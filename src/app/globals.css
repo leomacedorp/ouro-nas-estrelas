@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+:root {
+  --font-inter: "Inter", sans-serif;
+  --font-dm-serif: "DM Serif Display", serif;
+}
+
+@theme {
+  --color-mystic-950: #0a0512;
+  --color-mystic-900: #1a0b2e;
+  --color-mystic-800: #2d1b4e;
+
+  --color-gold-100: #fefce8;
+  --color-gold-200: #fff7ed;
+  --color-gold-300: #fde68a;
+  --color-gold-400: #fcd34d;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+  --color-gold-900: #78350f;
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-dm-serif);
+}
+
+@layer base {
+  body {
+    @apply bg-mystic-950 text-slate-200 antialiased selection:bg-gold-500/30 selection:text-gold-200;
+  }
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  }
+
+  .card-gradient {
+    background: linear-gradient(180deg, rgba(26, 11, 46, 0.6) 0%, rgba(10, 5, 18, 0.8) 100%);
+  }
+
+  .gold-gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-200 via-gold-400 to-gold-600;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-mystic-950;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-mystic-800 rounded-full hover:bg-gold-600/50;
+}
