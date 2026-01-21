@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { Sparkles, Calendar } from 'lucide-react';
+import { getTodayBrazilFormatted } from '@/lib/dateUtils';
+
+export const dynamic = 'force-dynamic';
 
 export default function HoroscopoPage() {
-    const date = new Date().toLocaleDateString('pt-BR', { dateStyle: 'full' });
+    const date = getTodayBrazilFormatted('full');
 
     return (
         <div className="min-h-screen pt-12 pb-20">

@@ -1,8 +1,28 @@
 {
     "crons": [
         {
-            "path": "/api/cron/generate",
-            "schedule": "0 5 * * *"
+            "path": "/api/cron/generate?mode=missing",
+            "schedule": "0 8 * * *"
+        },
+        {
+            "path": "/api/cron/generate?mode=missing",
+            "schedule": "10 8 * * *"
+        },
+        {
+            "path": "/api/cron/generate?mode=missing",
+            "schedule": "20 8 * * *"
+        },
+        {
+            "path": "/api/cron/generate?mode=missing",
+            "schedule": "30 8 * * *"
+        },
+        {
+            "path": "/api/cron/generate?mode=missing",
+            "schedule": "40 8 * * *"
+        },
+        {
+            "path": "/api/cron/generate?mode=missing",
+            "schedule": "50 8 * * *"
         }
     ]
 }
