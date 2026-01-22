@@ -6,9 +6,14 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { siteConfig } from '@/lib/siteConfig';
 
-export default function Navbar() {
+export default function Navbar({ settings }: { settings?: any }) {
     const [isOpen, setIsOpen] = useState(false);
-    const navLinks = siteConfig.links.nav;
+
+    // Filter logic
+    const navLinks = siteConfig.links.nav.filter(link => {
+        if (link.name === 'Produtos' && settings?.show_products_tab === false) return false;
+        return true;
+    });
 
     return (
         <nav className="fixed w-full z-50 transition-all duration-300 border-b border-white/5 bg-mystic-950/80 backdrop-blur-md">

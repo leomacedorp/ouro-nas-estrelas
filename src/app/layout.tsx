@@ -15,11 +15,22 @@ export const metadata: Metadata = {
   keywords: 'horóscopo, astrologia, signo, previsão, amor, dinheiro, carreira',
 };
 
-export default function RootLayout({
+import { createClient } from '@/lib/supabase/server';
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClient();
+  const { data: settingsData } = await supabase.from('site_settings').select('*');
+
+  // Converte array [{key, value}] para objeto {key: value}
+  const settings = settingsData?.reduce((acc, curr) => ({
+    ...acc,
+    [curr.key]: curr.value
+  }), {}) || {};
+
   return (
     <html lang="pt-BR" className="lenis" suppressHydrationWarning>
       <body className={cn(
@@ -28,7 +39,7 @@ export default function RootLayout({
         "antialiased bg-mystic-950 text-slate-100 min-h-screen flex flex-col"
       )}>
         <SmoothScrollProvider>
-          <Navbar />
+          <Navbar settings={settings} />
           <main className="flex-grow">
             {children}
           </main>
