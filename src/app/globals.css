@@ -22,6 +22,31 @@
   --font-serif: var(--font-dm-serif);
 }
 
+/* Smooth scroll for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 @layer base {
   body {
     @apply bg-mystic-950 text-slate-200 antialiased selection:bg-gold-500/30 selection:text-gold-200;
@@ -42,6 +67,116 @@
   }
 }
 
+/* ===== AWWWARDS ANIMATIONS ===== */
+
+/* Meteors Animation */
+.meteor {
+  position: absolute;
+  top: -10%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.8),
+    rgba(245, 158, 11, 0.4),
+    transparent
+  );
+  border-radius: 50%;
+  animation: meteor-fall linear infinite;
+  opacity: 0;
+}
+
+@keyframes meteor-fall {
+  0% {
+    transform: translateY(-100px) translateX(0) rotate(45deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) translateX(200px) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* Shimmer Effect */
+.shimmer-effect {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--shimmer-color) 50%,
+    transparent 100%
+  );
+  background-size: var(--shimmer-size) 100%;
+  animation: shimmer var(--shimmer-duration) ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Glow Pulse */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.6);
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Float Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Gradient Shift */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+
+/* Subtle Zoom on Scroll */
+.scroll-zoom {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-zoom:hover {
+  transform: scale(1.02);
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -53,4 +188,19 @@
 
 ::-webkit-scrollbar-thumb {
   @apply bg-mystic-800 rounded-full hover:bg-gold-600/50;
+}
+
+/* Better focus states */
+*:focus-visible {
+  @apply outline-none ring-2 ring-gold-500/50 ring-offset-2 ring-offset-mystic-950;
+}
+
+/* Glass morphism utility */
+.glass {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10;
+}
+
+/* Premium card hover */
+.card-hover {
+  @apply transition-all duration-500 hover:translate-y-[-4px] hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)];
 }
