@@ -325,11 +325,11 @@ export default async function SignPage({ params, searchParams }: PageProps) {
                                     Receba orientações personalizadas diretamente no seu WhatsApp.
                                 </p>
                                 <Link
-                                    href={siteConfig.whatsapp.url(whatsappMessage)}
+                                    href="/leitura-premium"
                                     className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gold-600 hover:bg-gold-500 text-white font-bold text-lg shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] transition-all relative z-10"
                                 >
                                     <MessageCircle className="w-5 h-5" />
-                                    {siteConfig.cta.sign_conversion}
+                                    Liberar Leitura Completa
                                 </Link>
                             </div>
                         </section>
