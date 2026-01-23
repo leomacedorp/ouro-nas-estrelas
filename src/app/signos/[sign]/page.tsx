@@ -170,7 +170,7 @@ export default async function SignPage({ params, searchParams }: PageProps) {
                     <div className="flex flex-col md:flex-row items-center gap-8">
                         <div className="relative">
                             <div className="absolute inset-0 bg-gold-500/20 blur-[50px] rounded-full" />
-                            <div className="relative bg-mystic-900/80 p-8 rounded-full border border-gold-500/20 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
+                            <div className="relative bg-mystic-900/80 p-8 rounded-full border border-gold-500/20 shadow-glow-gold">
                                 <span className="text-6xl md:text-7xl">{signData.symbol}</span>
                             </div>
                         </div>
@@ -326,7 +326,7 @@ export default async function SignPage({ params, searchParams }: PageProps) {
                                 </p>
                                 <Link
                                     href="/leitura-premium"
-                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gold-600 hover:bg-gold-500 text-white font-bold text-lg shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] transition-all relative z-10"
+                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gold-600 hover:bg-gold-500 text-white font-bold text-lg shadow-glow-gold hover:shadow-glow-gold-strong transition-all relative z-10"
                                 >
                                     <MessageCircle className="w-5 h-5" />
                                     Liberar Leitura Completa

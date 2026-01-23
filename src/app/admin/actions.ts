@@ -29,6 +29,32 @@ export async function toggleSetting(key: string, currentValue: boolean) {
     revalidatePath('/admin/dashboard');
 }
 
+export async function updateTextSetting(key: string, value: string) {
+    const supabase = await createClient();
+
+    // Verifica permissão
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const { data: access } = await supabase
+        .from('admin_access')
+        .select('role')
+        .eq('email', user.email)
+        .single();
+
+    if (!access) throw new Error("Forbidden");
+
+    // Persiste valor como texto/json
+    const { error } = await supabase
+        .from('site_settings')
+        .upsert({ key, value: value }); // Assumindo que value aceita string/jsonb
+
+    if (error) throw new Error(error.message);
+
+    revalidatePath('/');
+    revalidatePath('/admin/dashboard');
+}
+
 export async function signOut() {
     const supabase = await createClient();
     await supabase.auth.signOut();

@@ -1,12 +1,16 @@
 @import "tailwindcss";
 
+/* ===== VARIÁVEIS RAIZ ===== */
+:root {
+  --font-inter: "Inter", sans-serif;
+  --font-dm-serif: "DM Serif Display", serif;
+}
+
+/* ===== TEMA TAILWIND V4 ===== */
 @theme {
-  /* Cores místicas */
   --color-mystic-950: #0a0512;
   --color-mystic-900: #1a0b2e;
   --color-mystic-800: #2d1b4e;
-
-  /* Cores douradas - Ouro */
   --color-gold-100: #fefce8;
   --color-gold-200: #fff7ed;
   --color-gold-300: #fde68a;
@@ -15,48 +19,191 @@
   --color-gold-600: #d97706;
   --color-gold-900: #78350f;
 
-  /* Slate para texto */
-  --color-slate-100: #f1f5f9;
-  --color-slate-200: #e2e8f0;
-  --color-slate-400: #94a3b8;
-
-  /* Fontes */
   --font-sans: var(--font-inter);
   --font-serif: var(--font-dm-serif);
-
-  /* Animações */
-  --animate-spin-slow: spin 180s linear infinite;
-  --animate-spin-reverse: spin-reverse 180s linear infinite;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-pulse-glow: pulse-glow 4s ease-in-out infinite;
 }
 
+/* ===== SMOOTH SCROLL (LENIS) ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ===== BASE STYLES ===== */
+@layer base {
+  body {
+    @apply bg-mystic-950 text-slate-200 antialiased;
+  }
+
+  /* Seleção de texto */
+  ::selection {
+    @apply bg-gold-500/30 text-gold-200;
+  }
+
+  /* Scrollbar customizado */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0a0512;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2d1b4e;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(217, 119, 6, 0.5);
+  }
+
+  /* Focus states */
+  *:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #0a0512, 0 0 0 4px rgba(245, 158, 11, 0.5);
+  }
+}
+
+/* ===== UTILITIES ===== */
 @layer utilities {
+
+  /* Drop Shadows - Substituindo valores arbitrários */
+  .drop-shadow-gold {
+    filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));
+  }
+
+  .drop-shadow-gold-strong {
+    filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.6));
+  }
+
+  .drop-shadow-gold-subtle {
+    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.2));
+  }
+
+  /* Text Effects */
   .text-glow {
     text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
   }
 
-  .glass {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  .text-glow-strong {
+    text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+  }
+
+  /* Backgrounds */
+  .card-gradient {
+    background: linear-gradient(180deg, rgba(26, 11, 46, 0.6) 0%, rgba(10, 5, 18, 0.8) 100%);
   }
 
   .gold-gradient-text {
-    background: linear-gradient(to right, #fde68a, #fcd34d, #d97706);
+    background: linear-gradient(to right, #fff7ed, #fcd34d, #d97706);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
+
+  .star-pattern {
+    background-image: radial-gradient(circle at center, white 1px, transparent 1px);
+    background-size: 100px 100px;
+    -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+    mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  }
+
+  /* Glass morphism */
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Card hover effect */
+  .card-hover {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Box Shadows - Substituindo valores arbitrários */
+  .shadow-glow-gold {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  }
+
+  .shadow-glow-gold-strong {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+  }
+
+  .shadow-glow-indigo {
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+  }
+
+  .shadow-glow-emerald {
+    box-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+  }
+
+  /* Posicionamento nebulosas -  Substituindo valores arbitrários */
+  .nebula-top-left {
+    top: -20%;
+    left: -10%;
+  }
+
+  .nebula-bottom-right {
+    bottom: -20%;
+    right: -10%;
+  }
+
+  .nebula-size {
+    width: 60%;
+    height: 60%;
+  }
+
+  .nebula-size-half {
+    width: 50%;
+    height: 50%;
+  }
+
+  .blur-nebula {
+    filter: blur(100px);
+    will-change: transform, opacity;
+  }
+
+  .blur-nebula-sm {
+    filter: blur(80px);
+    will-change: transform, opacity;
+  }
 }
 
-@keyframes spin-reverse {
+/* ===== KEYFRAMES ===== */
+@keyframes spin-slow {
   from {
-    transform: rotate(360deg);
+    transform: rotate(0deg);
   }
 
   to {
-    transform: rotate(0deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -76,10 +223,123 @@
 
   0%,
   100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
+  }
+
+  50% {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.7));
+  }
+}
+
+@keyframes meteor-fall {
+  0% {
+    transform: translateX(-100px) translateY(0) rotate(20deg);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(120vw) translateY(600px) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
   }
 
   50% {
     box-shadow: 0 0 40px rgba(245, 158, 11, 0.6);
   }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ===== ANIMATION CLASSES ===== */
+.animate-spin-slow {
+  animation: spin-slow 120s linear infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.meteor {
+  position: absolute;
+  left: -120px;
+  width: 120px;
+  height: 2px;
+  top: 50%;
+  background: linear-gradient(to right,
+      transparent,
+      rgba(245, 158, 11, 0.4),
+      rgba(255, 255, 255, 0.8));
+  border-radius: 9999px;
+  animation: meteor-fall linear infinite;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.shimmer-effect {
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--shimmer-color, rgba(255, 255, 255, 0.1)) 50%,
+      transparent 100%);
+  background-size: var(--shimmer-size, 200%) 100%;
+  animation: shimmer var(--shimmer-duration, 2s) ease-in-out infinite;
+}
+
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+
+.scroll-zoom {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-zoom:hover {
+  transform: scale(1.02);
 }

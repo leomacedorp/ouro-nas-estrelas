@@ -58,7 +58,7 @@ export default function AboutPage() {
                     <h2 className="text-3xl font-serif text-slate-100 mb-8">Comece sua jornada hoje</h2>
                     <Link
                         href="/signos"
-                        className="inline-block px-8 py-3 rounded-full bg-amber-600 hover:bg-amber-500 text-white font-medium transition-all hover:shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+                        className="inline-block px-8 py-3 rounded-full bg-amber-600 hover:bg-amber-500 text-white font-medium transition-all hover:shadow-glow-gold"
                     >
                         Descubra seu Signo
                     </Link>

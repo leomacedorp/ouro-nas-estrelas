@@ -18,8 +18,8 @@ export default function LeituraPremiumPage() {
             <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20">
                 {/* Background Effects */}
                 <div className="absolute inset-0 bg-mystic-950">
-                    <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-indigo-950/40 blur-[150px] animate-pulse" />
-                    <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gold-900/10 blur-[150px]" />
+                    <div className="absolute nebula-top-left nebula-size rounded-full bg-indigo-950/40 blur-nebula animate-pulse" />
+                    <div className="absolute nebula-bottom-right nebula-size rounded-full bg-gold-900/10 blur-nebula" />
                     <div
                         className="absolute inset-0 opacity-20"
                         style={{
@@ -118,7 +118,7 @@ export default function LeituraPremiumPage() {
 
                         <BlurFade delay={0.2}>
                             <div className="relative">
-                                <div className="absolute inset-0 bg-gold-500/10 blur-[60px] rounded-full" />
+                                <div className="absolute inset-0 bg-gold-500/10 blur-nebula-sm rounded-full" />
                                 <div className="relative glass p-8 rounded-2xl border border-white/10">
                                     <div className="flex flex-col gap-6">
                                         <DeliverableItem

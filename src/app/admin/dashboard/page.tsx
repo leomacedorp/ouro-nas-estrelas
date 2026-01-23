@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { LogOut, LayoutDashboard, FileText, Settings, ToggleLeft, ToggleRight, ExternalLink } from 'lucide-react';
-import { toggleSetting, signOut } from '../actions';
+import { toggleSetting, signOut, updateTextSetting } from '../actions';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
@@ -12,12 +12,39 @@ function SettingToggle({ settingKey, label, value }: { settingKey: string, label
     return (
         <form action={toggleAction} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors">
             <div className="flex items-center gap-3">
-                <div className={`w-2 h-2 rounded-full ${value ? 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]' : 'bg-slate-600'}`} />
+                <div className={`w-2 h-2 rounded-full ${value ? 'bg-emerald-400 shadow-glow-emerald' : 'bg-slate-600'}`} />
                 <span className="font-medium text-slate-200">{label}</span>
             </div>
             <button type="submit" className={`text-2xl transition-colors ${value ? 'text-emerald-400' : 'text-slate-500'}`}>
                 {value ? <ToggleRight className="w-8 h-8" /> : <ToggleLeft className="w-8 h-8" />}
             </button>
+        </form>
+    );
+}
+
+// Componente de Texto (Client Side Logic wrapper in form)
+function SettingTextInput({ settingKey, label, defaultValue }: { settingKey: string, label: string, defaultValue: string }) {
+    // Componente client-side inline para evitar criar arquivo novo. Em prod idealmente separaria.
+    return (
+        <form
+            action={async (formData) => {
+                "use server";
+                const val = formData.get('value') as string;
+                await updateTextSetting(settingKey, val);
+            }}
+            className="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors space-y-3"
+        >
+            <label className="block font-medium text-slate-200">{label}</label>
+            <div className="flex gap-2">
+                <input
+                    name="value"
+                    defaultValue={defaultValue}
+                    className="flex-1 bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-500/50"
+                />
+                <button type="submit" className="px-4 py-2 bg-gold-600 hover:bg-gold-500 text-black text-sm font-bold rounded-lg transition-colors">
+                    Salvar
+                </button>
+            </div>
         </form>
     );
 }
@@ -36,6 +63,12 @@ export default async function DashboardPage() {
         const s = settings?.find(s => s.key === key);
         return s ? s.value : false;
     };
+
+    // Helper para ler settings de texto
+    const getTextSetting = (key: string) => {
+        const s = settings?.find(s => s.key === key);
+        return typeof s?.value === 'string' ? s.value : null;
+    }
 
     return (
         <div className="min-h-screen bg-mystic-950 text-slate-200">
@@ -66,7 +99,7 @@ export default async function DashboardPage() {
 
                 <div className="grid md:grid-cols-3 gap-8">
 
-                    {/* Cluna 1: Visão Geral e Ações Rápidas */}
+                    {/* Coluna 1: Visão Geral e Ações Rápidas */}
                     <div className="space-y-6">
                         <section className="bg-mystic-900/40 border border-white/5 rounded-2xl p-6">
                             <h2 className="text-lg font-serif font-bold text-white mb-4 flex items-center gap-2">
@@ -82,6 +115,20 @@ export default async function DashboardPage() {
                                         Dica: Use o editor para corrigir textos gerados pela IA ou criar previsões para dias especiais.
                                     </p>
                                 </div>
+                            </div>
+                        </section>
+
+                        {/* Configurações de Texto / Conteúdo */}
+                        <section className="bg-mystic-900/40 border border-white/5 rounded-2xl p-6">
+                            <h2 className="text-lg font-serif font-bold text-white mb-6 flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-gold-400" /> Mensagens e Textos
+                            </h2>
+                            <div className="space-y-4">
+                                <SettingTextInput
+                                    settingKey="home_hero_quote"
+                                    label="Frase de Destaque (Home)"
+                                    defaultValue={getTextSetting('home_hero_quote') || "O universo sussurra seus segredos a quem sabe ouvir. Alinhe-se com as estrelas e assuma o comando do seu destino."}
+                                />
                             </div>
                         </section>
                     </div>
