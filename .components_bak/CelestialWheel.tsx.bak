@@ -1,0 +1,89 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { ZODIAC_SIGNS } from "@/lib/constants";
+import Link from "next/link";
+
+export default function CelestialWheel() {
+    return (
+        <div className="relative w-full max-w-[800px] aspect-square mx-auto flex items-center justify-center">
+            {/* Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gold-500/5 blur-[100px] rounded-full" />
+
+            {/* Star Pattern Background */}
+            <div
+                className="absolute inset-0 opacity-20 dark:opacity-40 animate-spin-slow"
+                style={{
+                    backgroundImage: 'radial-gradient(circle at center, white 1px, transparent 1px)',
+                    backgroundSize: '100px 100px',
+                }}
+            />
+
+            {/* Rotating Container */}
+            <div className="relative w-full h-full animate-spin-slow">
+                {/* Inner Glow Circle */}
+                <div className="absolute top-[10%] left-[10%] w-[80%] h-[80%] rounded-full bg-indigo-500/5 border border-white/5 backdrop-blur-[1px]" />
+
+                {ZODIAC_SIGNS.map((sign, index) => {
+                    // Calculate position on the circle
+                    // Starting from top (270 degrees in standard math, but we can just shift angle)
+                    // 12 signs = 30 degrees each
+                    const angleDeg = index * 30; // 0, 30, 60...
+                    const angleRad = (angleDeg - 90) * (Math.PI / 180); // -90 to start at top
+
+                    // Radius is 50% of container - padding
+                    // Let's use % positioning for responsiveness
+                    // center is 50%, 50%
+                    // x = 50 + 40 * cos(theta)
+                    // y = 50 + 40 * sin(theta)
+                    const radius = 42; // % from center
+                    const x = 50 + radius * Math.cos(angleRad);
+                    const y = 50 + radius * Math.sin(angleRad);
+
+                    return (
+                        <Link key={sign.slug} href={`/signos/${sign.slug}`}>
+                            <motion.div
+                                className="absolute w-12 h-12 flex items-center justify-center cursor-pointer group"
+                                style={{
+                                    left: `${x}%`,
+                                    top: `${y}%`,
+                                    // Center the element itself
+                                    marginLeft: '-24px',
+                                    marginTop: '-24px',
+                                }}
+                                // Counter-rotate the icon so it stays upright while wheel spins? 
+                                // Alternatively, let it spin with the wheel for the "authentic" wheel look.
+                                // The provided HTML example just lets them spin. Let's stick to that but maybe add hover effect.
+                                whileHover={{ scale: 1.3 }}
+                            >
+                                <div className="relative flex items-center justify-center">
+                                    <span className="text-4xl text-slate-500 group-hover:text-gold-400 group-hover:drop-shadow-[0_0_15px_rgba(245,158,11,0.6)] transition-all duration-300">
+                                        {sign.symbol}
+                                    </span>
+
+                                    {/* Tooltip on Hover */}
+                                    <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 top-full mt-2 left-1/2 -translate-x-1/2 bg-mystic-900/90 px-3 py-1 rounded-full border border-gold-500/20 whitespace-nowrap z-50 pointer-events-none">
+                                        <span className="text-xs text-gold-200 font-medium uppercase tracking-widest">
+                                            {sign.name}
+                                        </span>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </Link>
+                    );
+                })}
+            </div>
+
+            {/* Centerpiece */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-10">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-b from-indigo-950/80 to-mystic-950/80 backdrop-blur-md border border-gold-500/20 flex items-center justify-center shadow-[0_0_50px_rgba(245,158,11,0.1)]">
+                    <span className="text-gold-400 opacity-80 animate-pulse-glow">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" />
+                        </svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+    );
+}
