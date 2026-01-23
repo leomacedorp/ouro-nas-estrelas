@@ -4,6 +4,7 @@ import { LogOut, LayoutDashboard, FileText, Settings, ToggleLeft, ToggleRight, E
 import { toggleSetting, signOut, updateTextSetting } from '../actions';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { GenerateButton } from './GenerateButton';
 
 // Componente de Toggle (Client Side Logic wrapper in form)
 function SettingToggle({ settingKey, label, value }: { settingKey: string, label: string, value: boolean }) {
@@ -68,7 +69,7 @@ export default async function DashboardPage() {
     const getTextSetting = (key: string) => {
         const s = settings?.find(s => s.key === key);
         return typeof s?.value === 'string' ? s.value : null;
-    }
+    };
 
     return (
         <div className="min-h-screen bg-mystic-950 text-slate-200">
@@ -105,14 +106,18 @@ export default async function DashboardPage() {
                             <h2 className="text-lg font-serif font-bold text-white mb-4 flex items-center gap-2">
                                 <FileText className="w-4 h-4 text-indigo-400" /> Conteúdo
                             </h2>
-                            <div className="space-y-2">
+                            <div className="space-y-4">
                                 <Link href="/admin/editor" className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-indigo-500/10 hover:border-indigo-500/30 border border-transparent transition-all group">
                                     <span className="text-slate-300 group-hover:text-indigo-300">Editor de Horóscopo</span>
                                     <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-indigo-400" />
                                 </Link>
+
+                                {/* Botão de Geração Manual */}
+                                <GenerateButton />
+
                                 <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/10 mt-4">
                                     <p className="text-xs text-amber-400/80">
-                                        Dica: Use o editor para corrigir textos gerados pela IA ou criar previsões para dias especiais.
+                                        Dica: O sistema atualiza automaticamente às 04:00 AM. Use o botão acima apenas se precisar forçar uma atualização agora.
                                     </p>
                                 </div>
                             </div>
