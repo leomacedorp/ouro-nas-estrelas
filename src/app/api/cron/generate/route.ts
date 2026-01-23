@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // 5 min max para Vercel Pro
 
 // Configuração de lotes e retry
-const MAX_SIGNS_PER_BATCH = 2;
+const MAX_SIGNS_PER_BATCH = 1; // Reduzido para 1 para evitar Timeout de 10s na Vercel (Hobby)
 const MAX_RETRY_ATTEMPTS = 3;
 const BACKOFF_DELAYS = [20000, 40000, 80000]; // 20s, 40s, 80s
 
