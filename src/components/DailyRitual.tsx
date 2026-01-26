@@ -83,7 +83,7 @@ export default function DailyRitual() {
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
             </div>
-        </BlurFade>
+        </div>
         </div >
     );
 }
