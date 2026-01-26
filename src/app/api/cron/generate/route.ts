@@ -13,9 +13,9 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // 5 min max para Vercel Pro
 
 // Configuração de lotes e retry
-const MAX_SIGNS_PER_BATCH = 1; // Reduzido para 1 para evitar Timeout de 10s na Vercel (Hobby)
-const MAX_RETRY_ATTEMPTS = 3;
-const BACKOFF_DELAYS = [20000, 40000, 80000]; // 20s, 40s, 80s
+const MAX_SIGNS_PER_BATCH = 1; // 1 signo por vez para evitar Timeout de 10s na Vercel (Hobby)
+const MAX_RETRY_ATTEMPTS = 1; // Sem retries - deixa o cron tentar de novo
+const BACKOFF_DELAYS = [0]; // Sem delay - retorna imediatamente em caso de erro
 
 // Focos suportados
 const FOCUSES = ['amor', 'dinheiro', 'carreira'] as const;
@@ -155,12 +155,9 @@ async function generateForSignWithRetry(
             const isRateLimit = err.status === 429 || err.code === 'rate_limit_exceeded';
             const isServerError = err.status === 503 || err.status === 500;
 
-            if ((isRateLimit || isServerError) && retryAttempt < MAX_RETRY_ATTEMPTS - 1) {
-                const waitTime = BACKOFF_DELAYS[retryAttempt];
-                console.log(`[RATE_LIMIT] ${signName} — tentativa ${retryAttempt + 1}/${MAX_RETRY_ATTEMPTS}, aguardando ${waitTime / 1000}s...`);
-                await delay(waitTime);
-                continue;
-            }
+            // Sem delay - retorna null imediatamente para não travar a função
+            // O cron vai tentar de novo na próxima execução
+            console.error(`[ERROR] ${signName} falhou (rate limit ou server error). Será tentado no próximo cron.`);
 
             console.error(`[ERROR] OpenAI failed for ${signName} after ${retryAttempt + 1} attempts:`, err.message || error);
             return null;
