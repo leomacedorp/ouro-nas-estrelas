@@ -114,8 +114,7 @@ async function generateWithGemini(signName: string): Promise<AIResponse | null> 
                 }],
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 500,
-                    responseMimeType: "application/json"
+                    maxOutputTokens: 800
                 }
             })
         });
