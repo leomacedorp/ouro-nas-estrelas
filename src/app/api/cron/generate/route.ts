@@ -266,6 +266,8 @@ export async function GET(request: NextRequest) {
 
         if (totalMissingBefore === 0) {
             console.log(`[CRON] All ${ZODIAC_SIGNS.length} signs already complete for ${today}`);
+            console.log(`[DEBUG] Date used: ${today}`);
+            console.log(`[DEBUG] All missing array:`, JSON.stringify(allMissing));
             return NextResponse.json({
                 success: true,
                 date: today,
@@ -273,7 +275,8 @@ export async function GET(request: NextRequest) {
                 message: 'All signs already complete',
                 generated: 0,
                 skipped: ZODIAC_SIGNS.length,
-                remaining: 0
+                remaining: 0,
+                debug: { dateUsed: today, totalMissingBefore }
             });
         }
 
