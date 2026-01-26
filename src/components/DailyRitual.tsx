@@ -84,6 +84,5 @@ export default function DailyRitual() {
                 </Link>
             </div>
         </div>
-        </div >
     );
 }
