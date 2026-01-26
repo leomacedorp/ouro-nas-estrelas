@@ -4,23 +4,27 @@ import { supabase } from '@/lib/supabase';
 import { getTodayBrazil } from '@/lib/dateUtils';
 import OpenAI from 'openai';
 
+// Inicializa OpenAI
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY || 'placeholder'
 });
 
+// URL da API do Gemini
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+
 export const dynamic = 'force-dynamic';
-export const maxDuration = 60; // 1 min é suficiente para o novo formato
+export const maxDuration = 60;
 
-// Configuração otimizada
-const MAX_SIGNS_PER_BATCH = 2; // Pode processar 2 signos por vez agora (texto menor)
+// Configuração
+const MAX_SIGNS_PER_BATCH = 2;
 
-// Resposta simplificada da OpenAI
-interface OpenAIResponse {
+// Resposta simplificada
+interface AIResponse {
     mensagem: string;
 }
 
-// Novo Prompt Otimizado (aprovado pelo ChatGPT)
-function buildSystemPrompt(signName: string): string {
+// Prompt compartilhado
+function buildPrompt(signName: string): string {
     return `Você é um astrólogo simbólico, empático e humano.
 
 Crie uma mensagem diária para o signo ${signName}, usando uma linguagem simples, acolhedora e emocionalmente próxima.
@@ -59,42 +63,105 @@ Retorne exclusivamente em JSON:
 }`;
 }
 
-// Gera conteúdo para um signo
-async function generateForSign(signName: string): Promise<OpenAIResponse | null> {
+// Tenta gerar com OpenAI
+async function generateWithOpenAI(signName: string): Promise<AIResponse | null> {
     try {
-        console.log(`[OPENAI] Gerando mensagem para ${signName}...`);
+        console.log(`[OPENAI] Tentando gerar para ${signName}...`);
 
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [
-                {
-                    role: "system",
-                    content: buildSystemPrompt(signName)
-                },
-                {
-                    role: "user",
-                    content: `Gere a mensagem do dia para ${signName}.`
-                }
+                { role: "system", content: buildPrompt(signName) },
+                { role: "user", content: `Gere a mensagem do dia para ${signName}.` }
             ],
             response_format: { type: "json_object" },
-            max_tokens: 500 // Reduzido de 4000 para 500
+            max_tokens: 500
         });
 
         const rawContent = completion.choices[0].message.content;
         if (!rawContent) return null;
 
-        const parsed = JSON.parse(rawContent) as OpenAIResponse;
-        console.log(`[OPENAI] ✅ ${signName} gerado (${parsed.mensagem.length} caracteres)`);
-        return parsed;
+        console.log(`[OPENAI] ✅ ${signName} gerado com sucesso`);
+        return JSON.parse(rawContent) as AIResponse;
 
     } catch (error: unknown) {
         const err = error as { status?: number; code?: string; message?: string };
-        console.error(`[ERROR] OpenAI falhou para ${signName}:`);
-        console.error(`  - Status: ${err.status || 'N/A'}`);
-        console.error(`  - Code: ${err.code || 'N/A'}`);
-        console.error(`  - Message: ${err.message || JSON.stringify(error)}`);
+        console.error(`[OPENAI] ❌ Falhou para ${signName}: ${err.status} - ${err.message}`);
         return null;
     }
+}
+
+// Tenta gerar com Gemini (Fallback)
+async function generateWithGemini(signName: string): Promise<AIResponse | null> {
+    const apiKey = process.env.GOOGLE_AI_API_KEY;
+
+    if (!apiKey) {
+        console.error('[GEMINI] ❌ API Key não configurada');
+        return null;
+    }
+
+    try {
+        console.log(`[GEMINI] Tentando gerar para ${signName} (fallback)...`);
+
+        const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: `${buildPrompt(signName)}\n\nGere a mensagem do dia para ${signName}.`
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 500,
+                    responseMimeType: "application/json"
+                }
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`[GEMINI] ❌ HTTP ${response.status}: ${errorText}`);
+            return null;
+        }
+
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!text) {
+            console.error('[GEMINI] ❌ Resposta vazia');
+            return null;
+        }
+
+        // Gemini às vezes retorna texto com ```json ... ```, precisamos limpar
+        const cleanedText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        const parsed = JSON.parse(cleanedText) as AIResponse;
+
+        console.log(`[GEMINI] ✅ ${signName} gerado com sucesso (fallback)`);
+        return parsed;
+
+    } catch (error) {
+        console.error(`[GEMINI] ❌ Erro para ${signName}:`, error);
+        return null;
+    }
+}
+
+// Função principal: tenta OpenAI, fallback para Gemini
+async function generateForSign(signName: string): Promise<{ content: AIResponse | null; provider: string }> {
+    // Tenta OpenAI primeiro
+    let content = await generateWithOpenAI(signName);
+    if (content) {
+        return { content, provider: 'openai' };
+    }
+
+    // Fallback para Gemini
+    content = await generateWithGemini(signName);
+    if (content) {
+        return { content, provider: 'gemini' };
+    }
+
+    return { content: null, provider: 'none' };
 }
 
 // Busca signos que faltam para hoje
@@ -118,6 +185,7 @@ export async function GET(request: NextRequest) {
 
         const generated: string[] = [];
         const errors: string[] = [];
+        const providers: Record<string, string> = {};
 
         // Busca signos faltantes
         const missingSigns = await getMissingSigns(today);
@@ -136,16 +204,16 @@ export async function GET(request: NextRequest) {
 
         console.log(`[CRON] ${missingSigns.length} signos pendentes: ${missingSigns.map(s => s.name).join(', ')}`);
 
-        // Processa apenas alguns signos por execução (evita timeout)
+        // Processa signos
         const signsToProcess = missingSigns.slice(0, MAX_SIGNS_PER_BATCH);
 
         for (const sign of signsToProcess) {
             console.log(`[GENERATE] Processando ${sign.name}...`);
 
-            const content = await generateForSign(sign.name);
+            const { content, provider } = await generateForSign(sign.name);
 
             if (!content) {
-                console.error(`[ERROR] Falha ao gerar ${sign.name}`);
+                console.error(`[ERROR] Falha total ao gerar ${sign.name} (OpenAI + Gemini falharam)`);
                 errors.push(sign.name);
                 continue;
             }
@@ -156,7 +224,7 @@ export async function GET(request: NextRequest) {
                 .insert({
                     sign: sign.slug,
                     date: today,
-                    focus: 'geral', // Foco único agora
+                    focus: 'geral',
                     type: 'daily',
                     content: content.mensagem
                 });
@@ -166,7 +234,8 @@ export async function GET(request: NextRequest) {
                 errors.push(sign.name);
             } else {
                 generated.push(sign.name);
-                console.log(`[SAVE] ✅ ${sign.name} salvo no banco`);
+                providers[sign.name] = provider;
+                console.log(`[SAVE] ✅ ${sign.name} salvo (via ${provider})`);
             }
         }
 
@@ -177,12 +246,13 @@ export async function GET(request: NextRequest) {
             success: errors.length === 0,
             date: today,
             mode,
-            format: 'mensagem_unica_otimizada',
+            format: 'mensagem_unica_com_fallback',
             generated: generated.length,
             errors: errors.length,
             remaining: remainingSigns.length,
             details: {
                 generated,
+                providers,
                 errors,
                 pending: remainingSigns.map(s => s.name)
             }
