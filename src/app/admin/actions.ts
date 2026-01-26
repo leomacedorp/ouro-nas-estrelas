@@ -44,15 +44,28 @@ export async function updateTextSetting(key: string, value: string) {
 
     if (!access) throw new Error("Forbidden");
 
-    // Persiste valor como texto/json
+    // IMPORTANTE: Supabase JSONB precisa receber string entre aspas duplas
+    const jsonValue = JSON.stringify(value); // Converte "texto" para "\"texto\""
+
+    // Persiste valor como JSONB
     const { error } = await supabase
         .from('site_settings')
-        .upsert({ key, value: value }); // Assumindo que value aceita string/jsonb
+        .upsert({
+            key,
+            value: jsonValue
+        }, {
+            onConflict: 'key' // Especifica qual coluna é a constraint
+        });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+        console.error('[updateTextSetting] Erro:', error);
+        throw new Error(error.message);
+    }
 
     revalidatePath('/');
     revalidatePath('/admin/dashboard');
+
+    return { success: true };
 }
 
 export async function signOut() {
