@@ -2,166 +2,13 @@ import { NextResponse, NextRequest } from 'next/server';
 import { ZODIAC_SIGNS } from '@/lib/constants';
 import { supabase } from '@/lib/supabase';
 import { getTodayBrazil } from '@/lib/dateUtils';
-import OpenAI from 'openai';
-
-// Inicializa OpenAI
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY || 'placeholder'
-});
-
-// URL da API do Gemini
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent';
+import { generateHoroscope, getProviderStatus } from '@/lib/aiProvider';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 // Configuração
-const MAX_SIGNS_PER_BATCH = 2;
-
-// Resposta simplificada
-interface AIResponse {
-    mensagem: string;
-}
-
-// Prompt compartilhado
-function buildPrompt(signName: string): string {
-    return `Você é um astrólogo simbólico, empático e humano.
-
-Crie uma mensagem diária para o signo ${signName}, usando uma linguagem simples, acolhedora e emocionalmente próxima.
-
-REGRAS:
-
-- Linguagem popular, clara e fácil de entender
-- Tom acolhedor, humano, calmo e empático
-- Escrita como se estivesse conversando com alguém querido
-- Evitar qualquer termo técnico, psicológico ou científico
-- Não usar palavras como: configuração, processo, estrutura, dinâmica, padrão, sistema, mecanismo, análise, reestruturação
-- Não usar previsões diretas de acontecimentos
-- Não usar pronomes pessoais ("você", "seu")
-- Frases fluidas, naturais, quentes e humanas
-- Máximo de 220 palavras
-
-A mensagem deve abordar de forma natural:
-- O clima emocional do dia
-- Relações e sentimentos
-- Trabalho e dinheiro de forma leve
-- Um conselho simples e prático para encerrar
-
-Evitar completamente:
-- Linguagem de máquina
-- Termos técnicos
-- Frases genéricas de horóscopo
-- Promessas ou previsões
-
-Estilo desejado:
-Sábio, acolhedor, humano, emocional, leve e inspirador.
-
-Retorne exclusivamente em JSON:
-
-{
-  "mensagem": "Texto completo aqui"
-}`;
-}
-
-// Tenta gerar com OpenAI
-async function generateWithOpenAI(signName: string): Promise<AIResponse | null> {
-    try {
-        console.log(`[OPENAI] Tentando gerar para ${signName}...`);
-
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: [
-                { role: "system", content: buildPrompt(signName) },
-                { role: "user", content: `Gere a mensagem do dia para ${signName}.` }
-            ],
-            response_format: { type: "json_object" },
-            max_tokens: 500
-        });
-
-        const rawContent = completion.choices[0].message.content;
-        if (!rawContent) return null;
-
-        console.log(`[OPENAI] ✅ ${signName} gerado com sucesso`);
-        return JSON.parse(rawContent) as AIResponse;
-
-    } catch (error: unknown) {
-        const err = error as { status?: number; code?: string; message?: string };
-        console.error(`[OPENAI] ❌ Falhou para ${signName}: ${err.status} - ${err.message}`);
-        return null;
-    }
-}
-
-// Tenta gerar com Gemini (Fallback)
-async function generateWithGemini(signName: string): Promise<AIResponse | null> {
-    const apiKey = process.env.GOOGLE_AI_API_KEY;
-
-    if (!apiKey) {
-        console.error('[GEMINI] ❌ API Key não configurada');
-        return null;
-    }
-
-    try {
-        console.log(`[GEMINI] Tentando gerar para ${signName} (fallback)...`);
-
-        const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: `${buildPrompt(signName)}\n\nGere a mensagem do dia para ${signName}.`
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 800
-                }
-            })
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`[GEMINI] ❌ HTTP ${response.status}: ${errorText}`);
-            return null;
-        }
-
-        const data = await response.json();
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!text) {
-            console.error('[GEMINI] ❌ Resposta vazia');
-            return null;
-        }
-
-        // Gemini às vezes retorna texto com ```json ... ```, precisamos limpar
-        const cleanedText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        const parsed = JSON.parse(cleanedText) as AIResponse;
-
-        console.log(`[GEMINI] ✅ ${signName} gerado com sucesso (fallback)`);
-        return parsed;
-
-    } catch (error) {
-        console.error(`[GEMINI] ❌ Erro para ${signName}:`, error);
-        return null;
-    }
-}
-
-// Função principal: tenta OpenAI, fallback para Gemini
-async function generateForSign(signName: string): Promise<{ content: AIResponse | null; provider: string }> {
-    // Tenta OpenAI primeiro
-    let content = await generateWithOpenAI(signName);
-    if (content) {
-        return { content, provider: 'openai' };
-    }
-
-    // Fallback para Gemini
-    content = await generateWithGemini(signName);
-    if (content) {
-        return { content, provider: 'gemini' };
-    }
-
-    return { content: null, provider: 'none' };
-}
+const MAX_SIGNS_PER_BATCH = 3; // Pode processar mais agora com fallback garantido
 
 // Busca signos que faltam para hoje
 async function getMissingSigns(today: string): Promise<typeof ZODIAC_SIGNS> {
@@ -181,6 +28,7 @@ export async function GET(request: NextRequest) {
         const mode = searchParams.get('mode') || 'missing';
 
         console.log(`[CRON] Iniciando geração para ${today} - Modo: ${mode.toUpperCase()}`);
+        console.log(`[CRON] Status dos providers:`, JSON.stringify(getProviderStatus()));
 
         const generated: string[] = [];
         const errors: string[] = [];
@@ -197,7 +45,8 @@ export async function GET(request: NextRequest) {
                 mode,
                 message: 'Todos os signos já foram gerados',
                 generated: 0,
-                remaining: 0
+                remaining: 0,
+                providerStatus: getProviderStatus()
             });
         }
 
@@ -207,34 +56,60 @@ export async function GET(request: NextRequest) {
         const signsToProcess = missingSigns.slice(0, MAX_SIGNS_PER_BATCH);
 
         for (const sign of signsToProcess) {
-            console.log(`[GENERATE] Processando ${sign.name}...`);
+            try {
+                console.log(`[GENERATE] Processando ${sign.name}...`);
 
-            const { content, provider } = await generateForSign(sign.name);
-
-            if (!content) {
-                console.error(`[ERROR] Falha total ao gerar ${sign.name} (OpenAI + Gemini falharam)`);
-                errors.push(sign.name);
-                continue;
-            }
-
-            // Salva no banco
-            const { error } = await supabase
-                .from('horoscopes')
-                .insert({
+                // Usa a camada unificada de AI
+                const result = await generateHoroscope({
                     sign: sign.slug,
-                    date: today,
-                    focus: 'geral',
-                    type: 'daily',
-                    content: content.mensagem
+                    signName: sign.name,
+                    dateBr: today,
+                    mode: 'short'
                 });
 
-            if (error) {
-                console.error(`[ERROR] Falha ao salvar ${sign.name}:`, error.message);
+                if (!result.success || !result.content) {
+                    console.error(`[ERROR] Falha ao gerar ${sign.name}: sem conteúdo`);
+                    errors.push(sign.name);
+                    continue;
+                }
+
+                // Prepara o conteúdo para salvar
+                const content = typeof result.content === 'string'
+                    ? result.content
+                    : JSON.stringify(result.content);
+
+                // Salva no banco com metadados
+                const { error: dbError } = await supabase
+                    .from('horoscopes')
+                    .insert({
+                        sign: sign.slug,
+                        date: today,
+                        focus: 'geral',
+                        type: 'daily',
+                        content: content,
+                        // Metadados de auditoria (salvos no próprio content ou em coluna separada se existir)
+                        layers: {
+                            provider: result.provider,
+                            model: result.model,
+                            attempts: result.attempts,
+                            errors: result.errors,
+                            generatedAt: result.meta.generatedAt
+                        }
+                    });
+
+                if (dbError) {
+                    console.error(`[ERROR] Falha ao salvar ${sign.name}:`, dbError.message);
+                    errors.push(sign.name);
+                } else {
+                    generated.push(sign.name);
+                    providers[sign.name] = result.provider;
+                    console.log(`[SAVE] ✅ ${sign.name} salvo (via ${result.provider})`);
+                }
+
+            } catch (signError) {
+                // Erro isolado por signo - não derruba o cron
+                console.error(`[ERROR] Erro inesperado ao processar ${sign.name}:`, signError);
                 errors.push(sign.name);
-            } else {
-                generated.push(sign.name);
-                providers[sign.name] = provider;
-                console.log(`[SAVE] ✅ ${sign.name} salvo (via ${provider})`);
             }
         }
 
@@ -242,10 +117,10 @@ export async function GET(request: NextRequest) {
         const remainingSigns = await getMissingSigns(today);
 
         const summary = {
-            success: errors.length === 0,
+            success: generated.length > 0,
             date: today,
             mode,
-            format: 'mensagem_unica_com_fallback',
+            format: 'resiliente_3_niveis',
             generated: generated.length,
             errors: errors.length,
             remaining: remainingSigns.length,
@@ -254,7 +129,8 @@ export async function GET(request: NextRequest) {
                 providers,
                 errors,
                 pending: remainingSigns.map(s => s.name)
-            }
+            },
+            providerStatus: getProviderStatus()
         };
 
         console.log(`[CRON] Finalizado:`, JSON.stringify(summary, null, 2));
@@ -265,7 +141,8 @@ export async function GET(request: NextRequest) {
         console.error('[CRON] Erro crítico:', error);
         return NextResponse.json({
             success: false,
-            error: error instanceof Error ? error.message : 'Unknown error'
+            error: error instanceof Error ? error.message : 'Unknown error',
+            providerStatus: getProviderStatus()
         }, { status: 500 });
     }
 }
