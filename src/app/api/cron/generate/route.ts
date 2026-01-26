@@ -7,8 +7,8 @@ import { generateHoroscope, getProviderStatus } from '@/lib/aiProvider';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-// Configuração
-const MAX_SIGNS_PER_BATCH = 3; // Pode processar mais agora com fallback garantido
+// Configuração - gera todos de uma vez (template é instantâneo como fallback)
+const MAX_SIGNS_PER_BATCH = 12;
 
 // Busca signos que faltam para hoje
 async function getMissingSigns(today: string): Promise<typeof ZODIAC_SIGNS> {

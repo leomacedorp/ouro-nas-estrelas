@@ -7,7 +7,7 @@ import OpenAI from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getShortPrompt, getPremiumPrompt, validateText } from './prompts';
 import { isInCooldown, handleRateLimitError, getCooldownStatus } from './circuitBreaker';
-import { generateTemplateMessage, generateTemplateSections } from './templateGenerator';
+import { generateLocalHoroscope } from './localTemplate';
 
 // Tipos
 export interface GenerationResult {
@@ -107,7 +107,7 @@ async function tryGemini(options: GenerationOptions): Promise<{ success: boolean
     try {
         console.log(`[GEMINI] Tentando gerar para ${signName} (fallback)...`);
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         const prompt = mode === 'premium' && focus
             ? getPremiumPrompt(signName, focus)
@@ -151,17 +151,18 @@ async function tryGemini(options: GenerationOptions): Promise<{ success: boolean
  * Gera com template local (fallback final)
  */
 function generateFromTemplate(options: GenerationOptions): { success: boolean; content: string } {
-    const { sign, dateBr, mode, focus } = options;
+    const { sign, dateBr, focus = 'amor' } = options;
 
-    console.log(`[TEMPLATE] Gerando para ${sign} via template local...`);
+    console.log(`[TEMPLATE] Gerando para ${sign} via template local premium...`);
 
-    if (mode === 'premium' && focus) {
-        const sections = generateTemplateSections(sign, dateBr, focus);
-        return { success: true, content: JSON.stringify(sections) };
-    }
+    // Usa o novo sistema de templates com alta variação
+    const result = generateLocalHoroscope({
+        sign,
+        focus,
+        dateBr
+    });
 
-    const message = generateTemplateMessage(sign, dateBr);
-    return { success: true, content: JSON.stringify({ mensagem: message }) };
+    return { success: true, content: JSON.stringify({ mensagem: result.message }) };
 }
 
 /**
@@ -216,7 +217,7 @@ export async function generateHoroscope(options: GenerationOptions): Promise<Gen
                 success: true,
                 content,
                 provider: 'gemini',
-                model: 'gemini-pro',
+                model: 'gemini-1.5-flash',
                 attempts,
                 errors,
                 meta: {
