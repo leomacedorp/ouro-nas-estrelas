@@ -9,8 +9,8 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY || 'placeholder'
 });
 
-// URL da API do Gemini
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+// URL da API do Gemini (modelo 2.0 Flash)
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
