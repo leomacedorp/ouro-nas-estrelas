@@ -155,11 +155,13 @@ async function generateForSignWithRetry(
             const isRateLimit = err.status === 429 || err.code === 'rate_limit_exceeded';
             const isServerError = err.status === 503 || err.status === 500;
 
-            // Sem delay - retorna null imediatamente para não travar a função
-            // O cron vai tentar de novo na próxima execução
-            console.error(`[ERROR] ${signName} falhou (rate limit ou server error). Será tentado no próximo cron.`);
+            // Log detalhado do erro
+            console.error(`[ERROR] OpenAI falhou para ${signName}:`);
+            console.error(`  - Status: ${err.status || 'N/A'}`);
+            console.error(`  - Code: ${err.code || 'N/A'}`);
+            console.error(`  - Message: ${err.message || JSON.stringify(error)}`);
 
-            console.error(`[ERROR] OpenAI failed for ${signName} after ${retryAttempt + 1} attempts:`, err.message || error);
+            // Retorna null imediatamente para não travar a função
             return null;
         }
     }
