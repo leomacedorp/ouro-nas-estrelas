@@ -36,14 +36,14 @@ export default function CosmicBackground({
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    // Reduce counts significantly on mobile
-    const starCount = isMobile ? 40 : {
+    // Reduce counts significantly on mobile but keep enough to be visible
+    const starCount = isMobile ? 60 : {
         subtle: 50,
         medium: 150,
         intense: 250,
     }[intensity];
 
-    const meteorCount = isMobile && showMeteors ? 3 : {
+    const meteorCount = isMobile && showMeteors ? 6 : {
         subtle: 5,
         medium: 15,
         intense: 25,
