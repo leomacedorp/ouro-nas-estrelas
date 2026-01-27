@@ -81,8 +81,8 @@ export default function CosmicBackground({
         const stars = Array.from({ length: starCount }, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            radius: Math.random() * (isMobile ? 1.5 : 2), // Visibility boost for mobile
-            opacity: Math.random() * 0.5 + 0.5,
+            radius: Math.random() * (isMobile ? 1.8 : 2), // Even bigger on mobile
+            opacity: Math.random() * 0.5 + (isMobile ? 0.7 : 0.5), // Brighter base on mobile (0.7-1.0)
             twinkleSpeed: Math.random() * 0.02 + 0.01,
         }));
 
@@ -129,13 +129,13 @@ export default function CosmicBackground({
                 />
             )}
 
-            {/* Nebulas - Heavy blur disabled on mobile */}
-            {showNebula && !isMobile && (
+            {/* Nebulas - Static on mobile for performance, Animated on Desktop */}
+            {showNebula && (
                 <>
                     <motion.div
                         className="absolute nebula-top-left nebula-size rounded-full bg-indigo-900/30 blur-nebula"
                         initial={{ opacity: 0.4, scale: 1 }}
-                        animate={{
+                        animate={isMobile ? undefined : {
                             scale: [1, 1.1, 1],
                             opacity: [0.4, 0.6, 0.4],
                         }}
@@ -148,7 +148,7 @@ export default function CosmicBackground({
                     <motion.div
                         className="absolute nebula-bottom-right nebula-size rounded-full bg-purple-900/30 blur-nebula"
                         initial={{ opacity: 0.3, scale: 1 }}
-                        animate={{
+                        animate={isMobile ? undefined : {
                             scale: [1, 1.2, 1],
                             opacity: [0.3, 0.5, 0.3],
                         }}
@@ -161,7 +161,7 @@ export default function CosmicBackground({
                     <motion.div
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 nebula-size-half rounded-full bg-gold-600/10 blur-nebula-sm"
                         initial={{ opacity: 0.2, scale: 1 }}
-                        animate={{
+                        animate={isMobile ? undefined : {
                             scale: [1, 1.3, 1],
                             opacity: [0.2, 0.4, 0.2],
                         }}
