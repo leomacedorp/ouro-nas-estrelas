@@ -27,35 +27,27 @@ export default function CosmicBackground({
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [meteors, setMeteors] = useState<MeteorData[]>([]);
 
-    // Star counts based on intensity
-    const starCount = {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Reduce counts significantly on mobile
+    const starCount = isMobile ? 40 : {
         subtle: 50,
         medium: 150,
         intense: 250,
     }[intensity];
 
-    const meteorCount = {
+    const meteorCount = isMobile && showMeteors ? 3 : {
         subtle: 5,
         medium: 15,
         intense: 25,
     }[intensity];
-
-    // Generate meteors on client side only to match hydration
-    useEffect(() => {
-        if (!showMeteors) {
-            setMeteors([]);
-            return;
-        }
-
-        const generatedMeteors = Array.from({ length: meteorCount }).map(() => ({
-            top: Math.random() * 40, // 0-40%
-            left: -(Math.random() * 20 + 5), // -5% to -25%
-            duration: Math.random() * 8 + 15, // 15-23s
-            delay: Math.random() * 5,
-            repeatDelay: Math.random() * 5 + 2,
-        }));
-        setMeteors(generatedMeteors);
-    }, [showMeteors, meteorCount]);
 
     // Canvas starfield effect
     useEffect(() => {
@@ -64,22 +56,32 @@ export default function CosmicBackground({
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: false }); // Optimization: alpha false if possible, but we need overlay. 
+        // Actually keep standard context but optimize draw loop
         if (!ctx) return;
 
         // Set canvas size
         const setCanvasSize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
         };
         setCanvasSize();
-        window.addEventListener('resize', setCanvasSize);
+
+        // Debounce resize to avoid thrashing on mobile scroll bar changes
+        let resizeTimeout: NodeJS.Timeout;
+        const handleResize = () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(setCanvasSize, 200);
+        };
+        window.addEventListener('resize', handleResize);
 
         // Generate stars
         const stars = Array.from({ length: starCount }, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            radius: Math.random() * 1.5,
+            radius: Math.random() * (isMobile ? 1 : 1.5),
             opacity: Math.random() * 0.5 + 0.5,
             twinkleSpeed: Math.random() * 0.02 + 0.01,
         }));
@@ -91,11 +93,14 @@ export default function CosmicBackground({
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             time += 0.01;
 
+            // Batch drawing for performance
+            ctx.fillStyle = '#FFF';
+
             stars.forEach((star) => {
                 const twinkle = Math.sin(time * star.twinkleSpeed) * 0.3 + 0.7;
                 ctx.beginPath();
+                ctx.globalAlpha = star.opacity * twinkle;
                 ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * twinkle})`;
                 ctx.fill();
             });
 
@@ -106,9 +111,9 @@ export default function CosmicBackground({
 
         return () => {
             cancelAnimationFrame(animationFrame);
-            window.removeEventListener('resize', setCanvasSize);
+            window.removeEventListener('resize', handleResize);
         };
-    }, [showStars, starCount]);
+    }, [showStars, starCount, isMobile]);
 
     return (
         <div className="fixed inset-0 pointer-events-none overflow-hidden bg-[radial-gradient(ellipse_at_center,_transparent_0%,_#0a0512_100%)]">
@@ -124,8 +129,8 @@ export default function CosmicBackground({
                 />
             )}
 
-            {/* Nebulas */}
-            {showNebula && (
+            {/* Nebulas - Heavy blur disabled on mobile */}
+            {showNebula && !isMobile && (
                 <>
                     <motion.div
                         className="absolute nebula-top-left nebula-size rounded-full bg-indigo-900/30 blur-nebula"

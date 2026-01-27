@@ -18,8 +18,8 @@ export default function Home() {
     <>
       {/* ===== HERO SECTION ===== */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-20">
-        {/* Cosmic Background - Intense */}
-        <CosmicBackground intensity="intense" />
+        {/* Cosmic Background - Global Instance */}
+        <CosmicBackground intensity="medium" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8">
@@ -83,7 +83,7 @@ export default function Home() {
 
       {/* ===== DAILY RITUAL ===== */}
       <section className="relative py-24 bg-mystic-900/50 overflow-hidden">
-        <CosmicBackground intensity="medium" showMeteors={false} />
+        {/* BG Removed */}
         <div className="relative z-10">
           <DailyRitual />
         </div>
@@ -91,7 +91,7 @@ export default function Home() {
 
       {/* ===== ZODIAC GRID ===== */}
       <div id="signos" className="border-t border-white/5 bg-mystic-950 relative">
-        <CosmicBackground intensity="subtle" showMeteors={false} showNebula={false} />
+        {/* BG Removed */}
         <div className="relative z-10">
           <BlurFade>
             <ZodiacGrid />
@@ -101,7 +101,7 @@ export default function Home() {
 
       {/* ===== BENEFITS SECTION ===== */}
       <section className="py-24 bg-mystic-900 relative overflow-hidden">
-        <CosmicBackground intensity="medium" />
+        {/* BG Removed */}
 
         <div className="container mx-auto px-4 relative z-10">
           <BlurFade>
@@ -141,7 +141,7 @@ export default function Home() {
 
       {/* ===== TESTIMONIALS ===== */}
       <section className="py-24 bg-mystic-950 relative overflow-hidden">
-        <CosmicBackground intensity="subtle" />
+        {/* BG Removed */}
 
         <div className="container mx-auto px-4 relative z-10">
           <BlurFade>
@@ -178,7 +178,7 @@ export default function Home() {
 
       {/* ===== FINAL CTA ===== */}
       <section className="py-32 relative overflow-hidden">
-        <CosmicBackground intensity="intense" />
+        {/* BG Removed */}
 
         <div className="container mx-auto px-4 relative z-10 text-center">
           <BlurFade>
