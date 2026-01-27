@@ -90,7 +90,7 @@ export default function Home() {
       </section>
 
       {/* ===== ZODIAC GRID ===== */}
-      <div id="signos" className="border-t border-white/5 bg-mystic-950 relative">
+      <div id="signos" className="border-t border-white/5 bg-transparent relative">
         {/* BG Removed */}
         <div className="relative z-10">
           <BlurFade>
@@ -100,7 +100,7 @@ export default function Home() {
       </div>
 
       {/* ===== BENEFITS SECTION ===== */}
-      <section className="py-24 bg-mystic-900 relative overflow-hidden">
+      <section className="py-24 bg-transparent relative overflow-hidden">
         {/* BG Removed */}
 
         <div className="container mx-auto px-4 relative z-10">
@@ -140,7 +140,7 @@ export default function Home() {
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <section className="py-24 bg-mystic-950 relative overflow-hidden">
+      <section className="py-24 bg-transparent relative overflow-hidden">
         {/* BG Removed */}
 
         <div className="container mx-auto px-4 relative z-10">

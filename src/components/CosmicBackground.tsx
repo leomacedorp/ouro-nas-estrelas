@@ -81,7 +81,7 @@ export default function CosmicBackground({
         const stars = Array.from({ length: starCount }, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            radius: Math.random() * (isMobile ? 1 : 1.5),
+            radius: Math.random() * (isMobile ? 1.5 : 2), // Visibility boost for mobile
             opacity: Math.random() * 0.5 + 0.5,
             twinkleSpeed: Math.random() * 0.02 + 0.01,
         }));
