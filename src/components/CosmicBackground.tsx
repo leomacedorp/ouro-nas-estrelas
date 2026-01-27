@@ -49,6 +49,24 @@ export default function CosmicBackground({
         intense: 25,
     }[intensity];
 
+    // Generate meteors on client side only to match hydration
+    useEffect(() => {
+        if (!showMeteors) {
+            setMeteors([]);
+            return;
+        }
+
+        const generatedMeteors = Array.from({ length: meteorCount }).map(() => ({
+            top: Math.random() * 40, // 0-40%
+            left: -(Math.random() * 20 + 5), // -5% to -25%
+            // Faster on mobile to feel more "alive" with fewer particles (3-7s)
+            duration: isMobile ? Math.random() * 4 + 3 : Math.random() * 8 + 15,
+            delay: Math.random() * 3, // Less initial delay too
+            repeatDelay: Math.random() * 3 + 1, // Faster repeat
+        }));
+        setMeteors(generatedMeteors);
+    }, [showMeteors, meteorCount, isMobile]);
+
     // Canvas starfield effect
     useEffect(() => {
         if (!showStars) return;
