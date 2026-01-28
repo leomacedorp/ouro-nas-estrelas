@@ -24,13 +24,24 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const { data: settingsData } = await supabase.from('site_settings').select('*');
 
-  // Converte array [{key, value}] para objeto {key: value}
-  const settings = settingsData?.reduce((acc, curr) => ({
-    ...acc,
-    [curr.key]: curr.value
-  }), {}) || {};
+  // Se supabase estiver offline (sem chaves), cria settings vazio
+  let settings = {};
+
+  if (supabase) {
+    try {
+      const { data: settingsData } = await supabase.from('site_settings').select('*');
+      // Converte array [{key, value}] para objeto {key: value}
+      if (settingsData) {
+        settings = settingsData.reduce((acc, curr) => ({
+          ...acc,
+          [curr.key]: curr.value
+        }), {});
+      }
+    } catch (e) {
+      console.error("Error fetching settings:", e);
+    }
+  }
 
   return (
     <html lang="pt-BR" className="lenis" suppressHydrationWarning>

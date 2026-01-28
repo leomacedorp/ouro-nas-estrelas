@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { MessageCircle, Sparkles, Star, Lock, Zap, Compass, ArrowRight, CheckCircle2, ShieldCheck, Gem } from 'lucide-react';
 import { siteConfig } from '@/lib/siteConfig';
 import { Meteors } from '@/components/ui/meteors';
@@ -134,6 +135,7 @@ export default function LeituraPremiumPage() {
                             ]}
                             buttonText="Comprar Apenas Uma"
                             isPopular={false}
+                            priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_SINGLE}
                             link={siteConfig.whatsapp.url("Olá! Quero comprar a Leitura Avulsa por R$ 37.")}
                         />
 
@@ -185,7 +187,46 @@ function LayerCard({ icon, title, desc }: { icon: string, title: string, desc: s
     );
 }
 
-function PricingCard({ title, price, period, features, buttonText, isPopular, link }: any) {
+function PricingCard({ title, price, period, features, buttonText, isPopular, link, priceId }: any) {
+    const [loading, setLoading] = useState(false);
+
+    const handleCheckout = async () => {
+        if (!priceId) return;
+
+        setLoading(true);
+        try {
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ priceId }),
+            });
+
+            const data = await response.json();
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                alert('Erro ao iniciar pagamento. Tente novamente.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao conectar com o servidor.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Botão unificado
+    const ButtonColors = isPopular
+        ? 'bg-gold-500 hover:bg-gold-400 text-mystic-950 shadow-glow-gold'
+        : 'bg-white/10 hover:bg-white/20 text-white';
+
+    const ButtonContent = loading ? (
+        <>
+            <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+            Processando...
+        </>
+    ) : buttonText;
+
     return (
         <div className={`relative p-8 rounded-3xl border ${isPopular ? 'border-gold-500 bg-gold-900/10' : 'border-white/10 bg-white/5'} flex flex-col h-full`}>
             {isPopular && (
@@ -210,13 +251,22 @@ function PricingCard({ title, price, period, features, buttonText, isPopular, li
                 ))}
             </ul>
 
-            <Link href={link} className="w-full">
-                <button className={`w-full py-4 rounded-xl font-bold transition-all ${isPopular
-                    ? 'bg-gold-500 hover:bg-gold-400 text-mystic-950 shadow-glow-gold'
-                    : 'bg-white/10 hover:bg-white/20 text-white'}`}>
-                    {buttonText}
+            {priceId ? (
+                // Botão de API (Stripe)
+                <button
+                    onClick={handleCheckout}
+                    disabled={loading}
+                    className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${ButtonColors}`}>
+                    {ButtonContent}
                 </button>
-            </Link>
+            ) : (
+                // Botão de Link (WhatsApp)
+                <Link href={link} className="w-full">
+                    <button className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${ButtonColors}`}>
+                        {ButtonContent}
+                    </button>
+                </Link>
+            )}
         </div>
     );
 }
