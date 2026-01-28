@@ -4,6 +4,7 @@ import { Sparkles, Calendar, ArrowLeft, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getTodayBrazil, formatDateBrazil } from '@/lib/dateUtils';
+import { generateLocalHoroscope } from '@/lib/localTemplate';
 
 // Force dynamic rendering (no ISR cache)
 export const revalidate = 0;
@@ -17,72 +18,24 @@ function getSign(slug: string) {
 // Mensagem de fallback
 const FALLBACK_MESSAGE = "A energia cósmica está em alinhamento especial neste momento. As estrelas preparam uma mensagem única para este signo. Em breve, uma leitura completa estará disponível com insights personalizados para o seu dia.";
 
-// Fetch horoscope data (versão simplificada)
+// Fetch horoscope data (versão V2 - Geração Viva Local)
 async function getHoroscope(sign: string) {
     const today = getTodayBrazil();
 
-    // Tentativa 1: Hoje (foco 'geral' - novo formato)
-    const { data: todayData } = await supabase
-        .from('horoscopes')
-        .select('*')
-        .eq('sign', sign)
-        .eq('date', today)
-        .eq('focus', 'geral')
-        .single();
+    // FORÇANDO GERAÇÃO LOCAL V2 (Bypass de Banco de Dados)
+    // Isso garante que o usuário veja os novos templates imediatamente
+    const localResult = generateLocalHoroscope({
+        sign,
+        focus: 'geral',
+        dateBr: today
+    });
 
-    if (todayData?.content) {
-        return {
-            message: todayData.content,
-            date: todayData.date,
-            sign,
-            isFallback: false
-        };
-    }
-
-    // Tentativa 2: Qualquer registro de hoje (compatibilidade com formato antigo)
-    const { data: anyToday } = await supabase
-        .from('horoscopes')
-        .select('*')
-        .eq('sign', sign)
-        .eq('date', today)
-        .limit(1)
-        .single();
-
-    if (anyToday?.content) {
-        return {
-            message: anyToday.content,
-            date: anyToday.date,
-            sign,
-            isFallback: false
-        };
-    }
-
-    // Tentativa 3: Última leitura disponível
-    const { data: lastAvailable } = await supabase
-        .from('horoscopes')
-        .select('*')
-        .eq('sign', sign)
-        .order('date', { ascending: false })
-        .limit(1)
-        .single();
-
-    if (lastAvailable?.content) {
-        return {
-            message: lastAvailable.content,
-            date: lastAvailable.date,
-            sign,
-            isFallback: true,
-            fallbackReason: 'Atualizando sua leitura, volte em instantes.'
-        };
-    }
-
-    // Tentativa 4: Mock local
     return {
-        message: FALLBACK_MESSAGE,
+        message: localResult.message,
         date: today,
         sign,
-        isFallback: true,
-        fallbackReason: 'Atualizando sua leitura, volte em instantes.'
+        isFallback: false, // Agora é oficial, não fallback
+        fallbackReason: null
     };
 }
 
@@ -169,7 +122,7 @@ export default async function SignPage({ params }: PageProps) {
 
                     {/* Mensagem Principal */}
                     <div className="prose prose-invert prose-lg max-w-none">
-                        <p className="text-slate-200 leading-relaxed text-lg whitespace-pre-line">
+                        <p className="text-slate-200 leading-relaxed text-lg whitespace-pre-line font-medium text-justify">
                             {horoscope.message}
                         </p>
                     </div>

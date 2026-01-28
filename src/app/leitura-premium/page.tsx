@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { MessageCircle, Sparkles, Star, Lock, Zap, Compass, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { MessageCircle, Sparkles, Star, Lock, Zap, Compass, ArrowRight, CheckCircle2, ShieldCheck, Gem } from 'lucide-react';
 import { siteConfig } from '@/lib/siteConfig';
 import { Meteors } from '@/components/ui/meteors';
 import { BlurFade } from '@/components/ui/blur-fade';
@@ -9,187 +9,163 @@ import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { motion } from 'framer-motion';
 
 export default function LeituraPremiumPage() {
-    const whatsappMessage = "Olá! Vim pelo site e quero receber minha Leitura Premium (Simbólica e Psicológica).";
+    // Link direto para WhatsApp (MVP de venda manual por enquanto, depois Stripe)
+    const whatsappMessage = "Olá! Quero liberar minha Leitura Premium (Amor, Dinheiro e Carreira). Como funciona o pagamento?";
 
     return (
         <div className="min-h-screen bg-mystic-950 text-slate-200 selection:bg-gold-500/30">
 
             {/* ===== HERO SECTION ===== */}
-            <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20">
+            <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-20">
                 {/* Background Effects */}
                 <div className="absolute inset-0 bg-mystic-950">
                     <div className="absolute nebula-top-left nebula-size rounded-full bg-indigo-950/40 blur-nebula animate-pulse" />
                     <div className="absolute nebula-bottom-right nebula-size rounded-full bg-gold-900/10 blur-nebula" />
-                    <div
-                        className="absolute inset-0 opacity-20"
-                        style={{
-                            backgroundImage: `radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.3), transparent),
-                               radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent)`,
-                            backgroundSize: '150px 150px',
-                        }}
-                    />
+                    <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay"></div>
                 </div>
 
-                <Meteors number={20} className="opacity-40" />
+                <Meteors number={15} className="opacity-30" />
 
                 <div className="container mx-auto px-4 relative z-10 text-center max-w-4xl">
                     <BlurFade delay={0.1}>
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-8">
-                            <Sparkles className="w-4 h-4 text-gold-400" />
-                            <span className="text-sm text-gold-300 font-medium tracking-wide uppercase">Leitura Simbólica Profunda</span>
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-8 backdrop-blur-md">
+                            <Gem className="w-4 h-4 text-gold-400" />
+                            <span className="text-sm text-gold-300 font-bold tracking-wide uppercase">Acesso Exclusivo</span>
                         </div>
                     </BlurFade>
 
                     <BlurFade delay={0.2}>
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold mb-8 leading-tight text-slate-100">
-                            Existe uma camada da sua jornada que os horóscopos comuns <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600">jamais alcançam.</span>
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold mb-6 leading-tight text-slate-100">
+                            Pare de Adivinhar o Futuro.<br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600">Comece a Criá-lo.</span>
                         </h1>
                     </BlurFade>
 
-                    <BlurFade delay={0.4}>
+                    <BlurFade delay={0.3}>
                         <p className="text-lg md:text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto">
-                            A leitura que acabou de ser vista mostra apenas a superfície simbólica do momento.
-                            Mas existe uma camada mais profunda, onde padrões emocionais, bloqueios invisíveis e oportunidades ocultas se revelam com clareza.
+                            Horóscopos de jornal são genéricos. Você precisa de um mapa de guerra.
+                            Descubra o que está oculto nas suas finanças, relacionamentos e carreira hoje.
                         </p>
                     </BlurFade>
 
-                    <BlurFade delay={0.6}>
-                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            <Link href={siteConfig.whatsapp.url(whatsappMessage)}>
-                                <ShimmerButton className="text-lg px-10 py-4 md:px-12 md:py-5 font-bold">
-                                    <span className="flex items-center gap-2">
-                                        <MessageCircle className="w-5 h-5 fill-current" />
-                                        Quero Receber Minha Leitura Premium
-                                    </span>
-                                </ShimmerButton>
-                            </Link>
-                        </motion.div>
-                        <p className="mt-4 text-xs text-slate-500 uppercase tracking-widest">
-                            Acesso exclusivo via WhatsApp
-                        </p>
-                    </BlurFade>
-                </div>
-            </section>
-
-            {/* ===== DIFFERENTIALS (WHY IT WORKS) ===== */}
-            <section className="py-24 relative overflow-hidden bg-mystic-900/50">
-                <div className="container mx-auto px-4 relative z-10">
-                    <BlurFade>
-                        <div className="text-center mb-16 max-w-3xl mx-auto">
-                            <h2 className="text-3xl md:text-4xl font-serif font-bold text-slate-100 mb-6">
-                                A maioria das previsões fala sobre eventos. <br />
-                                <span className="text-gold-400">Nós falamos sobre consciência.</span>
-                            </h2>
-                            <p className="text-slate-400 text-lg">
-                                Nosso método não tenta adivinhar o futuro. Ele revela como a energia coletiva do período interage com a essência psicológica de cada signo.
+                    <BlurFade delay={0.4}>
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <Link href="#pricing">
+                                    <ShimmerButton className="text-lg px-10 py-4 font-bold min-w-[240px]">
+                                        Liberar Minha Leitura
+                                    </ShimmerButton>
+                                </Link>
+                            </motion.div>
+                            <p className="text-sm text-slate-500 flex items-center gap-2">
+                                <ShieldCheck className="w-4 h-4" /> Garantia de 7 dias
                             </p>
                         </div>
                     </BlurFade>
-
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <FeatureCard
-                            icon={<Zap className="w-6 h-6 text-indigo-400" />}
-                            title="Astrologia Simbólica"
-                            description="Cada leitura considera o clima coletivo do período, a natureza psicológica do signo e o atrito entre essas duas forças."
-                            delay={0.1}
-                        />
-                        <FeatureCard
-                            icon={<Compass className="w-6 h-6 text-gold-400" />}
-                            title="Interpretação Emocional"
-                            description="O foco não é o que vai acontecer, mas como agir, sentir e se posicionar com mais consciência diante dos desafios."
-                            delay={0.2}
-                        />
-                        <FeatureCard
-                            icon={<MessageCircle className="w-6 h-6 text-emerald-400" />}
-                            title="Linguagem Humana"
-                            description="Sem clichês, sem previsões vazias e sem frases genéricas. Uma conversa adulta sobre seus processos internos."
-                            delay={0.3}
-                        />
-                    </div>
                 </div>
             </section>
 
-            {/* ===== DELIVERABLES (WHAT'S INCLUDED) ===== */}
-            <section className="py-24 relative bg-mystic-950">
-                <div className="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-                <div className="container mx-auto px-4 max-w-5xl">
-                    <div className="grid md:grid-cols-2 gap-12 items-center">
-
-                        <BlurFade delay={0.2}>
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-gold-500/10 blur-nebula-sm rounded-full" />
-                                <div className="relative glass p-8 rounded-2xl border border-white/10">
-                                    <div className="flex flex-col gap-6">
-                                        <DeliverableItem
-                                            text="Leitura simbólica aprofundada (PDF exclusivo)"
-                                            sub="De 600 a 900 palavras de análise profunda"
-                                        />
-                                        <DeliverableItem
-                                            text="Áudio guiado com interpretação"
-                                            sub="Para ouvir e integrar a mensagem no seu ritmo"
-                                        />
-                                        <DeliverableItem
-                                            text="Ritual simbólico de alinhamento"
-                                            sub="Prática real para sintonizar sua energia"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </BlurFade>
-
-                        <BlurFade delay={0.4}>
-                            <div className="space-y-8">
-                                <h3 className="text-3xl md:text-5xl font-serif font-bold text-slate-100 leading-tight">
-                                    O que torna essa leitura <span className="text-gold-400">única?</span>
-                                </h3>
-                                <p className="text-slate-400 text-lg leading-relaxed">
-                                    Quando compreendemos o que se move dentro, as decisões se tornam mais conscientes.
-                                    Quando reconhecemos padrões invisíveis, escolhas deixam de ser impulsivas.
-                                </p>
-                                <div className="p-6 bg-gold-900/10 border-l-2 border-gold-500 rounded-r-xl">
-                                    <p className="text-gold-200 italic font-medium">
-                                        "Essa leitura não prevê destinos. Ela oferece consciência para escolher melhor."
-                                    </p>
-                                </div>
-
-                                <Link href={siteConfig.whatsapp.url(whatsappMessage)}>
-                                    <button className="flex items-center gap-3 text-white bg-gold-600 hover:bg-gold-500 px-8 py-4 rounded-full font-bold transition-all shadow-lg hover:shadow-gold-500/20 group">
-                                        <MessageCircle className="w-5 h-5 fill-white/20" />
-                                        Quero Receber Agora
-                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                </Link>
-                            </div>
-                        </BlurFade>
-
-                    </div>
-                </div>
-            </section>
-
-            {/* ===== FINAL CTA ===== */}
-            <section className="py-20 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-gold-900/20 to-mystic-950" />
-                <Meteors number={15} />
-
-                <div className="container mx-auto px-4 relative z-10 text-center">
-                    <BlurFade>
-                        <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-6">
-                            Sua jornada de consciência começa agora.
+            {/* ===== THE 6 LAYERS (PRODUCT BREAKDOWN) ===== */}
+            <section className="py-24 bg-mystic-900/30 relative">
+                <div className="container mx-auto px-4 relative z-10">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-5xl font-serif font-bold text-slate-100 mb-4">
+                            O Que Você Recebe?
                         </h2>
-                        <p className="text-slate-400 mb-10 text-lg">
-                            Toque no botão abaixo para iniciar sua conversa no WhatsApp.
+                        <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+                            Não é apenas um texto. É uma análise completa de <span className="text-gold-400 font-bold">6 dimensões</span> da sua vida.
                         </p>
+                    </div>
 
-                        <Link href={siteConfig.whatsapp.url(whatsappMessage)}>
-                            <ShimmerButton className="text-xl px-12 py-5">
-                                <span className="flex items-center gap-2">
-                                    <MessageCircle className="w-6 h-6" />
-                                    Iniciar Leitura Premium
-                                </span>
-                            </ShimmerButton>
-                        </Link>
-                    </BlurFade>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <LayerCard
+                            icon="❤️" title="Amor & Vínculos"
+                            desc="O que está invisível na sua relação atual ou na sua busca. Não é sobre 'se vai dar certo', é sobre como fazer dar certo."
+                        />
+                        <LayerCard
+                            icon="💰" title="Dinheiro & Recursos"
+                            desc="Onde está a energia de prosperidade hoje. Pare de nadar contra a maré financeira e descubra o fluxo."
+                        />
+                        <LayerCard
+                            icon="🚀" title="Carreira & Missão"
+                            desc="A decisão estratégica para tomar nas próximas 24h. Liderança, foco e oportunidades profissionais."
+                        />
+                        <LayerCard
+                            icon="🚧" title="O Grande Bloqueio"
+                            desc="A armadilha mental que seu signo está propenso a cair hoje. Saber disso é evitar 80% dos problemas."
+                        />
+                        <LayerCard
+                            icon="💎" title="Ouro Escondido"
+                            desc="A oportunidade oculta que está na sua frente e você não está vendo por estar focado no problema errado."
+                        />
+                        <LayerCard
+                            icon="🔮" title="Conselho Secreto"
+                            desc="Uma frase mântrica personalizada (Afirmação de Poder) para alinhar sua vibração imediatamente."
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* ===== PRICING SECTION ===== */}
+            <section id="pricing" className="py-24 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-mystic-950 via-indigo-950/20 to-mystic-950" />
+
+                <div className="container mx-auto px-4 relative z-10 max-w-5xl">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-6">
+                            Escolha Seu Plano
+                        </h2>
+                        <p className="text-slate-400">
+                            Invista em você menos do que custa um café por dia.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                        {/* PLANO ÚNICO */}
+                        <PricingCard
+                            title="Leitura Avulsa"
+                            price="37"
+                            period="/única"
+                            features={[
+                                "Leitura Completa (6 Dimensões)",
+                                "Acesso Imediato",
+                                "PDF para Download",
+                                "Bônus: Ritual de Alinhamento"
+                            ]}
+                            buttonText="Comprar Apenas Uma"
+                            isPopular={false}
+                            link={siteConfig.whatsapp.url("Olá! Quero comprar a Leitura Avulsa por R$ 37.")}
+                        />
+
+                        {/* PLANO MENSAL (POPULAR) */}
+                        <PricingCard
+                            title="Clube das Estrelas"
+                            price="97"
+                            period="/mês"
+                            features={[
+                                "Leituras Premium ILIMITADAS",
+                                "Todos os dias do mês",
+                                "Acesso ao Grupo VIP",
+                                "Desconto em Mapas ASTRAIS",
+                                "Cancelamento a qualquer momento"
+                            ]}
+                            buttonText="Assinar e Economizar"
+                            isPopular={true}
+                            link={siteConfig.whatsapp.url("Olá! Quero assinar o Clube das Estrelas por R$ 97/mês.")}
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* ===== FAQ ===== */}
+            <section className="py-20 bg-mystic-900/20">
+                <div className="container mx-auto px-4 max-w-3xl text-center">
+                    <h2 className="text-2xl font-serif font-bold text-slate-200 mb-8">Dúvidas Frequentes</h2>
+                    <div className="space-y-6 text-left">
+                        <FaqItem q="Como recebo a leitura?" a="Imediatamente após a confirmação. Ela aparece na sua área de membros e também enviamos um resumo por WhatsApp." />
+                        <FaqItem q="Serve para qualquer signo?" a="Sim! O sistema analisa seu signo solar (essência) e o trânsito planetário atual para gerar a leitura." />
+                        <FaqItem q="Posso cancelar a assinatura?" a="Sim, a qualquer momento. Sem multas, sem letras miúdas. Você fica apenas se estiver vendo valor." />
+                    </div>
                 </div>
             </section>
 
@@ -197,30 +173,59 @@ export default function LeituraPremiumPage() {
     );
 }
 
-function FeatureCard({ icon, title, description, delay }: { icon: React.ReactNode, title: string, description: string, delay: number }) {
+function LayerCard({ icon, title, desc }: { icon: string, title: string, desc: string }) {
     return (
-        <BlurFade delay={delay}>
-            <div className="h-full p-8 rounded-2xl bg-white/5 border border-white/5 hover:border-gold-500/30 transition-colors group">
-                <div className="w-12 h-12 rounded-xl bg-mystic-950 flex items-center justify-center mb-6 border border-white/10 group-hover:scale-110 transition-transform">
-                    {icon}
-                </div>
-                <h3 className="text-xl font-serif font-bold text-slate-100 mb-3">{title}</h3>
-                <p className="text-slate-400 leading-relaxed">{description}</p>
+        <BlurFade>
+            <div className="h-full p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-gold-500/30 transition-all hover:-translate-y-1 group">
+                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">{icon}</div>
+                <h3 className="text-xl font-serif font-bold text-slate-100 mb-2">{title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{desc}</p>
             </div>
         </BlurFade>
     );
 }
 
-function DeliverableItem({ text, sub }: { text: string, sub: string }) {
+function PricingCard({ title, price, period, features, buttonText, isPopular, link }: any) {
     return (
-        <div className="flex items-start gap-4">
-            <div className="mt-1 w-6 h-6 flex-shrink-0 rounded-full bg-gold-500/20 flex items-center justify-center text-gold-400">
-                <CheckCircle2 className="w-4 h-4" />
+        <div className={`relative p-8 rounded-3xl border ${isPopular ? 'border-gold-500 bg-gold-900/10' : 'border-white/10 bg-white/5'} flex flex-col h-full`}>
+            {isPopular && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gold-500 text-mystic-950 text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
+                    Mais Escolhido
+                </div>
+            )}
+
+            <h3 className="text-xl font-medium text-slate-300 mb-2">{title}</h3>
+            <div className="flex items-baseline gap-1 mb-6">
+                <span className="text-sm text-slate-500">R$</span>
+                <span className="text-5xl font-bold text-slate-100">{price}</span>
+                <span className="text-sm text-slate-500">{period}</span>
             </div>
-            <div>
-                <h4 className="text-lg font-semibold text-slate-200">{text}</h4>
-                <p className="text-sm text-slate-500">{sub}</p>
-            </div>
+
+            <ul className="space-y-4 mb-8 flex-1">
+                {features.map((feat: string, i: number) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
+                        <CheckCircle2 className={`w-5 h-5 flex-shrink-0 ${isPopular ? 'text-gold-400' : 'text-slate-500'}`} />
+                        {feat}
+                    </li>
+                ))}
+            </ul>
+
+            <Link href={link} className="w-full">
+                <button className={`w-full py-4 rounded-xl font-bold transition-all ${isPopular
+                    ? 'bg-gold-500 hover:bg-gold-400 text-mystic-950 shadow-glow-gold'
+                    : 'bg-white/10 hover:bg-white/20 text-white'}`}>
+                    {buttonText}
+                </button>
+            </Link>
+        </div>
+    );
+}
+
+function FaqItem({ q, a }: { q: string, a: string }) {
+    return (
+        <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+            <h4 className="font-bold text-gold-300 mb-2">{q}</h4>
+            <p className="text-slate-400 text-sm">{a}</p>
         </div>
     );
 }

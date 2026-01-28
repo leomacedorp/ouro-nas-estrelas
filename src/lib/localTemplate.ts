@@ -1,11 +1,12 @@
 /**
- * Local Template Generator - PREMIUM VERSION
- * Fallback de alta qualidade com variação textual massiva
- * Tom: Místico moderno + psicológico + empático
+ * Local Template Generator - PREMIUM VERSION (V2)
+ * Fallback de alta qualidade com narrativas completas e fluidas
+ * Tom: Orientador Emocional (Místico moderno + psicológico + empático)
  */
 
 // ==================== OPENERS POR SIGNO ====================
 // 6 variações por signo = 72 frases
+// Mantidos da versão anterior pois funcionam bem como "gancho"
 
 const OPENERS: Record<string, string[]> = {
     aries: [
@@ -106,46 +107,398 @@ const OPENERS: Record<string, string[]> = {
     ]
 };
 
-// ==================== BODIES POR FOCO ====================
-// 10 variações por foco = 30 frases
+// ==================== BODIES RICOS POR SIGNO (V2) ====================
+// Textos completos que funcionam como leitura única e fluida
+// Estrutura: [Energia Geral] -> [Sentimento Interno] -> [Trabalho/Relações] -> [Conselho]
 
-const BODIES: Record<string, string[]> = {
-    amor: [
-        'Nos vínculos afetivos, há convite para presença verdadeira. Não basta estar junto — é preciso estar inteiro.',
-        'As relações pedem escuta. Daquelas que ouvem além das palavras, que captam o não dito.',
-        'O amor que cura é o que aceita imperfeições. Tanto as próprias quanto as alheias.',
-        'Há espaço para vulnerabilidade hoje. Mostrar-se como se é, sem máscaras, sem defesas.',
-        'Os laços se fortalecem quando há verdade circulando entre as pessoas.',
-        'Cuidar do outro começa em cuidar de si. Amor não é sacrifício, é troca.',
-        'As conversas importantes são as que deixam espaço para silêncio também.',
-        'Há diferença entre estar sozinho e sentir-se só. Hoje convida a sentir essa diferença.',
-        'O coração sabe quando uma conexão é genuína. Confiar nessa certeza vale a pena.',
-        'Relacionar-se é arte de equilibrar proximidade e autonomia. Nem muito perto que sufoca, nem muito longe que esfria.'
-    ],
-    dinheiro: [
-        'No campo material, clareza é poder. Saber exatamente onde se está já é meio caminho andado.',
-        'A prosperidade flui através de canais limpos. Vale revisar onde há bloqueio, onde há vazamento.',
-        'O dinheiro é energia. E como toda energia, responde à intenção com que é movimentado.',
-        'Há diferença entre ganhar e acumular. Às vezes é preciso organizar primeiro, ampliar depois.',
-        'Os recursos disponíveis são suficientes quando há criatividade na gestão.',
-        'Investir em si — em conhecimento, em saúde, em equilíbrio — é sempre retorno garantido.',
-        'A segurança financeira nasce de escolhas consistentes, não de golpes de sorte.',
-        'Vale olhar para os gastos com honestidade. Nem julgamento, nem negação — apenas clareza.',
-        'O trabalho rende mais quando há alinhamento entre o que se faz e o que se acredita.',
-        'Pequenos ajustes somados criam grandes mudanças. Nada precisa ser revolucionado de uma vez.'
-    ],
-    carreira: [
-        'No trabalho, competência se constrói com repetição consciente. É fazer de novo, mas aprendendo sempre.',
-        'Há espaço para contribuir com o que só você tem para oferecer. Singularidade é valor.',
-        'As metas fazem sentido quando conectadas com propósito maior. Senão vira só lista de tarefas.',
-        'Vale pausar para avaliar: o caminho ainda serve? Ou é hora de ajustar rota?',
-        'O reconhecimento virá, mas não pode ser a única motivação. Fazer bem feito já vale por si.',
-        'Colaborar é mais produtivo que competir. Especialmente consigo mesmo.',
-        'Há sabedoria em pedir ajuda quando necessário. Ninguém constrói nada sozinho.',
-        'O cansaço quando ignorado vira esgotamento. Descanso estratégico é eficiência.',
-        'As oportunidades aparecem para quem está atento, mas também para quem está preparado.',
-        'Construir carreira sustentável exige paciência com o processo. O atalho geralmente cobra depois.'
-    ]
+const BODIES_ARIES: string[] = [
+    `Há uma sensação no ar de que o ritmo do mundo está lento demais para a sua vontade de realizar. Parece que a vida decidiu testar sua paciência justamente quando você tem um tanque cheio de energia para queimar.
+
+    Você pode perceber uma irritabilidade surgindo sem aviso prévio, não por maldade, mas por uma necessidade visceral de movimento. Tende a surgir uma vontade de chutar o balde e fazer tudo sozinho, só para não depender do tempo dos outros.
+
+    No trabalho, a burocracia ou a indecisão de colegas pode ser o gatilho. Nas relações, você pode sentir que está falando grego quando pede objetividade. O silêncio do outro pode soar como afronta para a sua clareza direta.
+
+    Essa inquietação não é defeito, é sua bússola apontando que você tem energia de sobra. Ao invés de brigar com o trânsito parado, use essa força para abrir um caminho lateral. É um momento de ajuste entre sua velocidade interna e a realidade externa.
+
+    Conselho do dia:
+    Ação sem direção é apenas desperdício de energia. Respire fundo, mire no alvo e só então dispare. Sua força é preciosa demais para ser gasta com o vento.`,
+
+    `A energia de recomeço está pulsando ao seu redor, mas algo ainda te segura. É como estar com o pé no acelerador e o freio de mão puxado ao mesmo tempo. Essa tensão gera calor, e se não cuidada, gera explosão.
+
+    Internamente, você pode estar se sentindo como um guerreiro sem guerra. Sobra coragem, falta onde aplicar. Tende a surgir uma autocobrança por resultados imediatos que nem sempre dependem só de você.
+
+    Nas relações, cuidado para que sua honestidade não vire arma. Às vezes, a verdade dita no calor do momento queima em vez de iluminar. O desafio hoje é ser firme sem ser duro.
+
+    Esse desconforto é crescimento. Você está aprendendo que liderar a si mesmo é a batalha mais difícil. Organizar seus impulsos antes de agir é o que separa a impulsividade da iniciativa real.
+
+    Conselho do dia:
+    Seja o pioneiro da sua própria vida, mas lembre-se que todo pioneiro precisa saber ler o terreno antes de avançar.`,
+
+    `Você sente que poderia resolver os problemas do mundo em dez minutos se deixassem você assumir o comando. A autoconfiança está alta, mas o mundo pede colaboração, e isso te exige uma humildade que incomoda.
+
+    É possível sentir um cansaço mental vindo de tanta espera. Sua natureza é de faísca, de início, e processos longos drenam sua vitalidade.
+
+    No trabalho, procure tarefas curtas que você possa começar e terminar no mesmo dia. Ver o "check" na lista vai te devolver a sanidade. Nas relações, convide o outro para a ação — uma caminhada, um projeto — em vez de ficar discutindo a relação. O movimento cura tudo hoje.
+
+    Conselho do dia:
+    Não espere a aprovação de ninguém para validar sua força. Faça por você, e o reconhecimento virá como consequência natural.`
+];
+
+const BODIES_TOURO: string[] = [
+    `Este é um período em que a sua necessidade de segurança pode ser confundida com estagnação, mas não se engane: você está apenas fincando raízes mais profundas. Questões que envolvem seus recursos materiais e seu valor pessoal estão no centro do palco.
+
+    Você pode sentir uma resistência interna em aceitar mudanças de planos de última hora. Não é teimosia, é preservação. Você sabe intuitivamente que construir algo durável leva tempo, e ver os outros correndo sem direção pode te causar um cansaço mental que nem é seu.
+
+    No trabalho, foque no tangível. Projetos abstratos demais podem te irritar agora. Você quer ver o resultado, tocar na matéria. A qualidade do que você entrega é sua maior moeda de troca quando todos estão entregando pressa.
+
+    Nas relações, o silêncio compartilhado vale mais que mil promessas. Você está buscando lealdade prática — alguém que esteja lá quando a coisa aperta, não só na festa.
+
+    Conselho do dia:
+    Não ceda à pressão de quem vive no urgente. Seu tempo é o tempo da natureza, e ele nunca falha. Mantenha os pés no chão.`,
+
+    `Há uma suavidade disponível para você hoje, se permitir desacelerar. O mundo cobra performance, mas seu corpo pede calma e nutrição. Não ignore seus sentidos; eles são sua tecnologia mais avançada para ler a realidade.
+
+    Pode surgir uma preocupação com o futuro financeiro, não por falta, mas pelo desejo de garantir que nada falte aos seus. Essa prudência é sábia, desde que não vire medo paralisante.
+
+    Nas relações, o toque físico ou um presente pensado com carinho comunicam mais que discursos. Tente trazer beleza para o seu ambiente hoje — uma flor, um cheiro bom — isso acalma seu sistema nervoso instantaneamente.
+
+    Conselho do dia:
+    O prazer é produtivo. Estar bem, comer bem e dormir bem recarrega sua bateria para as batalhas reais. Cuide do seu jardim interno.`,
+
+    `A estabilidade que você tanto preza está sendo testada por pequenas oscilações externas. Pode parecer que o chão está tremendo, mas são apenas ajustes de acomodação. Suas fundações são sólidas.
+
+    Você tende a sentir um desejo de simplificar a vida. "Para que tanta complicação?" é a pergunta que ronda sua mente. E você está certo. O essencial é simples.
+
+    No trabalho, seu método consistente será a âncora no meio do caos alheio. Mantenha-se fiel ao que você sabe que funciona. Nas relações, sua paciência é um porto seguro para quem está à deriva, mas não deixe abusarem dela.
+
+    Conselho do dia:
+    Valorize o que já é seu. A gratidão pelo que já foi construído é o cimento que fortalece a próxima laje.`
+];
+
+const BODIES_GEMEOS: string[] = [
+    `Sua mente está operando em alta velocidade, captando sinais que a maioria ignora. É um momento de extrema fertilidade intelectual, mas com risco de dispersão. Muitas abas abertas no navegador da sua vida podem travar o sistema se você não priorizar.
+
+    Você pode sentir uma inquietação, como se estivesse perdendo algo importante em outro lugar. Isso é o medo de ficar de fora batendo na porta. Mas lembre-se: estar em todo lugar é não estar em lugar nenhum.
+
+    Nas conversas, seu poder de persuasão está magnético. É um ótimo dia para negociar, escrever ou ensinar. Mas cuidado com a superficialidade nas relações íntimas; ouvir de verdade dá mais trabalho que falar, mas é o que conecta corações.
+
+    Esse fluxo mental intenso pede canais de saída. Escreva, fale, grave áudios. Não deixe a energia estagnar na cabeça, ou ela vira ansiedade.
+
+    Conselho do dia:
+    Escolha uma única coisa para aprofundar hoje. Apenas uma. Deixe a curiosidade te guiar, mas deixe a disciplina te manter no caminho até o fim.`,
+
+    `A dualidade é sua natureza, e hoje ela está evidente. Uma parte de você quer sair e ver gente, a outra quer silêncio para processar tanta informação. Não tente resolver esse conflito; apenas navegue entre esses dois estados com leveza.
+
+    Pode surgir uma notícia ou mensagem inesperada que muda o tom do seu dia. Sua adaptabilidade será seu superpoder. Enquanto outros reclamam da mudança de planos, você já viu a oportunidade nela.
+
+    No trabalho e nas relações, sua clareza vale ouro. Você consegue explicar o inexplicável. Use esse dom para deshazer mal-entendidos, não para criar novos jogos de palavras.
+
+    Conselho do dia:
+    A palavra tem poder de criação. Use sua comunicação para construir pontes, não para espalhar ruído. Fale o que constrói.`,
+
+    `O mundo parece um quebra-cabeça interessante hoje, e você quer montar todas as peças. Sua curiosidade é um motor potente de renovação. O que estava velho e chato ganha nova cor sob seu olhar.
+
+    Tende a surgir uma impaciência com gente lenta de raciocínio. Respire. Nem todo mundo tem o seu processador. A inteligência também se mostra na capacidade de traduzir o complexo para o simples.
+
+    Nas relações, a diversão é o elo. Rir junto resolve tensões que mil discussões sérias não resolveriam. Traga leveza para a mesa.
+
+    Conselho do dia:
+    Troque a certeza pela pergunta. "Eu sei" fecha portas; "O que mais é possível aqui?" abre universos.`
+];
+
+const BODIES_CANCER: string[] = [
+    `Este é um período em que você tende a ficar mais reservado e reflexivo. Questões ligadas à segurança emocional e às relações do dia a dia pedem mais atenção e maturidade.
+
+    Você pode perceber uma vontade maior de se afastar de conversas vazias e situações que exigem explicações demais. Não é tristeza, nem frieza. É discernimento. Você está mais consciente de onde vale — e onde não vale — colocar sua energia.
+
+    No ambiente profissional, o dia pode trazer pequenos atritos ou irritações. Não porque você esteja buscando conflito, mas porque sua tolerância ao desrespeito está menor. Diferente de outros momentos, você não quer agradar a todos. Quer funcionar bem, em paz, e isso já muda sua postura.
+
+    Nas relações pessoais, você continua leal e cuidadoso com quem ama, mas menos disponível para dramas externos. Pode parecer distanciamento, mas é apenas uma forma de se proteger emocionalmente sem precisar levantar muros.
+
+    Conselho do dia:
+    Não reaja no impulso, principalmente no trabalho. Observe, filtre e responda apenas ao que realmente merece sua atenção. O silêncio, hoje, é mais poderoso do que qualquer explicação.`,
+
+    `A maré emocional está alta, trazendo memórias e sentimentos antigos à tona. Não se assuste; é apenas o seu inconsciente fazendo uma limpeza necessária. O que dói hoje é o que está sendo curado para amanhã.
+
+    Sua intuição está afiada como uma lâmina. Se sentir que algo está errado em um ambiente ou com uma pessoa, confie. Você tem um radar natural que a lógica não consegue explicar e que raramente falha.
+
+    Nas relações, o desejo de nutrir e ser nutrido é forte. Mas cuidado para não dar o que você não tem. O copo precisa estar cheio para transbordar.
+
+    Conselho do dia:
+    Acolha a si mesmo como você acolheria um amigo querido. Se dê o colo que você costuma dar aos outros. Hoje, a prioridade é você.`,
+
+    `Há uma força silenciosa em você hoje. Enquanto o mundo grita lá fora, você encontra um refúgio na sua própria casca. Isso não é fuga, é estratégia de recarga.
+
+    Você pode sentir uma necessidade de organizar seu espaço físico — sua casa, sua mesa. Essa organização externa reflete um desejo de ordem interna. Arrumar as gavetas acalma o coração.
+
+    No trabalho e na vida, sua memória é um trunfo. Você lembra do que foi combinado, do que foi sentido. Use isso para manter a coerência nas relações, cobrando com gentileza mas com firmeza.
+
+    Conselho do dia:
+    Suas emoções são sua bússola, não sua âncora. Deixe que elas te guiem, mas não deixe que elas te parem.`
+];
+
+const BODIES_LEAO: string[] = [
+    `Há uma energia de visibilidade pairando sobre você. Não é apenas sobre ser visto, mas sobre como você escolhe iluminar o ambiente. Sua generosidade natural está amplificada, atraindo pessoas que precisam da sua força.
+
+    Internamente, porém, cuidado com a armadilha da validação. Você pode perceber uma carência de elogios ou reconhecimento. Pergunte-se: "Estou fazendo isso porque gosto ou porque quero aplausos?". A resposta muda tudo.
+
+    No trabalho, assuma a liderança de projetos que parecem travados. Sua confiança destravará portas que a dúvida alheia manteve fechadas. Apenas cuide para não ofuscar quem está tentando colaborar.
+
+    Nas relações, seu calor é irresistível. Mas o dia pede reciprocidade. Veja se você não está doando sol para quem só oferece sombra. Amor próprio é saber o valor da sua entrega.
+
+    Conselho do dia:
+    Brilhe, mas brilhe para aquecer, não para cegar. A verdadeira majestade serve antes de ser servida.`,
+
+    `Sua criatividade está pedindo passagem. Ideias que pareciam bobas ontem hoje ganham contorno de genialidade. Confie na sua intuição artística e lúdica; o mundo está sério demais e precisa da sua cor.
+
+    Pode haver um momento de orgulho ferido em uma conversa próxima. Respire. Nem toda crítica é ataque à sua identidade. Às vezes, é apenas um ponto de vista diferente. Sua segurança não depende da concordância unânime.
+
+    No dia a dia, a vida parece um palco, e você quer desempenhar seu papel com excelência. Isso inspira os outros. Continue performando sua melhor versão, não para a plateia, mas pela arte de viver bem.
+
+    Conselho do dia:
+    A vida é palco, mas você também precisa ser plateia de si mesmo. Apláuda suas pequenas vitórias silenciosas.`,
+
+    `A coragem é seu estado natural, mas hoje ela pede sabedoria. Você sente que pode enfrentar qualquer leão, mas talvez não precise. Escolher qual batalha NÃO lutar é tão heroico quanto entrar na arena.
+
+    Tende a surgir uma impaciência com a mediocridade. Você quer o melhor, o belo, o grandioso. Use esse padrão alto para elevar seus próprios projetos, mas tenha compaixão com quem ainda está aprendendo a voar.
+
+    Nas relações, a lealdade é tudo para você. Deixe claro quem são os seus protegidos. Sua alcateia se sente segura sob sua guarda, e essa proteção retorna para você em forma de respeito.
+
+    Conselho do dia:
+    Seu coração é nobre. Não deixe que a frieza do mundo endureça sua capacidade de amar grandiosamente.`
+];
+
+const BODIES_VIRGEM: string[] = [
+    `Sua mente analítica está afiada como nunca. Você enxerga os detalhes que 99% das pessoas deixam passar, e isso é um superpoder. Use essa clareza para organizar o caos ao seu redor, seja na mesa de trabalho ou nos pensamentos.
+
+    Porém, cuidado para que a análise não vire paralisia. Existe um ponto ótimo entre o "feito" e o "perfeito", e hoje o universo pede que você entregue o "feito". A crítica interna pode estar falando alto demais; baixe o volume dela.
+
+    No trabalho, sua eficiência será notada, mesmo que não seja verbalizada. Você é a engrenagem que faz a máquina funcionar. Mas não deixe que a competência vire carga excessiva. Saber dizer "não" também é organização.
+
+    Nas relações, gestos de serviço são sua linguagem de amor. Mas observe se o outro entende essa língua. Às vezes, um abraço desajeitado vale mais que uma vida inteira organizada.
+
+    Conselho do dia:
+    Abrace a imperfeição como parte do processo. O mundo é bagunçado, e tentar controlar cada poeira só vai te exaustar. Solte um pouco.`,
+
+    `Há uma necessidade de purificação no ar. Seja na alimentação, na rotina ou nas energias que você permite entrar. Seu corpo é seu templo e ele está pedindo cuidado sagrado. Ouça os sinais físicos; eles são mensageiros da sua intuição prática.
+
+    A utilidade é seu guia hoje. Se algo não tem função ou propósito claro, elimine. Isso vale para objetos, tarefas e até conversas circulares. Sua paz mental depende dessa limpeza e simplificação.
+
+    Você pode sentir uma irritação com a desordem alheia. Lembre-se que o caos do outro é do outro. Organize seu metro quadrado e deixe que seu exemplo fale mais que sua crítica.
+
+    Conselho do dia:
+    Menos é mais. Simplifique sua agenda, simplifique suas expectativas. A clareza mora no simples.`,
+
+    `O dia pede terra, pé no chão e realismo. Enquanto outros sonham, você planeja. Essa capacidade de ver o passo a passo é o que vai transformar intenções em realidade.
+
+    Tende a surgir uma preocupação com a saúde ou o bem-estar diário. É um ótimo momento para iniciar aquele hábito saudável que você vem adiando. Pequenos ajustes na rotina terão impacto gigante a longo prazo.
+
+    Nas relações, sua honestidade é um bálsamo, mas precisa vir embrulhada em gentileza. A verdade cirúrgica cura, mas também corta. Seja o médico que cura, não o que fere.
+
+    Conselho do dia:
+    Servir é nobre, mas servidão não. Saiba a hora de parar de trabalhar pelos outros e fazer algo apenas pelo seu prazer.`
+];
+
+const BODIES_LIBRA: string[] = [
+    `O equilíbrio não é um estado estático, é um movimento constante de ajuste. Hoje, você pode sentir os pratos da balança oscilando. Relações, trabalho, desejos pessoais — tudo parece pedir atenção ao mesmo tempo e na mesma medida.
+
+    A tendência de evitar conflitos para manter a paz pode ser uma armadilha hoje. Paz a qualquer custo não é paz, é submissão. Se algo te incomoda, fale. Sua diplomacia natural garantirá que a mensagem chegue sem destruir pontes.
+
+    No campo afetivo, o charme está alto, mas cuidado com a indecisão. Ficar em cima do muro pode fazer você perder a vista de ambos os lados. Escolher é também renunciar, e isso faz parte de crescer.
+
+    A beleza é nutrição para sua alma. Tire um momento para apreciar algo esteticamente agradável — uma música, uma flor, uma arte. Isso recalibra seu sistema nervoso instantaneamente.
+
+    Conselho do dia:
+    Não se diminua para caber no mundo de ninguém. Sua harmonia interna vale mais do que a aprovação externa de quem não vive sua vida.`,
+
+    `Parcerias estão em foco. Sozinho você vai rápido, mas acompanhado você vai mais longe e se diverte mais. Olhe ao redor e veja quem soma com sua energia. Colaboração é a palavra-chave do seu sucesso hoje.
+
+    Justiça é um tema sensível agora. Você pode se ver mediando uma situação ou defendendo um ponto de vista ético. Confie no seu senso de imparcialidade; ele é raro e necessário em tempos de extremos.
+
+    Nas relações, o espelhamento é forte. O que te irrita no outro pode ser algo que você precisa olhar em si mesmo. Use o encontro como ferramenta de autoconhecimento.
+
+    Conselho do dia:
+    Seja o espelho que reflete o melhor do outro, mas não esqueça de olhar sua própria imagem com carinho e aprovação.`,
+
+    `A vida social chama, mas uma parte sua pede recolhimento para reencontrar o próprio eixo. É difícil dizer não quando se quer agradar, mas hoje o "não" para o outro pode ser o "sim" para você.
+
+    Você pode perceber uma clareza mental maior quando está em ambientes harmoniosos. Se o caos reinar ao redor, retire-se. Sua mente precisa de estética e silêncio para funcionar bem.
+
+    No amor e nas parcerias, o idealismo pode se chocar com a realidade. As pessoas têm defeitos. Aceitar a humanidade do outro (e a sua) é o verdadeiro romance maduro.
+
+    Conselho do dia:
+    A verdadeira elegância é ser gentil consigo mesmo quando ninguém está vendo.`
+];
+
+const BODIES_ESCORPIAO: string[] = [
+    `As profundezas te chamam. Você não tem paciência para o raso hoje. Conversas superficiais, sorrisos amarelos e protocolos sociais podem te causar uma irritação quase física. Você quer verdade, doa a quem doer.
+
+    Sua intuição está operando em frequência máxima. Você sente o que não foi dito, lê as entrelinhas. Use esse raio-X emocional para proteger seus interesses, mas cuidado para não criar fantasmas ondem eles não existem. Nem todo silêncio é uma conspiração.
+
+    Transformação é seu sobrenome. Algo que estava estagnado pode finalmente morrer hoje para dar lugar ao novo. Não segure o que quer ir embora. Deixe ir. O vácuo que fica é o espaço onde a nova vida vai crescer.
+
+    Nas relações, a intensidade é alta. O desejo de fusão emocional é belo, mas lembre-se de manter sua individualidade. Amar não é desaparecer no outro.
+
+    Conselho do dia:
+    O que você resiste, persiste. Olhe no olho dos seus medos hoje; você vai descobrir que eles são menores do que a sua sombra projetava.`,
+
+    `Poder pessoal e controle estão em pauta. Você sabe o que quer e tem a força de vontade para conseguir. Mas a estratégia silenciosa funciona melhor que o confronto direto. Mova-se nas sombras hoje; deixe que os resultados façam o barulho.
+
+    A cura emocional está disponível. Feridas antigas podem latejar, não para doer, mas para lembrar que precisam ser limpas definitivamente. Não tenha medo de sentir tudo; você é feito de material resistente.
+
+    Nas relações, a confiança é o tema. Se ela foi quebrada, avalie se vale o reparo. Se está intacta, aprofunde o laço. Você não sabe amar pela metade, e isso é sua virtude.
+
+    Conselho do dia:
+    Sua vulnerabilidade é sua maior força, desde que mostrada para quem merece. Confie desconfiando, mas confie na vida.`,
+
+    `Há um magnetismo natural emanando de você. As pessoas se sentem atraídas pelo seu mistério sem saberem por quê. Use essa influência com responsabilidade para liderar ou transformar uma situação difícil.
+
+    Você pode sentir uma necessidade de investigar, de saber o "porquê" das coisas. Essa mente investigativa é ótima para resolver problemas complexos no trabalho, mas péssima para a paz nos relacionamentos. Às vezes, não há segredo nenhum.
+
+    A regeneração é possível. Se você se sente cansado, saiba que tem uma bateria reserva que poucos signos têm. Um momento de introspecção profunda te devolve a força total.
+
+    Conselho do dia:
+    Solte o controle. A vida sabe o que faz. Às vezes, deixar o barco correr a correnteza leva a lugares melhores do que o remo forçado.`
+];
+
+const BODIES_SAGITARIO: string[] = [
+    `O horizonte te chama como um canto de sereia. Há um desejo pulsante de expansão, de ir além do conhecido. A rotina pequena te sufoca hoje. Mas cuidado: a verdadeira viagem pode ser para dentro, não para fora.
+
+    Sua fé natural é seu combustível, mas ela precisa de rodas para andar na terra. Sonhar alto é ótimo, desde que você tenha um plano para construir a escada até lá. O otimismo sem ação é apenas imaginação fértil.
+
+    No trabalho, sua visão macro é valiosa. Enquanto todos olham para o buraco na estrada, você vê onde a estrada vai dar. Compartilhe essa visão, mas tenha paciência com quem precisa olhar para o buraco para consertá-lo.
+
+    Nas relações, a liberdade é inegociável. Mas lembre-se que liberdade não é ausência de compromisso, é escolher onde ficar. Quem te ama entende suas asas, desde que você volte para o ninho de vez em quando.
+
+    Conselho do dia:
+    A sabedoria não está apenas nos livros ou nas viagens, está na capacidade de encontrar sentido no cotidiano. Seja o filósofo da sua própria rotina.`,
+
+    `A verdade é seu valor supremo, e hoje ela quer sair da sua boca sem filtro. Cuidado. A honestidade brutal pode ser apenas brutalidade disfarçada de virtude. A verdade dita sem amor é uma arma, não um presente. Use seu arco para apontar caminhos, não para ferir.
+
+    Há uma energia de entusiasmo que contagia. Use isso para levantar o astral de quem está ao seu redor. Você tem o dom de fazer a vida parecer uma aventura digna de ser vivida, mesmo numa terça-feira comum.
+
+    O aprendizado chama. Pode ser um livro, um curso ou uma conversa com um estranho. Alimente sua mente com algo novo e sua alma agradecerá.
+
+    Conselho do dia:
+    Mire nas estrelas, mas mantenha os pés na lama se for preciso. A flecha só voa longe se o arqueiro estiver firme no chão.`,
+
+    `O sentido da vida é o tema que ronda seus pensamentos. Você quer propósito, quer missão. Trabalhar só pelo dinheiro parece pouco hoje. Busque conectar o que você faz com algo maior que você.
+
+    Você pode sentir uma vontade de exagerar — na comida, nos gastos, nas promessas. Júpiter expande tudo que toca, inclusive os problemas. Moderação não é sua palavra favorita, mas hoje ela é sua amiga necessária.
+
+    Nas relações, busque parceiros de aventura. Alguém que tope suas ideias loucas e ainda acrescente mais uma. A vida a dois tem que ser divertida, senão não vale o ticket.
+
+    Conselho do dia:
+    Sua alegria é medicina. Não deixe ninguém apagar seu sorriso, ele é a prova de que a vida vale a pena.`
+];
+
+const BODIES_CAPRICORNIO: string[] = [
+    `A montanha parece alta hoje, mas você nasceu para escalar. Sua ambição não é vaidade, é necessidade de construção. Você olha para o topo e sabe que vai chegar lá, não importa quanto tempo leve. A persistência é seu talento natural.
+
+    Internamente, a cobrança pode estar excessiva. Você é seu pior chefe. Dê uma folga para si mesmo. O mundo não vai desabar se você descansar por algumas horas. Pelo contrário, estruturas precisam de manutenção para não ruir.
+
+    No trabalho, sua competência é inquestionável. Mas cuidado para não centralizar tudo por achar que "só você faz direito". Delegar é a prova máxima de liderança madura. Confie no processo que você mesmo criou.
+
+    Nas relações, você demonstra amor com atos, não com palavras. Mas saiba que às vezes as pessoas precisam ouvir. Um "eu te amo" falado tem um poder que nenhuma conta paga consegue substituir. Aqueça um pouco essa fachada séria.
+
+    Conselho do dia:
+    O tempo é seu aliado, não seu inimigo. Tudo que é sólido leva tempo para curar. Respeite o ritmo das estações, inclusive as internas.`,
+
+    `A responsabilidade pesa, mas também enobrece. Você sente o peso do mundo nas costas, e estranhamente, isso te dá força. Hoje é dia de revisar suas estruturas: o que é essencial fica, o que é supérfluo vai. Otimização é a palavra.
+
+    Sua autoridade natural está em evidência. As pessoas vão te procurar buscando direção e segurança. Ofereça sua sabedoria pragmática, mas não carregue a mochila de ninguém. Cada um precisa aprender a subir sua própria ladeira.
+
+    Pode haver um sentimento de solidão no topo. Lembre-se que construir impérios sozinho é possível, mas sem graça. Abra espaço para quem quer somar tijolos com você.
+
+    Conselho do dia:
+    O sucesso é uma maratona, não um sprint. Beba água, ajuste o passo e continue. A vista lá de cima vai valer a pena a caminhada.`,
+
+    `O mundo material pede ordem. Planilhas, metas, prazos — hoje você nada de braçada nesse mar. Use essa eficiência para resolver pendências antigas que estavam drenando sua energia mental.
+
+    Cuidado com o pessimismo disfarçado de realismo. Ver os defeitos é útil para consertar, mas focar só neles impede de ver as oportunidades. Permita-se um pouco de otimismo calculado.
+
+    Nas relações, a maturidade é exigida. Jogos infantis te cansam. Você quer o real, o concreto, o preto no branco. Expresse essa necessidade de clareza, o outro agradecerá a honestidade.
+
+    Conselho do dia:
+    Sua reputação é construída no que você faz quando está cansado. Descanse, mas não desista. Você está quase lá.`
+];
+
+const BODIES_AQUARIO: string[] = [
+    `Sua mente está anos-luz à frente, habitando um futuro que os outros ainda nem imaginam. Isso traz genialidade, mas também solidão. Hoje, o desafio é traduzir suas visões para a língua dos mortais sem perder a paciência.
+
+    Você sente uma necessidade quase física de quebrar padrões. A rotina te sufoca, as regras sem sentido te irritam. Use essa energia rebelde para inovar, não apenas para contestar. Criar o novo é mais poderoso do que apenas destruir o velho.
+
+    No coletivo, você brilha. Sua turma, sua comunidade, seus amigos — é aí que você recarrega. Mas não esqueça das relações um a um. A intimidade exige um tipo de presença olho no olho que o grupo não supre.
+
+    A frieza que às vezes te acusam de ter é apenas sua forma de ver as coisas com clareza, sem o drama emocional. Mas hoje, tente descer da torre de controle e sentir junto. A empatia é a inteligência do coração.
+
+    Conselho do dia:
+    Ser diferente é sua natureza, mas conectar é sua necessidade. Encontre a tribo que entende seu idioma estranho e celebre o pertencimento.`,
+
+    `A eletricidade mental está alta. Insights caem como raios sobre sua cabeça. Anote tudo. O que parece loucura hoje será o óbvio uluante de amanhã. Você é o canal por onde o novo entra no mundo.
+
+    Cuidado com a teimosia intelectual. Só porque você vê o futuro, não significa que os métodos do passado não tenham valor. Integre a tradição com a inovação para criar algo sustentável.
+
+    Você pode sentir um distanciamento das questões emocionais "pegajosas". É sua defesa. Mas lembre-se que somos seres biológicos que precisam de abraço. Não vire um robô por medo de sentir.
+
+    Conselho do dia:
+    A liberdade que você tanto preza começa na mente. Liberte-se da necessidade de ser "o do contra" e apenas seja quem você é.`,
+
+    `O senso de humanidade pulsa em você. Você se importa com causas, com o todo, com o futuro. Use essa visão ampla para resolver conflitos pequenos — olhe de cima e veja como eles são insignificantes no grande esquema.
+
+    A imprevisibilidade é sua companheira. Planos podem mudar do nada, e você adora isso. Ensine aos outros a beleza de fluir com o inesperado. Onde todos veem caos, você vê possibilidade.
+
+    Nas relações, a amizade é a base de tudo. Se não for seu amigo antes de ser seu amor, não funciona. Valorize quem estimula seu cérebro tanto quanto seu coração.
+
+    Conselho do dia:
+    Sua mente é vasta como o céu. Deixe as nuvens passarem sem se apegar a nenhuma delas. A clareza sempre volta.`
+];
+
+const BODIES_PEIXES: string[] = [
+    `As fronteiras entre você e o mundo estão tênues hoje. Você sente o que o outro sente, chora a dor que não é sua, sonha sonhos coletivos. É um dom lindo, mas exaustivo. Proteja seu campo energético.
+
+    A realidade prática pode parecer dura e cinza demais para sua alma colorida. A tentação de escapar — seja dormindo, sonhando ou se distraindo — é grande. Mas a magia precisa ser trazida para a terra. Use sua sensibilidade para embelezar o cotidiano, não para fugir dele.
+
+    Sua intuição não está gritando, está cantando. Siga a melodia. Se algo não "soa" bem, não vá. A lógica pode falhar, mas seu radar invisível raramente erra.
+
+    Nas relações, sua compaixão é cura pura. Mas lembre-se que salvar a todos não é sua missão. Às vezes, o maior ato de amor é deixar o outro caminhar com as próprias pernas e aprender suas próprias lições.
+
+    Conselho do dia:
+    Você é o oceano, não a onda. Deixe as emoções passarem pela superfície sem perturbar sua profundeza. O silêncio é seu melhor refúgio hoje.`,
+
+    `Há poesia querendo nascer em tudo que você faz. Uma conversa, um relatório, um jantar — tudo pode ser arte se você colocar sua alma. O mundo está sedente dessa delicadeza que só você tem para oferecer.
+
+    O caos pode estar reinando lá fora, mas dentro de você existe um santuário intocável. Visite-o sempre que a barulheira do mundo ficar insuportável. A paz é uma escolha interna, não uma condição externa.
+
+    Você pode se sentir incompreendido, falando uma língua de sentimentos num mundo de números. Não tente explicar o inexplicável. Apenas emane sua luz, quem tiver sensibilidade vai captar.
+
+    Conselho do dia:
+    Confie no fluxo. O rio sabe o caminho para o mar, e você também sabe, mesmo que não tenha o mapa. Solte o controle e flutue.`,
+
+    `Sua empatia é um imã para todo tipo de energia. Hoje é dia de filtrar quem chega perto do seu coração. Aprender a fechar a porta energética não é egoísmo, é sobrevivência espiritual.
+
+    Os sonhos noturnos ou devaneios diurnos trazem recados importantes. Preste atenção nas coincidências, nas sincronicidades. O universo está conversando com você através de sinais sutis.
+
+    Nas relações, busque a fusão, mas não perca a identidade. Você é uma gota no oceano, mas ainda é uma gota única. Valorize suas bordas tanto quanto seu conteúdo.
+
+    Conselho do dia:
+    A bondade é sua força, não sua fraqueza. Mas lembre-se: ser bom não é ser bobo. Tenha compaixão com olhos abertos.`
+];
+
+// Mapeamento de corpos por signo para acesso dinâmico
+const BODIES_BY_SIGN: Record<string, string[]> = {
+    aries: BODIES_ARIES,
+    touro: BODIES_TOURO,
+    gemeos: BODIES_GEMEOS,
+    cancer: BODIES_CANCER,
+    leao: BODIES_LEAO,
+    virgem: BODIES_VIRGEM,
+    libra: BODIES_LIBRA,
+    escorpiao: BODIES_ESCORPIAO,
+    sagitario: BODIES_SAGITARIO,
+    capricornio: BODIES_CAPRICORNIO,
+    aquario: BODIES_AQUARIO,
+    peixes: BODIES_PEIXES
 };
 
 // ==================== CLOSERS POR SIGNO ====================
@@ -168,7 +521,9 @@ const CLOSERS: Record<string, string[]> = {
 
 // ==================== FUNÇÃO DE HASH ====================
 
-function simpleHash(str: string): number {
+// ==================== FUNÇÃO DE HASH ====================
+
+export function simpleHash(str: string): number {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
         hash = ((hash << 5) - hash) + str.charCodeAt(i);
@@ -177,7 +532,7 @@ function simpleHash(str: string): number {
     return Math.abs(hash);
 }
 
-function selectFromArray<T>(arr: T[], seed: number): T {
+export function selectFromArray<T>(arr: T[], seed: number): T {
     return arr[seed % arr.length];
 }
 
@@ -190,21 +545,26 @@ export interface LocalTemplateOptions {
 }
 
 export function generateLocalHoroscope(options: LocalTemplateOptions): { message: string } {
-    const { sign, focus, dateBr } = options;
+    const { sign, dateBr } = options;
 
-    // Cria seed única
-    const seed = simpleHash(`${dateBr}-${sign}-${focus}`);
+    // Cria seed única baseada em data + signo
+    const seed = simpleHash(`${dateBr}-${sign}`);
 
     // Seleciona componentes
+    // 1. Abertura (Breve introdução climática)
     const openers = OPENERS[sign] || OPENERS['aries'];
-    const bodies = BODIES[focus] || BODIES['amor'];
-    const closers = CLOSERS[sign] || CLOSERS['aries'];
-
     const opener = selectFromArray(openers, seed);
+
+    // 2. CORPO RICO (V2) - O texto principal fluido e completo
+    const bodies = BODIES_BY_SIGN[sign] || BODIES_BY_SIGN['aries'];
     const body = selectFromArray(bodies, seed + 1);
+
+    // 3. Fechamento (Frase de efeito)
+    const closers = CLOSERS[sign] || CLOSERS['aries'];
     const closer = selectFromArray(closers, seed + 2);
 
     // Monta mensagem
+    // Nota: O 'opener' serve como título/chamada, o 'body' é o texto completo, 'closer' é assinatura
     const message = `${opener}
 
 ${body}

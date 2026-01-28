@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { SmoothScrollProvider } from '@/components/ui/smooth-scroll';
+import CosmicBackground from '@/components/CosmicBackground';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const dmSerif = DM_Serif_Display({ weight: '400', subsets: ['latin'], variable: '--font-dm-serif' });
@@ -39,6 +40,7 @@ export default async function RootLayout({
         "antialiased bg-mystic-950 text-slate-100 min-h-screen flex flex-col"
       )}>
         <SmoothScrollProvider>
+          <CosmicBackground intensity="medium" />
           <Navbar settings={settings} />
           <main className="flex-grow">
             {children}

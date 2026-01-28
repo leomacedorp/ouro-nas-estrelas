@@ -64,7 +64,8 @@ export async function GET(request: NextRequest) {
                     sign: sign.slug,
                     signName: sign.name,
                     dateBr: today,
-                    mode: 'short'
+                    mode: 'luna',
+                    focus: 'geral'
                 });
 
                 if (!result.success || !result.content) {

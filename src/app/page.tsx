@@ -5,7 +5,6 @@ import { MessageCircle, Sparkles, Star } from 'lucide-react';
 import { homeContent } from '@/lib/content/home';
 import { siteConfig } from '@/lib/siteConfig';
 import { motion } from 'framer-motion';
-import CosmicBackground from '@/components/CosmicBackground';
 import CelestialWheel from '@/components/CelestialWheel';
 import ZodiacGrid from '@/components/ZodiacGrid';
 import DailyRitual from '@/components/DailyRitual';
@@ -18,8 +17,6 @@ export default function Home() {
     <>
       {/* ===== HERO SECTION ===== */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-20">
-        {/* Cosmic Background - Global Instance */}
-        <CosmicBackground intensity="medium" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8">

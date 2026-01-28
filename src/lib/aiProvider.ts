@@ -5,7 +5,7 @@
 
 import OpenAI from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { getShortPrompt, getPremiumPrompt, validateText } from './prompts';
+import { getShortPrompt, getPremiumPrompt, getLunaPrompt, validateText } from './prompts';
 import { isInCooldown, handleRateLimitError, getCooldownStatus } from './circuitBreaker';
 import { generateLocalHoroscope } from './localTemplate';
 
@@ -27,7 +27,7 @@ export interface GenerationOptions {
     sign: string;      // slug do signo (aries, touro, etc)
     signName: string;  // nome do signo (Áries, Touro, etc)
     dateBr: string;    // data no formato YYYY-MM-DD
-    mode: 'short' | 'premium';  // modo de geração
+    mode: 'short' | 'premium' | 'luna';  // modo de geração
     focus?: string;    // foco (amor, dinheiro, carreira) - apenas para premium
 }
 
@@ -56,7 +56,9 @@ async function tryOpenAI(options: GenerationOptions): Promise<{ success: boolean
 
         const prompt = mode === 'premium' && focus
             ? getPremiumPrompt(signName, focus)
-            : getShortPrompt(signName);
+            : mode === 'luna'
+                ? getLunaPrompt(signName)
+                : getShortPrompt(signName);
 
         const completion = await openai.chat.completions.create({
             model: 'gpt-4o-mini',
@@ -111,7 +113,9 @@ async function tryGemini(options: GenerationOptions): Promise<{ success: boolean
 
         const prompt = mode === 'premium' && focus
             ? getPremiumPrompt(signName, focus)
-            : getShortPrompt(signName);
+            : mode === 'luna'
+                ? getLunaPrompt(signName)
+                : getShortPrompt(signName);
 
         const fullPrompt = `${prompt}\n\nGere a mensagem do dia para ${signName}.`;
 

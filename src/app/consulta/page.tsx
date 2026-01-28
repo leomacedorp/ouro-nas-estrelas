@@ -1,11 +1,12 @@
-import GenericSalesPage from '@/components/GenericSalesPage';
+import ComingSoon from '@/components/ComingSoon';
 
 export default function ConsultaPage() {
     return (
-        <GenericSalesPage
+        <ComingSoon
             title="Consulta Simbólica"
-            description="Agende uma leitura profunda do seu mapa astral com nossos especialistas. Entenda seus caminhos, bloqueios e potenciais através da sabedoria dos astros."
-            ctaText="Agendar Minha Consulta"
+            subtitle="Atendimentos individuais para quem busca clareza profunda. Nossa agenda está sendo organizada para melhor atendê-lo."
+            badge="Agenda Restrita"
+            whatsappMessage="Olá! Tenho interesse na Consulta Simbólica Individual."
         />
     );
 }

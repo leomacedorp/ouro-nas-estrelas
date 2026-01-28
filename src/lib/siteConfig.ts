@@ -12,7 +12,7 @@ export const siteConfig = {
     },
     links: {
         nav: [
-            { name: 'Mensagem do Dia', href: '/horoscopo' },
+            { name: 'Mensagem do Dia', href: '/' },
             { name: 'Consulta Simbólica', href: '/consulta' },
             { name: 'Clube Ouro', href: '/clube' },
             { name: 'Produtos', href: '/produtos' },

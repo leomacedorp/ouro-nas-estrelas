@@ -1,11 +1,12 @@
-import GenericSalesPage from '@/components/GenericSalesPage';
+import ComingSoon from '@/components/ComingSoon';
 
 export default function ProdutosPage() {
     return (
-        <GenericSalesPage
-            title="Produtos Simbólicos"
-            description="Amuletos, cristais e guias digitais consagrados para elevar sua vibração e proteger sua energia."
-            ctaText="Ver Catálogo no WhatsApp"
+        <ComingSoon
+            title="Loja Cósmica"
+            subtitle="Mapas Astrais, Guias de Rituais e Ferramentas Mágicas escolhidas a dedo para sua jornada. Estamos abastecendo o estoque estelar."
+            badge="Lançamento Próximo"
+            whatsappMessage="Olá! Gostaria de ser avisado sobre os novos Produtos."
         />
     );
 }

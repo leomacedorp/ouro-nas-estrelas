@@ -1,11 +1,12 @@
-import GenericSalesPage from '@/components/GenericSalesPage';
+import ComingSoon from '@/components/ComingSoon';
 
 export default function ClubePage() {
     return (
-        <GenericSalesPage
-            title="Clube Ouro"
-            description="Faça parte da nossa comunidade exclusiva. Receba previsões detalhadas, rituais mensais e acesso direto aos nossos astrólogos."
-            ctaText="Quero Entrar para o Clube"
+        <ComingSoon
+            title="Clube das Estrelas"
+            subtitle="Uma comunidade exclusiva para quem deseja aprofundar seu conhecimento astrológico e conexão espiritual. Acesso VIP a conteúdos inéditos."
+            badge="Lista de Espera Aberta"
+            whatsappMessage="Olá! Quero entrar na lista de espera do Clube das Estrelas."
         />
     );
 }
