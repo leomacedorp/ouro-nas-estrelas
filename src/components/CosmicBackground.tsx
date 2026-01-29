@@ -134,7 +134,7 @@ export default function CosmicBackground({
     }, [showStars, starCount, isMobile]);
 
     return (
-        <div className="fixed inset-0 pointer-events-none overflow-hidden bg-[radial-gradient(ellipse_at_center,_transparent_0%,_#0a0512_100%)]">
+        <div className="fixed inset-0 pointer-events-none overflow-hidden bg-radial-cosmic">
             {/* Ambient Base Glow */}
             <div className="absolute inset-0 bg-indigo-950/10" />
 

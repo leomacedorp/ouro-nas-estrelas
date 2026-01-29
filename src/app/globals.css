@@ -196,6 +196,16 @@ html.lenis body {
   }
 }
 
+/* ===== CUSTOM GRADIENT BACKGROUNDS ===== */
+/* Fixes Tailwind V4 arbitrary value parsing issues */
+.bg-radial-cosmic {
+  background: radial-gradient(ellipse at center, transparent 0%, #0a0512 100%);
+}
+
+.bg-radial-top-right {
+  background: radial-gradient(ellipse at top right, var(--tw-gradient-stops));
+}
+
 /* ===== KEYFRAMES ===== */
 @keyframes spin-slow {
   from {

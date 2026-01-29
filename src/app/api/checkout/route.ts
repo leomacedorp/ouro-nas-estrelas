@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
-import { siteConfig } from '@/lib/siteConfig';
+import { getStripe } from '@/lib/stripe';
 
 export async function POST(req: Request) {
     try {
@@ -10,6 +9,7 @@ export async function POST(req: Request) {
         // O Next.js geralmente expõe VERCEL_URL em prod
         const origin = req.headers.get('origin') || 'http://localhost:3000';
 
+        const stripe = getStripe();
         const session = await stripe.checkout.sessions.create({
             line_items: [
                 {

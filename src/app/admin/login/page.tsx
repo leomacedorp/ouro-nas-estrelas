@@ -19,6 +19,12 @@ export default function LoginPage() {
         setLoading(true);
         setError(null);
 
+        if (!supabase) {
+            setError("Serviço de autenticação indisponível.");
+            setLoading(false);
+            return;
+        }
+
         const { error } = await supabase.auth.signInWithPassword({
             email,
             password,

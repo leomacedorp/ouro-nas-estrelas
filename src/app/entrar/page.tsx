@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function LoginPage() {
     return (
         <div className="min-h-[80vh] flex items-center justify-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/20 via-slate-950 to-slate-950" />
+            <div className="absolute inset-0 bg-radial-top-right from-indigo-500/20 via-slate-950 to-slate-950" />
 
             <div className="w-full max-w-md p-8 relative z-10">
                 <div className="text-center mb-8">

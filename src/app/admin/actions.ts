@@ -6,6 +6,10 @@ import { revalidatePath } from 'next/cache';
 export async function toggleSetting(key: string, currentValue: boolean) {
     const supabase = await createClient();
 
+    if (!supabase) {
+        throw new Error("Database connection unavailable");
+    }
+
     // Verifica permissão (Dupla checagem além do middleware)
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorized");
@@ -31,6 +35,10 @@ export async function toggleSetting(key: string, currentValue: boolean) {
 
 export async function updateTextSetting(key: string, value: string) {
     const supabase = await createClient();
+
+    if (!supabase) {
+        throw new Error("Database connection unavailable");
+    }
 
     // Verifica permissão
     const { data: { user } } = await supabase.auth.getUser();
@@ -70,5 +78,7 @@ export async function updateTextSetting(key: string, value: string) {
 
 export async function signOut() {
     const supabase = await createClient();
-    await supabase.auth.signOut();
+    if (supabase) {
+        await supabase.auth.signOut();
+    }
 }

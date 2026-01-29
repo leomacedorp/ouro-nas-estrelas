@@ -53,6 +53,10 @@ function SettingTextInput({ settingKey, label, defaultValue }: { settingKey: str
 export default async function DashboardPage() {
     const supabase = await createClient();
 
+    if (!supabase) {
+        redirect('/admin/login');
+    }
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect('/admin/login');
 
