@@ -9,9 +9,14 @@ import { BlurFade } from '@/components/ui/blur-fade';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { motion } from 'framer-motion';
 
+// Variáveis de ambiente são injetadas no build para Client Components
+const STRIPE_PRICE_SINGLE = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_SINGLE || '';
+const STRIPE_PRICE_MONTHLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_MONTHLY || '';
+
 export default function LeituraPremiumPage() {
-    // Link direto para WhatsApp (MVP de venda manual por enquanto, depois Stripe)
-    const whatsappMessage = "Olá! Quero liberar minha Leitura Premium (Amor, Dinheiro e Carreira). Como funciona o pagamento?";
+    // Debug: mostra se as variáveis estão configuradas
+    console.log('[Stripe Config] Single:', STRIPE_PRICE_SINGLE ? 'OK' : 'MISSING');
+    console.log('[Stripe Config] Monthly:', STRIPE_PRICE_MONTHLY ? 'OK' : 'MISSING');
 
     return (
         <div className="min-h-screen bg-mystic-950 text-slate-200 selection:bg-gold-500/30">
@@ -135,7 +140,7 @@ export default function LeituraPremiumPage() {
                             ]}
                             buttonText="Comprar Apenas Uma"
                             isPopular={false}
-                            priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_SINGLE}
+                            priceId={STRIPE_PRICE_SINGLE}
                             link={siteConfig.whatsapp.url("Olá! Quero comprar a Leitura Avulsa por R$ 37.")}
                         />
 
@@ -153,6 +158,7 @@ export default function LeituraPremiumPage() {
                             ]}
                             buttonText="Assinar e Economizar"
                             isPopular={true}
+                            priceId={STRIPE_PRICE_MONTHLY}
                             link={siteConfig.whatsapp.url("Olá! Quero assinar o Clube das Estrelas por R$ 97/mês.")}
                         />
                     </div>
