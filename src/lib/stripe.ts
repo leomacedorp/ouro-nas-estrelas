@@ -5,13 +5,22 @@ function getRawKey() {
 }
 
 function normalizeKey(k: string) {
-    // Remove espaços e quebras de linha nas pontas
-    const key = k.trim();
+    // Remove TODOS os caracteres inválidos de qualquer lugar:
+    // - Quebras de linha (\n, \r)
+    // - Espaços e tabs
+    // - Aspas
+    // - Caracteres de controle
+    const clean = k.replace(/[\s"'\r\n\t\u0000-\u001f\u007f-\u009f]/g, '');
 
-    // Se colaram com aspas, remove
-    const unquoted = key.replace(/^["']|["']$/g, '');
+    // Debug temporário
+    console.log('[Stripe Sanitize]', {
+        original: k.length,
+        clean: clean.length,
+        starts: clean.slice(0, 7),
+        diff: k.length - clean.length
+    });
 
-    return unquoted;
+    return clean;
 }
 
 const stripeSecretKey = normalizeKey(getRawKey());
