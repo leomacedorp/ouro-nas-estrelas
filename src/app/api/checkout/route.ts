@@ -9,6 +9,12 @@ export async function POST(req: Request) {
         // O Next.js geralmente expõe VERCEL_URL em prod
         const origin = req.headers.get('origin') || 'http://localhost:3000';
 
+        // Log temporário de diagnóstico (REMOVER DEPOIS)
+        console.log('[Stripe Key Check]', {
+            startsWith: (process.env.STRIPE_SECRET_KEY ?? '').trim().slice(0, 7),
+            length: (process.env.STRIPE_SECRET_KEY ?? '').trim().length
+        });
+
         const stripe = getStripe();
         const session = await stripe.checkout.sessions.create({
             line_items: [
