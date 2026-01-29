@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, DM_Serif_Display } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import Navbar from '@/components/Navbar';
@@ -9,6 +10,9 @@ import CosmicBackground from '@/components/CosmicBackground';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const dmSerif = DM_Serif_Display({ weight: '400', subsets: ['latin'], variable: '--font-dm-serif' });
+
+// Google Analytics ID
+const GA_MEASUREMENT_ID = 'G-6TWW6XHNTH';
 
 export const metadata: Metadata = {
   title: 'Ouro Nas Estrelas - Horóscopo Diário Personalizado',
@@ -45,6 +49,21 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-BR" className="lenis" suppressHydrationWarning>
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
+      </head>
       <body className={cn(
         inter.variable,
         dmSerif.variable,
