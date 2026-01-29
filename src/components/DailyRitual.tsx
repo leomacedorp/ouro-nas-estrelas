@@ -80,7 +80,7 @@ export default function DailyRitual() {
                     <span className="border-b border-transparent group-hover:border-gold-400 pb-0.5">
                         Ver a mensagem dos astros para hoje
                     </span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-5 h-5" />
                 </Link>
             </div>
         </div>

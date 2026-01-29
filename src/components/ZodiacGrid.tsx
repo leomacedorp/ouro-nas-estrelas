@@ -107,7 +107,7 @@ export default function ZodiacGrid() {
                                         <span className="text-gold-500 text-sm flex items-center gap-1">
                                             Ver horóscopo
                                             <svg
-                                                className="w-4 h-4 transform group-hover:translate-x-1 transition-transform"
+                                                className="w-4 h-4"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
