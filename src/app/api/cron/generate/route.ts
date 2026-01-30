@@ -37,6 +37,12 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({
                 success: false,
                 error: 'Unauthorized',
+                debug: {
+                    isVercelCron,
+                    expectedSecretPresent: !!expectedSecret,
+                    providedSecretPresent: !!providedSecret,
+                    providedSecretLength: providedSecret?.length || 0,
+                }
             }, { status: 401 });
         }
 
