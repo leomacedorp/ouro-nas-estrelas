@@ -119,6 +119,12 @@ export default async function DashboardPage() {
                                 {/* Botão de Geração Manual */}
                                 <GenerateButton />
 
+                                {/* Link para Configurações Avançadas */}
+                                <Link href="/admin/settings" className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-gold-500/10 hover:border-gold-500/30 border border-transparent transition-all group">
+                                    <span className="text-slate-300 group-hover:text-gold-300">⚙️ Configurações Avançadas</span>
+                                    <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-gold-400" />
+                                </Link>
+
                                 <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/10 mt-4">
                                     <p className="text-xs text-amber-400/80">
                                         Dica: O sistema atualiza automaticamente às 04:00 AM. Use o botão acima apenas se precisar forçar uma atualização agora.
