@@ -32,6 +32,11 @@ Abra: http://localhost:3000
 O arquivo `vercel.json` agenda chamadas para:
 - `/api/cron/generate?mode=missing`
 
+### Proteção do endpoint
+O endpoint verifica:
+- Header `x-vercel-cron: 1` (quando chamado pelo Cron da Vercel)
+- OU `?secret=...` (para disparos manuais), comparando com `CRON_SECRET` no ambiente
+
 ### Modo A (confiável)
 - **1 signo por execução** (`MAX_SIGNS_PER_BATCH = 1`)
 - O cron roda várias vezes (ex.: 03:00–05:30 UTC) até completar os signos faltantes do dia

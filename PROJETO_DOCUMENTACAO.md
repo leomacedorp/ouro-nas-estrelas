@@ -47,6 +47,7 @@ Plataforma web de astrologia premium focada em autoconhecimento e orientação d
 - **Cron Jobs** configurados em `vercel.json`:
   - Executa às 03:00, 03:30, 04:00, 04:30, 05:00, 05:30 UTC
   - Rota: `/api/cron/generate?mode=missing`
+  - Proteção: header `x-vercel-cron: 1` (Vercel) ou `?secret=...` com `CRON_SECRET`
 - **Batch Size (Modo A)**: 1 signo por execução (reduz risco de timeout nas Functions da Vercel)
 
 ---

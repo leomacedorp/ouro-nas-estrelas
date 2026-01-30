@@ -24,8 +24,23 @@ async function getMissingSigns(today: string): Promise<typeof ZODIAC_SIGNS> {
 
 export async function GET(request: NextRequest) {
     try {
-        const today = getTodayBrazil();
+        // --- Proteção do endpoint (mínimo necessário) ---
+        // Vercel Cron normalmente envia o header `x-vercel-cron: 1`.
+        // Para disparos manuais (ex.: debug), permita `?secret=...` com `CRON_SECRET`.
+        const isVercelCron = request.headers.get('x-vercel-cron') === '1';
         const searchParams = request.nextUrl.searchParams;
+        const providedSecret = searchParams.get('secret');
+        const expectedSecret = process.env.CRON_SECRET;
+
+        const hasValidSecret = !!expectedSecret && !!providedSecret && providedSecret === expectedSecret;
+        if (!isVercelCron && !hasValidSecret) {
+            return NextResponse.json({
+                success: false,
+                error: 'Unauthorized',
+            }, { status: 401 });
+        }
+
+        const today = getTodayBrazil();
         const mode = searchParams.get('mode') || 'missing';
 
         console.log(`[CRON] Iniciando geração para ${today} - Modo: ${mode.toUpperCase()}`);
