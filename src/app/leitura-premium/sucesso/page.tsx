@@ -8,7 +8,7 @@ import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { BlurFade } from '@/components/ui/blur-fade';
 import { Meteors } from '@/components/ui/meteors';
 import { ZODIAC_SIGNS } from '@/lib/constants';
-import { generatePremiumHoroscope, PremiumContent } from '@/lib/localPremiumTemplate';
+import { PremiumContent } from '@/lib/localPremiumTemplate';
 import { siteConfig } from '@/lib/siteConfig';
 
 export default function SucessoPage() {
@@ -19,19 +19,61 @@ export default function SucessoPage() {
     const [selectedSign, setSelectedSign] = useState<string | null>(null);
     const [reading, setReading] = useState<PremiumContent | null>(null);
     const [isRevealing, setIsRevealing] = useState(false);
+    const [isValidating, setIsValidating] = useState(true);
+    const [isValidPurchase, setIsValidPurchase] = useState(false);
 
-    // Efeito para simular carregamento da leitura
-    const handleReveal = (signSlug: string) => {
+    useEffect(() => {
+        async function validate() {
+            if (!sessionId) {
+                setIsValidPurchase(false);
+                setIsValidating(false);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/stripe/validate-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId }),
+                });
+                const data = await res.json();
+                setIsValidPurchase(Boolean(data.valid));
+            } catch (e) {
+                setIsValidPurchase(false);
+            } finally {
+                setIsValidating(false);
+            }
+        }
+
+        validate();
+    }, [sessionId]);
+
+    const handleReveal = async (signSlug: string) => {
+        if (!sessionId) return;
+
         setIsRevealing(true);
         setSelectedSign(signSlug);
 
-        // Simula um "download do cosmos"
-        setTimeout(() => {
-            const date = new Date().toISOString().split('T')[0];
-            const result = generatePremiumHoroscope(signSlug, date);
-            setReading(result);
+        try {
+            const res = await fetch('/api/premium-reading/reveal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId, signSlug }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                alert('Não foi possível validar seu pagamento. Se você acabou de pagar, aguarde 1 minuto e tente novamente.');
+                setIsRevealing(false);
+                return;
+            }
+
+            setReading(data.content);
+        } catch (e) {
+            alert('Erro ao gerar sua leitura. Tente novamente.');
+        } finally {
             setIsRevealing(false);
-        }, 2000);
+        }
     };
 
     return (
@@ -45,7 +87,27 @@ export default function SucessoPage() {
             <div className="container mx-auto px-4 py-20 relative z-10">
 
                 {/* HEADLINE SUCESSO */}
-                {!reading ? (
+                {isValidating ? (
+                    <div className="max-w-2xl mx-auto text-center">
+                        <div className="mt-12 flex flex-col items-center">
+                            <div className="w-12 h-12 border-4 border-gold-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                            <p className="text-gold-300 font-serif animate-pulse">Validando seu pagamento...</p>
+                        </div>
+                    </div>
+                ) : !isValidPurchase ? (
+                    <div className="max-w-2xl mx-auto text-center">
+                        <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-red-500/50">
+                            <Lock className="w-10 h-10 text-red-300" />
+                        </div>
+                        <h1 className="text-3xl md:text-5xl font-serif font-bold text-white mb-6">Acesso não liberado</h1>
+                        <p className="text-lg text-slate-400 mb-8">
+                            Não encontramos um pagamento válido para esta sessão. Se você acabou de pagar, aguarde alguns instantes e recarregue.
+                        </p>
+                        <Link href="/leitura-premium" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+                            <ArrowRight className="w-5 h-5" /> Voltar
+                        </Link>
+                    </div>
+                ) : !reading ? (
                     <div className="max-w-2xl mx-auto text-center">
                         <BlurFade delay={0}>
                             <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-green-500/50 shadow-glow-green">

@@ -1,0 +1,65 @@
+import { notFound } from 'next/navigation';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { ZODIAC_SIGNS } from '@/lib/constants';
+
+export const runtime = 'nodejs';
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ t?: string }>;
+}
+
+export default async function MinhaLeituraPage({ params, searchParams }: PageProps) {
+  const { id } = await params;
+  const { t } = await searchParams;
+  if (!t) return notFound();
+
+  const supabase = createAdminClient();
+  const { data: reading } = await supabase
+    .from('premium_readings')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (!reading) return notFound();
+  if (String(reading.access_token) !== String(t)) return notFound();
+
+  const signName = ZODIAC_SIGNS.find(s => s.slug === reading.sign_slug)?.name || reading.sign_slug;
+
+  const c = reading.content as any;
+
+  return (
+    <main className="min-h-screen bg-mystic-950 text-slate-200">
+      <div className="container mx-auto px-4 py-16 max-w-4xl">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-5xl font-serif font-bold text-white mb-3">
+            Sua Leitura Premium
+          </h1>
+          <p className="text-slate-400">{signName} • válida para {reading.date_key}</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card title="❤️ Amor & Vínculos" content={c.amor} />
+          <Card title="💰 Dinheiro & Recursos" content={c.dinheiro} />
+          <Card title="🚀 Carreira & Missão" content={c.carreira} />
+          <Card title="🚧 O Grande Bloqueio" content={c.bloqueio} />
+          <Card title="💎 Ouro Escondido" content={c.oportunidade} />
+          <Card title="🔮 Conselho Mágico" content={c.conselho} />
+        </div>
+
+        <div className="mt-10 text-center text-sm text-slate-500">
+          Dica: salve este link — ele é o acesso da sua leitura.
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function Card({ title, content }: { title: string; content: string }) {
+  return (
+    <section className="p-6 rounded-2xl bg-white/5 border border-white/10">
+      <h2 className="text-lg font-serif font-bold text-gold-300 mb-3">{title}</h2>
+      <p className="text-slate-200 leading-relaxed">{content}</p>
+    </section>
+  );
+}
