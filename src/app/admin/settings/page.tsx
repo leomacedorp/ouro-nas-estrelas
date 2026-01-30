@@ -99,27 +99,27 @@ export default function SettingsPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-mystic-950 flex items-center justify-center">
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
                 <Loader2 className="w-8 h-8 animate-spin text-gold-400" />
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-mystic-950 text-slate-200">
+        <div className="min-h-screen bg-white text-slate-900">
             {/* Header */}
-            <header className="border-b border-white/10 bg-mystic-900/50 backdrop-blur-md sticky top-0 z-50">
+            <header className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
                             href="/admin/dashboard"
-                            className="p-2 hover:bg-white/5 rounded-lg text-slate-400 hover:text-white transition-colors"
+                            className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-slate-900 transition-colors"
                         >
                             <ArrowLeft className="w-5 h-5" />
                         </Link>
                         <div className="flex items-center gap-2">
                             <Settings className="w-5 h-5 text-gold-400" />
-                            <span className="font-serif font-bold text-white">Configurações do Site</span>
+                            <span className="font-serif font-bold text-slate-900">Configurações do Site</span>
                         </div>
                     </div>
 
@@ -142,15 +142,15 @@ export default function SettingsPage() {
                 {/* Mensagem de feedback */}
                 {message && (
                     <div className={`p-4 rounded-lg mb-6 ${message.type === 'success'
-                        ? 'bg-emerald-500/20 border border-emerald-500/30 text-emerald-200'
-                        : 'bg-red-500/20 border border-red-500/30 text-red-200'
+                        ? 'bg-emerald-50 border border-emerald-200 text-emerald-900'
+                        : 'bg-red-50 border border-red-200 text-red-900'
                         }`}>
                         {message.text}
                     </div>
                 )}
 
                 {/* Info */}
-                <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-200 text-sm mb-8">
+                <div className="p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-sm mb-8">
                     💡 As alterações são aplicadas na home em até 5 minutos (cache ISR).
                 </div>
 
@@ -159,7 +159,7 @@ export default function SettingsPage() {
                     {Object.entries(grouped).map(([category, categorySettings]) => (
                         <section
                             key={category}
-                            className="bg-mystic-900/40 border border-white/5 rounded-2xl p-6"
+                            className="bg-slate-50 border border-slate-200 rounded-2xl p-6"
                         >
                             <h2 className="text-xl font-serif font-bold text-gold-400 mb-6">
                                 {categoryLabels[category] || category}
@@ -167,8 +167,8 @@ export default function SettingsPage() {
 
                             <div className="space-y-4">
                                 {categorySettings.map(setting => (
-                                    <div key={setting.key} className="p-4 bg-white/5 border border-white/10 rounded-xl">
-                                        <label className="block text-sm text-slate-400 mb-2">
+                                    <div key={setting.key} className="p-4 bg-white border border-slate-200 rounded-xl">
+                                        <label className="block text-sm text-slate-700 mb-2">
                                             {setting.description || setting.key}
                                             <span className="text-xs text-slate-600 ml-2">({setting.key})</span>
                                         </label>
@@ -180,7 +180,7 @@ export default function SettingsPage() {
                                                     type="checkbox"
                                                     checked={setting.value}
                                                     onChange={(e) => updateValue(setting.key, e.target.checked)}
-                                                    className="w-5 h-5 rounded bg-mystic-800 border-white/20 text-gold-500 focus:ring-gold-500"
+                                                    className="w-5 h-5 rounded bg-white border-slate-300 text-gold-600 focus:ring-gold-500"
                                                 />
                                                 <span className={`text-sm font-medium ${setting.value ? 'text-emerald-400' : 'text-slate-500'}`}>
                                                     {setting.value ? '✓ Ativo' : '✗ Inativo'}
@@ -194,7 +194,7 @@ export default function SettingsPage() {
                                                 type="number"
                                                 value={setting.value}
                                                 onChange={(e) => updateValue(setting.key, Number(e.target.value))}
-                                                className="w-full max-w-xs px-4 py-2 rounded-lg bg-mystic-800 border border-white/10 text-white focus:border-gold-500/50 focus:outline-none"
+                                                className="w-full max-w-xs px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 focus:border-gold-500/70 focus:outline-none"
                                             />
                                         )}
 
@@ -204,7 +204,7 @@ export default function SettingsPage() {
                                                 type="text"
                                                 value={setting.value}
                                                 onChange={(e) => updateValue(setting.key, e.target.value)}
-                                                className="w-full px-4 py-2 rounded-lg bg-mystic-800 border border-white/10 text-white focus:border-gold-500/50 focus:outline-none"
+                                                className="w-full px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 focus:border-gold-500/70 focus:outline-none"
                                             />
                                         )}
 
@@ -214,7 +214,7 @@ export default function SettingsPage() {
                                                 value={setting.value}
                                                 onChange={(e) => updateValue(setting.key, e.target.value)}
                                                 rows={3}
-                                                className="w-full px-4 py-2 rounded-lg bg-mystic-800 border border-white/10 text-white focus:border-gold-500/50 focus:outline-none resize-y"
+                                                className="w-full px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 focus:border-gold-500/70 focus:outline-none resize-y"
                                             />
                                         )}
                                     </div>

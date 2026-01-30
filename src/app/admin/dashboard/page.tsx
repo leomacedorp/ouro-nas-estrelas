@@ -11,10 +11,10 @@ function SettingToggle({ settingKey, label, value }: { settingKey: string, label
     const toggleAction = toggleSetting.bind(null, settingKey, value);
 
     return (
-        <form action={toggleAction} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors">
+        <form action={toggleAction} className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">
             <div className="flex items-center gap-3">
                 <div className={`w-2 h-2 rounded-full ${value ? 'bg-emerald-400 shadow-glow-emerald' : 'bg-slate-600'}`} />
-                <span className="font-medium text-slate-200">{label}</span>
+                <span className="font-medium text-slate-900">{label}</span>
             </div>
             <button type="submit" className={`text-2xl transition-colors ${value ? 'text-emerald-400' : 'text-slate-500'}`}>
                 {value ? <ToggleRight className="w-8 h-8" /> : <ToggleLeft className="w-8 h-8" />}
@@ -33,14 +33,14 @@ function SettingTextInput({ settingKey, label, defaultValue }: { settingKey: str
                 const val = formData.get('value') as string;
                 await updateTextSetting(settingKey, val);
             }}
-            className="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors space-y-3"
+            className="p-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors space-y-3"
         >
-            <label className="block font-medium text-slate-200">{label}</label>
+            <label className="block font-medium text-slate-800">{label}</label>
             <div className="flex gap-2">
                 <input
                     name="value"
                     defaultValue={defaultValue}
-                    className="flex-1 bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-500/50"
+                    className="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-gold-500/70"
                 />
                 <button type="submit" className="px-4 py-2 bg-gold-600 hover:bg-gold-500 text-black text-sm font-bold rounded-lg transition-colors">
                     Salvar
@@ -76,23 +76,23 @@ export default async function DashboardPage() {
     };
 
     return (
-        <div className="min-h-screen bg-mystic-950 text-slate-200">
+        <div className="min-h-screen bg-white text-slate-900">
 
             {/* Top Bar */}
-            <header className="border-b border-white/10 bg-mystic-900/50 backdrop-blur-md sticky top-0 z-50">
+            <header className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <LayoutDashboard className="w-5 h-5 text-gold-400" />
-                        <span className="font-serif font-bold text-white">Ouro Admin</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 ml-2">
+                        <span className="font-serif font-bold text-slate-900">Ouro Admin</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 ml-2">
                             v1.0
                         </span>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <span className="text-sm text-slate-400 hidden md:block">{user.email}</span>
+                        <span className="text-sm text-slate-600 hidden md:block">{user.email}</span>
                         <form action={signOut}>
-                            <button className="p-2 hover:bg-white/5 rounded-lg text-slate-400 hover:text-red-400 transition-colors">
+                            <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-red-600 transition-colors">
                                 <LogOut className="w-5 h-5" />
                             </button>
                         </form>
@@ -106,13 +106,13 @@ export default async function DashboardPage() {
 
                     {/* Coluna 1: Visão Geral e Ações Rápidas */}
                     <div className="space-y-6">
-                        <section className="bg-mystic-900/40 border border-white/5 rounded-2xl p-6">
-                            <h2 className="text-lg font-serif font-bold text-white mb-4 flex items-center gap-2">
+                        <section className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+                            <h2 className="text-lg font-serif font-bold text-slate-900 mb-4 flex items-center gap-2">
                                 <FileText className="w-4 h-4 text-indigo-400" /> Conteúdo
                             </h2>
                             <div className="space-y-4">
-                                <Link href="/admin/editor" className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-indigo-500/10 hover:border-indigo-500/30 border border-transparent transition-all group">
-                                    <span className="text-slate-300 group-hover:text-indigo-300">Editor de Horóscopo</span>
+                                <Link href="/admin/editor" className="flex items-center justify-between p-3 rounded-lg bg-white hover:bg-indigo-50 hover:border-indigo-200 border border-slate-200 transition-all group">
+                                    <span className="text-slate-700 group-hover:text-indigo-700">Editor de Horóscopo</span>
                                     <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-indigo-400" />
                                 </Link>
 
@@ -120,13 +120,13 @@ export default async function DashboardPage() {
                                 <GenerateButton />
 
                                 {/* Link para Configurações Avançadas */}
-                                <Link href="/admin/settings" className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-gold-500/10 hover:border-gold-500/30 border border-transparent transition-all group">
-                                    <span className="text-slate-300 group-hover:text-gold-300">⚙️ Configurações Avançadas</span>
+                                <Link href="/admin/settings" className="flex items-center justify-between p-3 rounded-lg bg-white hover:bg-amber-50 hover:border-amber-200 border border-slate-200 transition-all group">
+                                    <span className="text-slate-700 group-hover:text-amber-700">⚙️ Configurações Avançadas</span>
                                     <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-gold-400" />
                                 </Link>
 
-                                <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/10 mt-4">
-                                    <p className="text-xs text-amber-400/80">
+                                <div className="p-4 rounded-lg bg-amber-50 border border-amber-200 mt-4">
+                                    <p className="text-xs text-amber-900">
                                         Dica: O sistema atualiza automaticamente às 04:00 AM. Use o botão acima apenas se precisar forçar uma atualização agora.
                                     </p>
                                 </div>
@@ -134,9 +134,9 @@ export default async function DashboardPage() {
                         </section>
 
                         {/* Configurações de Texto / Conteúdo */}
-                        <section className="bg-mystic-900/40 border border-white/5 rounded-2xl p-6">
-                            <h2 className="text-lg font-serif font-bold text-white mb-6 flex items-center gap-2">
-                                <FileText className="w-4 h-4 text-gold-400" /> Mensagens e Textos
+                        <section className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+                            <h2 className="text-lg font-serif font-bold text-slate-900 mb-6 flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-gold-600" /> Mensagens e Textos
                             </h2>
                             <div className="space-y-4">
                                 <SettingTextInput
@@ -150,9 +150,9 @@ export default async function DashboardPage() {
 
                     {/* Coluna 2: CMS / Configurações Globais */}
                     <div className="md:col-span-2 space-y-6">
-                        <section className="bg-mystic-900/40 border border-white/5 rounded-2xl p-6">
-                            <h2 className="text-lg font-serif font-bold text-white mb-6 flex items-center gap-2">
-                                <Settings className="w-4 h-4 text-emerald-400" /> Controle do Site (CMS)
+                        <section className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+                            <h2 className="text-lg font-serif font-bold text-slate-900 mb-6 flex items-center gap-2">
+                                <Settings className="w-4 h-4 text-emerald-600" /> Controle do Site (CMS)
                             </h2>
 
                             <div className="grid md:grid-cols-2 gap-4">
@@ -179,8 +179,8 @@ export default async function DashboardPage() {
                             </div>
                         </section>
 
-                        <section className="bg-mystic-900/40 border border-white/5 rounded-2xl p-6 opacity-50 pointer-events-none">
-                            <h2 className="text-lg font-serif font-bold text-white mb-2">Estatísticas de Acesso</h2>
+                        <section className="bg-slate-50 border border-slate-200 rounded-2xl p-6 opacity-60 pointer-events-none">
+                            <h2 className="text-lg font-serif font-bold text-slate-900 mb-2">Estatísticas de Acesso</h2>
                             <p className="text-sm text-slate-500">Em desenvolvimento...</p>
                         </section>
                     </div>
