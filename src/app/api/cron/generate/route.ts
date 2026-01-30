@@ -7,8 +7,9 @@ import { generateHoroscope, getProviderStatus } from '@/lib/aiProvider';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-// Configuração - gera todos de uma vez (template é instantâneo como fallback)
-const MAX_SIGNS_PER_BATCH = 12;
+// Configuração (Modo A): processa 1 signo por execução para reduzir risco de timeout na Vercel
+// (o vercel.json agenda múltiplas execuções para completar o lote do dia)
+const MAX_SIGNS_PER_BATCH = 1;
 
 // Busca signos que faltam para hoje
 async function getMissingSigns(today: string): Promise<typeof ZODIAC_SIGNS> {
