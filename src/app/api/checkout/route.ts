@@ -3,7 +3,17 @@ import { getStripe } from '@/lib/stripe';
 
 export async function POST(req: Request) {
     try {
-        const { priceId, mode = 'payment' } = await req.json();
+        const { priceId, mode } = await req.json();
+
+        // Se o client não mandar mode, inferimos a partir do Price no Stripe.
+        // - price recorrente => subscription
+        // - price avulso => payment
+        let inferredMode: 'payment' | 'subscription' | undefined = mode;
+        if (!inferredMode) {
+            const stripe = getStripe();
+            const price = await stripe.prices.retrieve(priceId);
+            inferredMode = price.type === 'recurring' ? 'subscription' : 'payment';
+        }
 
         // URL base do site (localhost em dev, vercel em prod)
         // O Next.js geralmente expõe VERCEL_URL em prod
@@ -23,7 +33,7 @@ export async function POST(req: Request) {
                     quantity: 1,
                 },
             ],
-            mode: mode, // 'payment' (venda única) ou 'subscription' (assinatura)
+            mode: inferredMode, // 'payment' (venda única) ou 'subscription' (assinatura)
             success_url: `${origin}/leitura-premium/sucesso?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/leitura-premium`,
             metadata: {

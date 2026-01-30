@@ -204,7 +204,11 @@ function PricingCard({ title, price, period, features, buttonText, isPopular, li
             const response = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ priceId }),
+                body: JSON.stringify({
+                    priceId,
+                    // fallback: o backend também tenta inferir o mode
+                    mode: isPopular ? 'subscription' : 'payment'
+                }),
             });
 
             const data = await response.json();
