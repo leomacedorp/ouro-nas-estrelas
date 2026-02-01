@@ -1027,10 +1027,17 @@ export interface LocalTemplateOptions {
     sign: string;      // slug: aries, touro, etc
     focus: string;     // amor, dinheiro, carreira
     dateBr: string;    // YYYY-MM-DD
+
+    // Opcional: pacote do dia (gerado via IA 1x/dia) para dar sensação de "hoje vivo"
+    dailyEnergyPackage?: {
+        date?: string;
+        quote?: string;
+        byElement?: { fogo?: string; terra?: string; ar?: string; agua?: string };
+    };
 }
 
 export function generateLocalHoroscope(options: LocalTemplateOptions): { message: string } {
-    const { sign, dateBr } = options;
+    const { sign, dateBr, dailyEnergyPackage } = options;
 
     // Cria seed única baseada em data + signo
     const seed = simpleHash(`${dateBr}-${sign}`);
@@ -1044,10 +1051,6 @@ export function generateLocalHoroscope(options: LocalTemplateOptions): { message
     const openers = OPENERS[sign] || OPENERS['aries'];
     const opener = selectFromArray(openers, seed);
 
-    // 1.0 Energia do dia (global)
-    const energies = WEEKDAY_ENERGIES[weekday] || WEEKDAY_ENERGIES[1];
-    const dayEnergy = selectFromArray(energies, seed + 5);
-
     // Elemento (para micro-variações consistentes)
     const elementMap: Record<string, 'fogo' | 'terra' | 'ar' | 'agua'> = {
         aries: 'fogo', leao: 'fogo', sagitario: 'fogo',
@@ -1056,6 +1059,19 @@ export function generateLocalHoroscope(options: LocalTemplateOptions): { message
         cancer: 'agua', escorpiao: 'agua', peixes: 'agua'
     };
     const element = elementMap[sign] || 'fogo';
+
+    // 1.0 Energia do dia (global)
+    // Preferir IA 1x/dia (se vier e bater data); fallback para weekday energies.
+    const energies = WEEKDAY_ENERGIES[weekday] || WEEKDAY_ENERGIES[1];
+    const fallbackDayEnergy = selectFromArray(energies, seed + 5);
+    const dayEnergy = (dailyEnergyPackage?.date === dateBr && dailyEnergyPackage?.quote)
+        ? String(dailyEnergyPackage.quote)
+        : fallbackDayEnergy;
+
+    // 1.0.1 Energia do elemento (IA 1x/dia) — micro-variação extra, opcional
+    const elementEnergy = (dailyEnergyPackage?.date === dateBr && dailyEnergyPackage?.byElement)
+        ? String((dailyEnergyPackage.byElement as any)?.[element] || '')
+        : '';
 
     // 1.1 Ponte (varia o "ritmo" do texto sem perder o tom)
     const bridges = ELEMENT_BRIDGES[element] || ELEMENT_BRIDGES.fogo;
@@ -1090,9 +1106,11 @@ ${elementAddon}`;
     const closer = selectFromArray(closers, seed + 2);
 
     // Monta mensagem
+    const energyBlock = elementEnergy ? `${dayEnergy}\n\n${elementEnergy}` : dayEnergy;
+
     const message = `${opener}
 
-${dayEnergy}
+${energyBlock}
 
 ${bridge}
 

@@ -5,6 +5,7 @@ import { Sparkles, Calendar, ArrowLeft, MessageCircle, CheckCircle2 } from 'luci
 import Link from 'next/link';
 import { getTodayBrazil, formatDateBrazil } from '@/lib/dateUtils';
 import { generateLocalHoroscope } from '@/lib/localTemplate';
+import { getSettings } from '@/lib/cms/getSettings';
 import { SIGN_GUIDES } from '@/lib/content/signGuides';
 
 // ISR: atualiza periodicamente (suficiente pro “do dia” e bom pra SEO)
@@ -22,12 +23,17 @@ const FALLBACK_MESSAGE = "A energia cósmica está em alinhamento especial neste
 async function getHoroscope(sign: string) {
     const today = getTodayBrazil();
 
+    // Pacote do dia (IA 1x/dia) — melhora a sensação de "hoje" mesmo no fallback local.
+    const settings = await getSettings(['daily_energy_package']);
+    const dailyEnergyPackage = settings.daily_energy_package;
+
     // Por enquanto, a mensagem do dia vem do gerador local (determinístico por data+signo).
     // Como a página tem ISR (6h), o conteúdo é estável o suficiente para SEO.
     const localResult = generateLocalHoroscope({
         sign,
         focus: 'geral',
-        dateBr: today
+        dateBr: today,
+        dailyEnergyPackage
     });
 
     return {
