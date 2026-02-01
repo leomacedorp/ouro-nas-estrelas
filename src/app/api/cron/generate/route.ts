@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { ZODIAC_SIGNS } from '@/lib/constants';
-import { supabase } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { getTodayBrazil } from '@/lib/dateUtils';
 import { generateHoroscope, getProviderStatus } from '@/lib/aiProvider';
 
@@ -12,7 +12,7 @@ export const maxDuration = 60;
 const MAX_SIGNS_PER_BATCH = 1;
 
 // Busca signos que faltam para hoje
-async function getMissingSigns(today: string): Promise<typeof ZODIAC_SIGNS> {
+async function getMissingSigns(supabase: ReturnType<typeof createAdminClient>, today: string): Promise<typeof ZODIAC_SIGNS> {
     const { data: existing } = await supabase
         .from('horoscopes')
         .select('sign')
@@ -20,6 +20,42 @@ async function getMissingSigns(today: string): Promise<typeof ZODIAC_SIGNS> {
 
     const existingSigns = new Set(existing?.map(e => e.sign) || []);
     return ZODIAC_SIGNS.filter(sign => !existingSigns.has(sign.slug));
+}
+
+// Tema do dia: forçar variação perceptível sem perder o tom
+const DAILY_THEMES = [
+    'limites e proteção emocional',
+    'coragem e iniciativa',
+    'organização e clareza',
+    'comunicação e conversas honestas',
+    'descanso e autocuidado',
+    'recomeço e desapego',
+    'foco e disciplina leve'
+];
+
+function pickThemeForDay(dateKey: string, signSlug: string): string {
+    // hash simples: soma de chars
+    const seed = (dateKey + signSlug).split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    return DAILY_THEMES[seed % DAILY_THEMES.length];
+}
+
+async function getRecentContents(
+    supabase: ReturnType<typeof createAdminClient>,
+    signSlug: string,
+    today: string
+): Promise<string[]> {
+    const { data } = await supabase
+        .from('horoscopes')
+        .select('date, content')
+        .eq('type', 'daily')
+        .eq('sign', signSlug)
+        .lt('date', today)
+        .order('date', { ascending: false })
+        .limit(2);
+
+    return (data || [])
+        .map(r => (typeof r.content === 'string' ? r.content : ''))
+        .filter(Boolean);
 }
 
 export async function GET(request: NextRequest) {
@@ -49,6 +85,8 @@ export async function GET(request: NextRequest) {
         const today = getTodayBrazil();
         const mode = searchParams.get('mode') || 'missing';
 
+        const supabase = createAdminClient();
+
         console.log(`[CRON] Iniciando geração para ${today} - Modo: ${mode.toUpperCase()}`);
         console.log(`[CRON] Status dos providers:`, JSON.stringify(getProviderStatus()));
 
@@ -57,7 +95,7 @@ export async function GET(request: NextRequest) {
         const providers: Record<string, string> = {};
 
         // Busca signos faltantes
-        const missingSigns = await getMissingSigns(today);
+        const missingSigns = await getMissingSigns(supabase, today);
 
         if (missingSigns.length === 0) {
             console.log(`[CRON] ✅ Todos os ${ZODIAC_SIGNS.length} signos já foram gerados para ${today}`);
@@ -81,13 +119,19 @@ export async function GET(request: NextRequest) {
             try {
                 console.log(`[GENERATE] Processando ${sign.name}...`);
 
+                // Anti-repetição: pega ontem/anteontem do mesmo signo
+                const avoidContents = await getRecentContents(supabase, sign.slug, today);
+                const theme = pickThemeForDay(today, sign.slug);
+
                 // Usa a camada unificada de AI
                 const result = await generateHoroscope({
                     sign: sign.slug,
                     signName: sign.name,
                     dateBr: today,
                     mode: 'luna',
-                    focus: 'geral'
+                    focus: 'geral',
+                    theme,
+                    avoidContents
                 });
 
                 if (!result.success || !result.content) {
@@ -137,7 +181,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Calcula restantes
-        const remainingSigns = await getMissingSigns(today);
+        const remainingSigns = await getMissingSigns(supabase, today);
 
         const summary = {
             success: generated.length > 0,

@@ -8,6 +8,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getShortPrompt, getPremiumPrompt, getLunaPrompt, validateText } from './prompts';
 import { isInCooldown, handleRateLimitError, getCooldownStatus } from './circuitBreaker';
 import { generateLocalHoroscope } from './localTemplate';
+import { isContentTooSimilar } from './similarity';
 
 // Tipos
 export interface GenerationResult {
@@ -29,6 +30,10 @@ export interface GenerationOptions {
     dateBr: string;    // data no formato YYYY-MM-DD
     mode: 'short' | 'premium' | 'luna';  // modo de geração
     focus?: string;    // foco (amor, dinheiro, carreira) - apenas para premium
+
+    // Anti-repetição (opcional) — usado principalmente no modo 'luna'
+    theme?: string;            // tema do dia (ex.: limites, coragem, recomeço...)
+    avoidContents?: string[];  // textos recentes (ex.: ontem/anteontem) para NÃO repetir
 }
 
 // Inicialização dos clientes
@@ -43,7 +48,29 @@ const genAI = process.env.GOOGLE_AI_API_KEY
 /**
  * Tenta gerar com OpenAI
  */
-async function tryOpenAI(options: GenerationOptions): Promise<{ success: boolean; content?: string; error?: string }> {
+function buildAntiRepetitionBlock(options: GenerationOptions, pass: number): string {
+    const { mode, theme, avoidContents } = options;
+    if (mode !== 'luna') return '';
+
+    const recent = (avoidContents || []).filter(Boolean);
+    const excerpts = recent
+        .slice(0, 2)
+        .map((t, idx) => {
+            const clip = t.length > 900 ? t.slice(0, 900) + '…' : t;
+            return `--- TEXTO RECENTE ${idx + 1} (NÃO REUTILIZAR FRASES/METÁFORAS/CONSELHO) ---\n${clip}`;
+        })
+        .join('\n\n');
+
+    const strength = pass === 0
+        ? 'Evite repetir o tom, as metáforas e o conselho.'
+        : pass === 1
+            ? 'IMPORTANTE: mude COMPLETAMENTE as metáforas e exemplos cotidianos. Use uma estrutura narrativa diferente e um conselho final diferente.'
+            : 'MUITO IMPORTANTE: texto precisa parecer outro autor no mesmo tom. Proibido reutilizar qualquer frase marcante, analogia ou conselho dos textos recentes.';
+
+    return `\n\n=== VARIAÇÃO / NÃO REPETIÇÃO ===\nTema do dia: ${theme || 'livre'}\n${strength}\n\n${excerpts ? `Conteúdos recentes para referência proibida:\n${excerpts}` : ''}`.trim();
+}
+
+async function tryOpenAI(options: GenerationOptions, pass: number = 0): Promise<{ success: boolean; content?: string; error?: string }> {
     const { signName, mode, focus } = options;
 
     // Verifica cooldown
@@ -54,11 +81,13 @@ async function tryOpenAI(options: GenerationOptions): Promise<{ success: boolean
     try {
         console.log(`[OPENAI] Tentando gerar para ${signName}...`);
 
-        const prompt = mode === 'premium' && focus
+        const basePrompt = mode === 'premium' && focus
             ? getPremiumPrompt(signName, focus)
             : mode === 'luna'
                 ? getLunaPrompt(signName)
                 : getShortPrompt(signName);
+
+        const prompt = `${basePrompt}\n\n${buildAntiRepetitionBlock(options, pass)}`.trim();
 
         const completion = await openai.chat.completions.create({
             model: 'gpt-4o-mini',
@@ -94,7 +123,7 @@ async function tryOpenAI(options: GenerationOptions): Promise<{ success: boolean
 /**
  * Tenta gerar com Gemini
  */
-async function tryGemini(options: GenerationOptions): Promise<{ success: boolean; content?: string; error?: string }> {
+async function tryGemini(options: GenerationOptions, pass: number = 0): Promise<{ success: boolean; content?: string; error?: string }> {
     const { signName, mode, focus } = options;
 
     if (!genAI) {
@@ -111,11 +140,13 @@ async function tryGemini(options: GenerationOptions): Promise<{ success: boolean
 
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-        const prompt = mode === 'premium' && focus
+        const basePrompt = mode === 'premium' && focus
             ? getPremiumPrompt(signName, focus)
             : mode === 'luna'
                 ? getLunaPrompt(signName)
                 : getShortPrompt(signName);
+
+        const prompt = `${basePrompt}\n\n${buildAntiRepetitionBlock(options, pass)}`.trim();
 
         const fullPrompt = `${prompt}\n\nGere a mensagem do dia para ${signName}.`;
 
@@ -176,64 +207,91 @@ export async function generateHoroscope(options: GenerationOptions): Promise<Gen
     const errors: string[] = [];
     let attempts = 0;
 
-    // Nível 1: OpenAI
-    attempts++;
-    const openaiResult = await tryOpenAI(options);
-    if (openaiResult.success && openaiResult.content) {
-        try {
-            const parsed = JSON.parse(openaiResult.content);
-            const content = options.mode === 'premium' ? parsed : parsed.mensagem;
+    const shouldCheckSimilarity = options.mode === 'luna' && (options.avoidContents?.length || 0) > 0;
 
-            // Validação de qualidade
-            const validation = validateText(typeof content === 'string' ? content : JSON.stringify(content));
-            if (!validation.valid) {
-                console.warn(`[QUALITY] Texto contém problemas: ${validation.issues.join(', ')}`);
-            }
+    const acceptIfNotSimilar = (text: string): { ok: boolean; note?: string } => {
+        if (!shouldCheckSimilarity) return { ok: true };
+        const avoid = (options.avoidContents || []).filter(Boolean);
+        const tooSimilar = isContentTooSimilar(text, avoid, 0.35);
+        return tooSimilar ? { ok: false, note: 'too_similar' } : { ok: true };
+    };
 
-            return {
-                success: true,
-                content,
-                provider: 'openai',
-                model: 'gpt-4o-mini',
-                attempts,
-                errors,
-                meta: {
-                    generatedAt: new Date().toISOString(),
-                    cooldownStatus: getCooldownStatus()
+    // Nível 1: OpenAI (com até 3 passes de variação)
+    for (let pass = 0; pass < 3; pass++) {
+        attempts++;
+        const openaiResult = await tryOpenAI(options, pass);
+        if (openaiResult.success && openaiResult.content) {
+            try {
+                const parsed = JSON.parse(openaiResult.content);
+                const content = options.mode === 'premium' ? parsed : parsed.mensagem;
+
+                // Validação de qualidade
+                const validation = validateText(typeof content === 'string' ? content : JSON.stringify(content));
+                if (!validation.valid) {
+                    console.warn(`[QUALITY] Texto contém problemas: ${validation.issues.join(', ')}`);
                 }
-            };
-        } catch (parseError) {
-            errors.push(`OpenAI parse error: ${parseError}`);
+
+                const simCheck = acceptIfNotSimilar(typeof content === 'string' ? content : JSON.stringify(content));
+                if (!simCheck.ok) {
+                    errors.push(`OpenAI: conteúdo muito similar aos dias anteriores (pass ${pass + 1})`);
+                    continue;
+                }
+
+                return {
+                    success: true,
+                    content,
+                    provider: 'openai',
+                    model: 'gpt-4o-mini',
+                    attempts,
+                    errors,
+                    meta: {
+                        generatedAt: new Date().toISOString(),
+                        cooldownStatus: getCooldownStatus()
+                    }
+                };
+            } catch (parseError) {
+                errors.push(`OpenAI parse error: ${parseError}`);
+            }
+        } else if (openaiResult.error) {
+            errors.push(`OpenAI: ${openaiResult.error}`);
+            break; // se falhou por provider, cai pro Gemini
         }
-    } else if (openaiResult.error) {
-        errors.push(`OpenAI: ${openaiResult.error}`);
     }
 
-    // Nível 2: Gemini
-    attempts++;
-    const geminiResult = await tryGemini(options);
-    if (geminiResult.success && geminiResult.content) {
-        try {
-            const parsed = JSON.parse(geminiResult.content);
-            const content = options.mode === 'premium' ? parsed : parsed.mensagem;
+    // Nível 2: Gemini (com até 3 passes de variação)
+    for (let pass = 0; pass < 3; pass++) {
+        attempts++;
+        const geminiResult = await tryGemini(options, pass);
+        if (geminiResult.success && geminiResult.content) {
+            try {
+                const parsed = JSON.parse(geminiResult.content);
+                const content = options.mode === 'premium' ? parsed : parsed.mensagem;
 
-            return {
-                success: true,
-                content,
-                provider: 'gemini',
-                model: 'gemini-1.5-flash',
-                attempts,
-                errors,
-                meta: {
-                    generatedAt: new Date().toISOString(),
-                    cooldownStatus: getCooldownStatus()
+                const simCheck = acceptIfNotSimilar(typeof content === 'string' ? content : JSON.stringify(content));
+                if (!simCheck.ok) {
+                    errors.push(`Gemini: conteúdo muito similar aos dias anteriores (pass ${pass + 1})`);
+                    continue;
                 }
-            };
-        } catch (parseError) {
-            errors.push(`Gemini parse error: ${parseError}`);
+
+                return {
+                    success: true,
+                    content,
+                    provider: 'gemini',
+                    model: 'gemini-1.5-flash',
+                    attempts,
+                    errors,
+                    meta: {
+                        generatedAt: new Date().toISOString(),
+                        cooldownStatus: getCooldownStatus()
+                    }
+                };
+            } catch (parseError) {
+                errors.push(`Gemini parse error: ${parseError}`);
+            }
+        } else if (geminiResult.error) {
+            errors.push(`Gemini: ${geminiResult.error}`);
+            break;
         }
-    } else if (geminiResult.error) {
-        errors.push(`Gemini: ${geminiResult.error}`);
     }
 
     // Nível 3: Template Local
