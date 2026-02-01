@@ -505,18 +505,90 @@ const BODIES_BY_SIGN: Record<string, string[]> = {
 // Fechamento personalizado para dar identidade única
 
 const CLOSERS: Record<string, string[]> = {
-    aries: ['Que a coragem seja bússola. O resto se resolve no caminho.'],
-    touro: ['Que as raízes permaneçam firmes. Tempestade passa, base fica.'],
-    gemeos: ['Que a mente descanse quando cansar. Pensamento também precisa de silêncio.'],
-    cancer: ['Que o coração encontre porto seguro. Primeiro dentro, depois fora.'],
-    leao: ['Que o brilho seja generoso. Luz compartilhada multiplica.'],
-    virgem: ['Que o olhar atento também saiba descansar. Nem tudo precisa ser consertado hoje.'],
-    libra: ['Que o equilíbrio seja dinâmico. Harmonia é movimento, não estátua.'],
-    escorpiao: ['Que a profundidade revele tesouros. O que desce sempre volta transformado.'],
-    sagitario: ['Que o horizonte continue chamando. Mas que os pés toquem o chão também.'],
-    capricornio: ['Que a montanha seja escalada com presença. O topo importa, mas o caminho também.'],
-    aquario: ['Que a visão inovadora encontre raízes. Futuro se constrói no presente.'],
-    peixes: ['Que os sonhos ganhem forma. Mas que a realidade também tenha espaço.']
+    aries: [
+        'Que a coragem seja bússola. O resto se resolve no caminho.',
+        'Que a chama encontre direção. A pressa vira força quando tem alvo.',
+        'Que a iniciativa venha com presença. Um passo firme vale por dez impulsos.',
+        'Que a coragem seja calma por dentro. Força real não precisa gritar.',
+        'Que o coração avance sem se perder. Movimento também pode ser consciente.'
+    ],
+    touro: [
+        'Que as raízes permaneçam firmes. Tempestade passa, base fica.',
+        'Que a calma proteja o que importa. O tempo trabalha a seu favor.',
+        'Que o corpo guie o ritmo. Descanso também é construção.',
+        'Que o simples seja suficiente. O essencial sempre sustenta.',
+        'Que a segurança venha de dentro. O mundo muda, a base permanece.'
+    ],
+    gemeos: [
+        'Que a mente descanse quando cansar. Pensamento também precisa de silêncio.',
+        'Que as ideias encontrem chão. Clareza nasce quando se escolhe um foco.',
+        'Que a curiosidade seja leve. Nem tudo precisa virar urgência.',
+        'Que a palavra cure, não confunda. Dizer menos pode dizer melhor.',
+        'Que o agora seja âncora. A mente viaja melhor quando sabe voltar.'
+    ],
+    cancer: [
+        'Que o coração encontre porto seguro. Primeiro dentro, depois fora.',
+        'Que a sensibilidade seja abrigo, não peso. Cuidar de si é prioridade.',
+        'Que a intuição fale mais alto que o medo. Silêncio também é resposta.',
+        'Que o afeto seja mútuo. Reciprocidade é paz emocional.',
+        'Que o passado ensine sem prender. O presente merece espaço.'
+    ],
+    leao: [
+        'Que o brilho seja generoso. Luz compartilhada multiplica.',
+        'Que a autoestima seja quieta. Quem sabe do próprio valor não implora aplauso.',
+        'Que o coração lidere com ternura. Grandeza de verdade acolhe.',
+        'Que a alegria seja guia. O que é autêntico ilumina sem esforço.',
+        'Que a coragem de amar seja maior que o orgulho. O afeto também é força.'
+    ],
+    virgem: [
+        'Que o olhar atento também saiba descansar. Nem tudo precisa ser consertado hoje.',
+        'Que o “feito” traga paz. Perfeição não é requisito para seguir.',
+        'Que a rotina seja aliada, não prisão. Ajustes pequenos mudam o dia.',
+        'Que a gentileza com si mesmo vença a cobrança. Você já está tentando.',
+        'Que a clareza venha do simples. Menos peso, mais presença.'
+    ],
+    libra: [
+        'Que o equilíbrio seja dinâmico. Harmonia é movimento, não estátua.',
+        'Que a escolha seja leve. Decidir é também cuidar do próprio caminho.',
+        'Que a gentileza não esconda a verdade. Honestidade também é amor.',
+        'Que a paz não seja silêncio forçado. Conversa limpa o ar.',
+        'Que a beleza acalme por dentro. Harmonia começa no coração.'
+    ],
+    escorpiao: [
+        'Que a profundidade revele tesouros. O que desce sempre volta transformado.',
+        'Que a verdade seja cura, não guerra. Firmeza também pode ser delicada.',
+        'Que o controle ceda espaço à confiança. Soltar é renascer.',
+        'Que a intensidade tenha direção. Potência sem rumo vira desgaste.',
+        'Que o medo seja atravessado. Coragem emocional muda destinos internos.'
+    ],
+    sagitario: [
+        'Que o horizonte continue chamando. Mas que os pés toquem o chão também.',
+        'Que a liberdade venha com responsabilidade. Expandir também é sustentar.',
+        'Que a fé seja prática. Um passo pequeno abre grandes estradas.',
+        'Que o entusiasmo não vire fuga. Presença também é aventura.',
+        'Que o riso alivie o peso. Leveza é inteligência em movimento.'
+    ],
+    capricornio: [
+        'Que a montanha seja escalada com presença. O topo importa, mas o caminho também.',
+        'Que a constância vença a pressa. O que é sólido não nasce correndo.',
+        'Que o descanso seja estratégia. Nenhuma obra dura sem manutenção.',
+        'Que a disciplina venha com humanidade. Você não precisa carregar tudo.',
+        'Que o futuro seja construído sem esquecer o agora. Vida é também hoje.'
+    ],
+    aquario: [
+        'Que a visão inovadora encontre raízes. Futuro se constrói no presente.',
+        'Que a liberdade seja ponte, não distância. Conectar também é força.',
+        'Que o diferente encontre utilidade. Ideia boa vira mundo quando vira prática.',
+        'Que a mente ampla lembre do coração. Humanidade também é tecnologia.',
+        'Que o novo nasça com calma. Inovar é escolher melhor, não apenas mudar.'
+    ],
+    peixes: [
+        'Que os sonhos ganhem forma. Mas que a realidade também tenha espaço.',
+        'Que a sensibilidade encontre limites. Cuidar de si é proteger a luz.',
+        'Que a intuição seja guia. E que o corpo seja chão.',
+        'Que a compaixão não vire sacrifício. Amor também é dizer não.',
+        'Que a poesia do dia traga calma. O silêncio também cura.'
+    ]
 };
 
 // ==================== FUNÇÃO DE HASH ====================
