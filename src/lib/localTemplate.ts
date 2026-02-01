@@ -869,6 +869,141 @@ const WEEKDAY_ENERGIES: Record<number, string[]> = {
     ]
 };
 
+// ==================== VARIAÇÃO PROFUNDA (MIolo) ====================
+// Para reduzir sensação de repetição sem precisar escrever 10 "corpos" inteiros por signo,
+// adicionamos 2 parágrafos extras (1 do signo + 1 do elemento) acoplados ao corpo base.
+// Isso cria centenas de combinações determinísticas por dia.
+
+const SIGN_ADDONS: Record<string, string[]> = {
+    aries: [
+        'Se você sentir uma impaciência fora do normal, tente separar impulso de prioridade. Nem tudo que chama sua atenção merece sua energia inteira.',
+        'Você tende a se fortalecer quando age, mas hoje a ação mais inteligente pode ser escolher o que NÃO fazer.',
+        'O seu “sim” tem poder. Use-o com intenção — e não como resposta automática ao tédio.',
+        'Quando você lidera pelo exemplo, você inspira. Quando lidera pela pressa, você desgasta. Hoje pede a primeira opção.',
+        'A coragem de Áries não é só começar. É sustentar sem se perder no meio do caminho.',
+        'Se bater a sensação de “ninguém acompanha meu ritmo”, lembre: ritmo forte também precisa de pausas para não virar exaustão.'
+    ],
+    touro: [
+        'Hoje, a sua estabilidade pode ser remédio para o caos alheio — mas sem virar peso. Você não precisa carregar o mundo nas costas.',
+        'Se algo parecer lento demais, talvez seja só o tempo certo das coisas. Nem tudo melhora quando acelera.',
+        'Touro cresce quando confia no processo: repetição boa, constância e cuidado com o básico.',
+        'O prazer simples (comida boa, banho, música) pode ser mais terapêutico do que você imagina hoje.',
+        'Você não precisa se endurecer para se proteger. Limite firme pode ser colocado com gentileza.',
+        'Se a insegurança aparecer, volte para o concreto: o que é fato, o que é sensação, o que é suposição.'
+    ],
+    gemeos: [
+        'A mente de Gêmeos cria caminhos rápido — e isso é um dom. Hoje o desafio é não se perder em caminhos demais ao mesmo tempo.',
+        'Se você sentir ansiedade mental, experimente escrever em uma frase o que você realmente quer resolver hoje. Uma frase só.',
+        'Nem toda informação precisa virar decisão. Às vezes, é só dado passando.',
+        'Você se organiza melhor quando conversa com alguém de confiança — não para pedir permissão, mas para ouvir você mesmo em voz alta.',
+        'Quando a cabeça está cheia, o corpo é o atalho: água, respiração, caminhada curta. O pensamento acompanha.',
+        'Você não precisa ter resposta agora. Hoje, perguntas boas valem mais do que conclusões apressadas.'
+    ],
+    cancer: [
+        'Câncer sente antes de entender. Hoje, respeitar o tempo do sentir é parte do autocuidado.',
+        'Se algo te tocar mais do que deveria, talvez não seja sobre o agora — pode ser um eco emocional antigo pedindo atenção.',
+        'Você tem uma inteligência afetiva rara. Use-a também para cuidar de você, não só dos outros.',
+        'Hoje, segurança emocional vem de limites claros: o que é seu, o que é do outro, o que você não precisa absorver.',
+        'Se bater vontade de se fechar, tente escolher alguém seguro em vez de escolher solidão total. Pequena conexão já ajuda.',
+        'O seu coração funciona melhor quando a casa interna está em ordem. Um gesto de cuidado consigo já muda o dia.'
+    ],
+    leao: [
+        'Leão floresce quando se sente visto — mas hoje o convite é se ver primeiro. Validação interna antes da externa.',
+        'Se o orgulho ameaçar falar mais alto, volte para o que você quer construir, não para o que você quer provar.',
+        'Você é mais forte quando é autêntico. Performance cansa; presença sustenta.',
+        'Hoje, generosidade com você mesmo é tão importante quanto generosidade com os outros.',
+        'Quando a emoção sobe, o coração de Leão pode virar palco. Hoje vale escolher um tom mais íntimo e verdadeiro.',
+        'Brilhar não é se expor o tempo todo. Às vezes é só estar firme e quente por dentro.'
+    ],
+    virgem: [
+        'Virgem melhora tudo que toca — mas hoje o convite é: escolha um ponto e resolva só ele. O resto pode esperar.',
+        'Se a autocrítica apertar, troque cobrança por ajuste: o que é uma melhoria pequena e realista para hoje?',
+        'Seu olhar é preciso. Só cuide para não usar essa precisão contra você mesmo.',
+        'Quando você organiza o ambiente, você organiza a mente. Hoje um gesto simples de arrumação pode aliviar muito.',
+        'Nem tudo precisa estar perfeito para estar bom. O “bom o bastante” também é maturidade.',
+        'Você não precisa merecer descanso. Descanso é parte do processo, não prêmio.'
+    ],
+    libra: [
+        'Libra sente a balança interna: quando algo está torto, você percebe. Hoje, perceba — e escolha sem culpa.',
+        'Se você estiver hesitando, talvez não seja indecisão: pode ser sensibilidade ao impacto. Transforme isso em clareza.',
+        'Você não precisa manter paz a qualquer custo. Paz que exige silêncio não é paz, é contenção.',
+        'Hoje, diplomacia funciona melhor quando vem junto de verdade. Gentileza não é concordar com tudo.',
+        'Se a energia do outro te puxar, volte para o centro: o que você quer, de verdade?',
+        'Um “não” bem colocado hoje pode ser o começo de um “sim” mais honesto amanhã.'
+    ],
+    escorpiao: [
+        'Escorpião percebe o que ninguém diz. Hoje, use isso para entender — não para se defender.',
+        'Se você sentir vontade de controlar, pergunte: é medo de perder ou necessidade real de proteção?',
+        'O seu poder aumenta quando você escolhe a verdade com calma, não quando reage na intensidade.',
+        'Hoje, transformar é melhor do que confrontar. A energia certa muda o jogo por dentro.',
+        'Nem todo silêncio é ameaça. Às vezes é só espaço. E espaço também cura.',
+        'Você não precisa carregar tudo sozinho. Vulnerabilidade seletiva também é força.'
+    ],
+    sagitario: [
+        'Sagitário precisa de sentido. Hoje, sentido pode ser simples: uma escolha alinhada já muda a energia.',
+        'Se bater inquietação, talvez você esteja buscando expansão onde o que falta é presença.',
+        'Você fica mais leve quando confia. Mas confiança hoje pede base: um plano mínimo, realista.',
+        'O “sim” de Sagitário abre portas — só cuide para não dizer sim para fugir do desconforto.',
+        'Hoje, liberdade é escolher com responsabilidade. Você consegue sustentar o que deseja?',
+        'A aventura mais inteligente hoje pode ser interna: mudar um pensamento, um padrão, um hábito.'
+    ],
+    capricornio: [
+        'Capricórnio sustenta muito. Hoje, a pergunta é: o que você está sustentando que já não é seu?',
+        'Se a pressão interna apertar, volte para a métrica certa: progresso real, não perfeição.',
+        'Seu senso de dever é valioso — desde que você não vire funcionário da própria vida.',
+        'Hoje, disciplina com gentileza funciona melhor do que disciplina com dureza.',
+        'Você pode ser forte e ainda assim descansar. Descanso é estratégia, não fraqueza.',
+        'Quando você respeita o próprio tempo, o resultado melhora. Pressa é cara.'
+    ],
+    aquario: [
+        'Aquário vê o futuro, mas hoje o futuro precisa de um gesto concreto no presente.',
+        'Se você sentir distância emocional, talvez seja só proteção. Hoje, conexão pode ser segura e gradual.',
+        'A sua originalidade é potência — desde que não vire isolamento. Ideia boa também precisa de troca.',
+        'Hoje, liberdade é escolher o que te faz bem, não só o que te diferencia.',
+        'Você não precisa convencer ninguém. Só precisa construir com consistência.',
+        'Quando a mente abre demais, o corpo chama. Voltar pro agora te fortalece.'
+    ],
+    peixes: [
+        'Peixes capta o clima. Hoje, cuide para não confundir empatia com absorção. Limite é autocuidado.',
+        'Se a emoção vier forte, não corra para explicar. Sinta primeiro, nomeie depois.',
+        'A intuição de Peixes é real — mas ela funciona melhor quando o corpo está bem.',
+        'Hoje, delicadeza com você mesmo é prioridade. Sem isso, o mundo pesa demais.',
+        'Você não precisa salvar nada hoje. Só estar presente já é suficiente.',
+        'Quando você simplifica, a clareza aparece. Um gesto pequeno pode te devolver paz.'
+    ]
+};
+
+const ELEMENT_ADDONS: Record<'fogo' | 'terra' | 'ar' | 'agua', string[]> = {
+    fogo: [
+        'Se a energia estiver alta, canalize: uma ação pequena e bem feita vale mais do que explosões de vontade.',
+        'Hoje, o impulso pede direção. Escolha um alvo e proteja sua energia do excesso.',
+        'Quando a vontade cresce, a pausa vira estratégia. Respire antes de agir.',
+        'A energia do fogo é poderosa — e fica melhor quando usada com intenção.',
+        'Coragem também é dizer não para distrações que drenam.'
+    ],
+    terra: [
+        'Hoje, o concreto te organiza: rotina simples, tarefa prática, um cuidado com o corpo.',
+        'A energia pede constância. Faça o básico bem feito e o resto se ajeita.',
+        'Quando tudo parece demais, volte para o essencial: o que sustenta você de verdade?',
+        'A estabilidade cresce com pequenos hábitos. Um ajuste já muda o dia.',
+        'Hoje, menos pressa e mais presença trazem paz.'
+    ],
+    ar: [
+        'Hoje, clareza é remédio: menos ruído, mais foco. Uma coisa por vez.',
+        'A mente tende a correr; o antídoto é simplificar e nomear o que você sente.',
+        'Uma conversa honesta pode destravar o que estava preso.',
+        'Escolha onde colocar sua atenção. Atenção é energia.',
+        'Quando o pensamento vira loop, escrever ajuda a quebrar o ciclo.'
+    ],
+    agua: [
+        'Hoje, sentir com limite é sabedoria. Acolher não é se afogar.',
+        'A energia pede gentileza: consigo e com os outros. Sem exagero.',
+        'Quando a emoção sobe, o corpo precisa de cuidado. Água, respiração, pausa.',
+        'O coração entende antes da mente. Dê tempo para a clareza chegar.',
+        'Hoje, carinho bem colocado muda tudo: por dentro e por fora.'
+    ]
+};
+
 // ==================== FUNÇÃO DE HASH ====================
 
 // ==================== FUNÇÃO DE HASH ====================
@@ -928,9 +1063,23 @@ export function generateLocalHoroscope(options: LocalTemplateOptions): { message
 
     // 2. CORPO RICO (V2) - O texto principal fluido e completo
     const bodies = BODIES_BY_SIGN[sign] || BODIES_BY_SIGN['aries'];
-    const body = selectFromArray(bodies, seed + 1);
+    const baseBody = selectFromArray(bodies, seed + 1);
 
-    // 2.1 Insight extra (micro-variação dentro do corpo)
+    // 2.1 Adendo do signo (micro-variação dentro do miolo)
+    const signAddons = SIGN_ADDONS[sign] || SIGN_ADDONS['aries'];
+    const signAddon = selectFromArray(signAddons, seed + 17);
+
+    // 2.2 Adendo do elemento (micro-variação dentro do miolo)
+    const elementAddons = ELEMENT_ADDONS[element] || ELEMENT_ADDONS.fogo;
+    const elementAddon = selectFromArray(elementAddons, seed + 19);
+
+    const body = `${baseBody}
+
+${signAddon}
+
+${elementAddon}`;
+
+    // 2.3 Insight extra (micro-variação dentro do corpo)
     const insights = ELEMENT_INSIGHTS[element] || ELEMENT_INSIGHTS.fogo;
     const insight = selectFromArray(insights, seed + 11);
 
