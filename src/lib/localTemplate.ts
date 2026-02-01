@@ -501,93 +501,308 @@ const BODIES_BY_SIGN: Record<string, string[]> = {
     peixes: BODIES_PEIXES
 };
 
-// ==================== CLOSERS POR SIGNO ====================
-// Fechamento personalizado para dar identidade única
+// ==================== CLOSERS / MICRO-VARIAÇÕES ====================
+// Para evitar sensação de repetição, combinamos:
+// - fechamentos por signo (identidade)
+// - + fechamentos por elemento (variação extra)
 
-const CLOSERS: Record<string, string[]> = {
+const SIGN_CLOSERS: Record<string, string[]> = {
     aries: [
         'Que a coragem seja bússola. O resto se resolve no caminho.',
         'Que a chama encontre direção. A pressa vira força quando tem alvo.',
         'Que a iniciativa venha com presença. Um passo firme vale por dez impulsos.',
         'Que a coragem seja calma por dentro. Força real não precisa gritar.',
-        'Que o coração avance sem se perder. Movimento também pode ser consciente.'
+        'Que o coração avance sem se perder. Movimento também pode ser consciente.',
+        'Que o impulso encontre foco. A energia certa move montanhas.',
+        'Que a ação venha com clareza. Coragem é também escolha.',
+        'Que a vontade não vire guerra. Liderar começa dentro.',
+        'Que a força seja gentil. Firmeza pode ser serena.',
+        'Que o dia termine com paz. O que importa permanece.'
     ],
     touro: [
         'Que as raízes permaneçam firmes. Tempestade passa, base fica.',
         'Que a calma proteja o que importa. O tempo trabalha a seu favor.',
         'Que o corpo guie o ritmo. Descanso também é construção.',
         'Que o simples seja suficiente. O essencial sempre sustenta.',
-        'Que a segurança venha de dentro. O mundo muda, a base permanece.'
+        'Que a segurança venha de dentro. O mundo muda, a base permanece.',
+        'Que a paciência seja aliada. O que é sólido cresce devagar.',
+        'Que o prazer seja permitido. Bem-estar também é caminho.',
+        'Que a constância vença a ansiedade. Um passo de cada vez.',
+        'Que a vida seja mais leve. Menos peso, mais presença.',
+        'Que o dia feche com serenidade. O coração agradece.'
     ],
     gemeos: [
         'Que a mente descanse quando cansar. Pensamento também precisa de silêncio.',
         'Que as ideias encontrem chão. Clareza nasce quando se escolhe um foco.',
         'Que a curiosidade seja leve. Nem tudo precisa virar urgência.',
         'Que a palavra cure, não confunda. Dizer menos pode dizer melhor.',
-        'Que o agora seja âncora. A mente viaja melhor quando sabe voltar.'
+        'Que o agora seja âncora. A mente viaja melhor quando sabe voltar.',
+        'Que a dúvida vire pergunta boa. Perguntar é sabedoria em movimento.',
+        'Que a conversa traga paz. O que é claro não pesa.',
+        'Que o dia tenha espaço. Silêncio também organiza a cabeça.',
+        'Que a leveza seja guia. Nem tudo precisa ser resolvido hoje.',
+        'Que a mente se acalme. Uma coisa por vez basta.'
     ],
     cancer: [
         'Que o coração encontre porto seguro. Primeiro dentro, depois fora.',
         'Que a sensibilidade seja abrigo, não peso. Cuidar de si é prioridade.',
         'Que a intuição fale mais alto que o medo. Silêncio também é resposta.',
         'Que o afeto seja mútuo. Reciprocidade é paz emocional.',
-        'Que o passado ensine sem prender. O presente merece espaço.'
+        'Que o passado ensine sem prender. O presente merece espaço.',
+        'Que o cuidado não vire excesso. Limite também é amor.',
+        'Que o coração descanse. Nem tudo precisa de resposta agora.',
+        'Que a casa interna fique em ordem. Paz começa por dentro.',
+        'Que a saudade vire sabedoria. O agora pede presença.',
+        'Que o dia termine com acolhimento. Você merece gentileza.'
     ],
     leao: [
         'Que o brilho seja generoso. Luz compartilhada multiplica.',
         'Que a autoestima seja quieta. Quem sabe do próprio valor não implora aplauso.',
         'Que o coração lidere com ternura. Grandeza de verdade acolhe.',
         'Que a alegria seja guia. O que é autêntico ilumina sem esforço.',
-        'Que a coragem de amar seja maior que o orgulho. O afeto também é força.'
+        'Que a coragem de amar seja maior que o orgulho. O afeto também é força.',
+        'Que o brilho não pese. Você não precisa provar nada.',
+        'Que o dia tenha beleza. O simples também pode ser grandioso.',
+        'Que a presença fale. Silêncio seguro vale mais que performance.',
+        'Que o amor-próprio seja base. Quando a base é forte, tudo cresce.',
+        'Que a luz seja calma. Brilhar também é descansar.'
     ],
     virgem: [
         'Que o olhar atento também saiba descansar. Nem tudo precisa ser consertado hoje.',
         'Que o “feito” traga paz. Perfeição não é requisito para seguir.',
         'Que a rotina seja aliada, não prisão. Ajustes pequenos mudam o dia.',
         'Que a gentileza com si mesmo vença a cobrança. Você já está tentando.',
-        'Que a clareza venha do simples. Menos peso, mais presença.'
+        'Que a clareza venha do simples. Menos peso, mais presença.',
+        'Que o detalhe não roube o todo. Visão ampla também é sabedoria.',
+        'Que a ordem traga leveza. Organização é cuidado consigo.',
+        'Que o dia feche em paz. Você não precisa fazer tudo.',
+        'Que o coração respire. Nem tudo é problema para resolver.',
+        'Que o progresso seja constante. Um ajuste hoje já muda amanhã.'
     ],
     libra: [
         'Que o equilíbrio seja dinâmico. Harmonia é movimento, não estátua.',
         'Que a escolha seja leve. Decidir é também cuidar do próprio caminho.',
         'Que a gentileza não esconda a verdade. Honestidade também é amor.',
         'Que a paz não seja silêncio forçado. Conversa limpa o ar.',
-        'Que a beleza acalme por dentro. Harmonia começa no coração.'
+        'Que a beleza acalme por dentro. Harmonia começa no coração.',
+        'Que a presença valha mais que a aprovação. Você não precisa agradar tudo.',
+        'Que o dia tenha doçura. O que é simples também cura.',
+        'Que a balança encontre centro. Um “não” também é cuidado.',
+        'Que a verdade venha com respeito. Limite é carinho.',
+        'Que o coração escolha paz. Sem perder a própria voz.'
     ],
     escorpiao: [
         'Que a profundidade revele tesouros. O que desce sempre volta transformado.',
         'Que a verdade seja cura, não guerra. Firmeza também pode ser delicada.',
         'Que o controle ceda espaço à confiança. Soltar é renascer.',
         'Que a intensidade tenha direção. Potência sem rumo vira desgaste.',
-        'Que o medo seja atravessado. Coragem emocional muda destinos internos.'
+        'Que o medo seja atravessado. Coragem emocional muda destinos internos.',
+        'Que a transformação seja leve. Mudança não precisa ser dor.',
+        'Que o silêncio organize o coração. Nem tudo precisa ser dito agora.',
+        'Que a força seja limpa. Sem rancor, sem peso extra.',
+        'Que o dia feche com clareza. Verdade também acalma.',
+        'Que a coragem seja interna. O resto acompanha.'
     ],
     sagitario: [
         'Que o horizonte continue chamando. Mas que os pés toquem o chão também.',
         'Que a liberdade venha com responsabilidade. Expandir também é sustentar.',
         'Que a fé seja prática. Um passo pequeno abre grandes estradas.',
         'Que o entusiasmo não vire fuga. Presença também é aventura.',
-        'Que o riso alivie o peso. Leveza é inteligência em movimento.'
+        'Que o riso alivie o peso. Leveza é inteligência em movimento.',
+        'Que o dia traga sentido. Propósito é bússola silenciosa.',
+        'Que o novo seja bem-vindo. Mas sem esquecer o que sustenta.',
+        'Que a alegria seja coragem. Viver bem também é escolha.',
+        'Que a visão se transforme em ação. Ideia boa vira caminho.',
+        'Que o coração respire livre. E que a mente volte pro agora.'
     ],
     capricornio: [
         'Que a montanha seja escalada com presença. O topo importa, mas o caminho também.',
         'Que a constância vença a pressa. O que é sólido não nasce correndo.',
         'Que o descanso seja estratégia. Nenhuma obra dura sem manutenção.',
         'Que a disciplina venha com humanidade. Você não precisa carregar tudo.',
-        'Que o futuro seja construído sem esquecer o agora. Vida é também hoje.'
+        'Que o futuro seja construído sem esquecer o agora. Vida é também hoje.',
+        'Que o dia feche com paz. Você já fez o suficiente.',
+        'Que a meta não vire peso. Caminho também é vida.',
+        'Que a responsabilidade tenha limites. Limite também é maturidade.',
+        'Que o esforço seja reconhecido. Inclusive por você.',
+        'Que a firmeza seja suave. Consistência é um abraço no tempo.'
     ],
     aquario: [
         'Que a visão inovadora encontre raízes. Futuro se constrói no presente.',
         'Que a liberdade seja ponte, não distância. Conectar também é força.',
         'Que o diferente encontre utilidade. Ideia boa vira mundo quando vira prática.',
         'Que a mente ampla lembre do coração. Humanidade também é tecnologia.',
-        'Que o novo nasça com calma. Inovar é escolher melhor, não apenas mudar.'
+        'Que o novo nasça com calma. Inovar é escolher melhor, não apenas mudar.',
+        'Que a mudança tenha propósito. Revolução sem rumo vira ruído.',
+        'Que o dia traga clareza. Nem todo caos é necessário.',
+        'Que a comunidade some. Mas que você não se perca de si.',
+        'Que o futuro seja leve. O presente é a base.',
+        'Que a ideia vire ação. Um passo concreto muda o jogo.'
     ],
     peixes: [
         'Que os sonhos ganhem forma. Mas que a realidade também tenha espaço.',
         'Que a sensibilidade encontre limites. Cuidar de si é proteger a luz.',
         'Que a intuição seja guia. E que o corpo seja chão.',
         'Que a compaixão não vire sacrifício. Amor também é dizer não.',
-        'Que a poesia do dia traga calma. O silêncio também cura.'
+        'Que a poesia do dia traga calma. O silêncio também cura.',
+        'Que a gentileza seja consigo. Você não precisa salvar tudo.',
+        'Que o dia feche em paz. Leveza também é sabedoria.',
+        'Que a imaginação encontre rotina. Um passo por vez.',
+        'Que o coração descanse. Limite também é amor.',
+        'Que a alma respire. Presença é abrigo.'
+    ]
+};
+
+const ELEMENT_CLOSERS: Record<'fogo' | 'terra' | 'ar' | 'agua', string[]> = {
+    fogo: [
+        'Que o impulso vire direção. Uma escolha consciente vale ouro.',
+        'Que a coragem seja serena. Força que se controla é força real.',
+        'Que o dia termine leve. Nem toda batalha é sua.',
+        'Que a energia encontre um alvo. O resto é ruído.',
+        'Que a vontade seja guia. Com calma por dentro.',
+        'Que o movimento seja limpo. Sem pressa, sem culpa.',
+        'Que a chama aqueça, não queime. Presença é proteção.',
+        'Que a iniciativa seja madura. Começar também é sustentar.',
+        'Que a ação cure. Mas que a pausa também cure.',
+        'Que o coração avance com respeito ao próprio tempo.',
+        'Que o entusiasmo se transforme em prática.',
+        'Que a força seja usada com sabedoria.',
+        'Que o impulso encontre estratégia.',
+        'Que o dia feche com paz e coragem.',
+        'Que a energia do começo abra um caminho bom.',
+        'Que a coragem não vire pressa. O alvo é o que importa.',
+        'Que o corpo acompanhe a mente. Respire e siga.',
+        'Que a ação seja gentil. A vida responde melhor assim.',
+        'Que a chama permaneça acesa. Sem consumir você.',
+        'Que a intenção seja clara. O resto se alinha.'
+    ],
+    terra: [
+        'Que o simples sustente. O essencial nunca falha.',
+        'Que a calma organize tudo. Um passo de cada vez.',
+        'Que o tempo seja aliado. Constância constrói.',
+        'Que o corpo seja bússola. Ritmo é sabedoria.',
+        'Que a estabilidade venha de dentro. E o resto se ajeita.',
+        'Que a vida fique leve. Sem perder o chão.',
+        'Que o dia feche com serenidade. Você merece descanso.',
+        'Que a paciência renda frutos. O que é sólido fica.',
+        'Que a rotina seja cuidado. E não prisão.',
+        'Que a segurança seja presença. Não controle.',
+        'Que o coração tenha tempo. Sem pressa, sem culpa.',
+        'Que a consistência faça o trabalho silencioso.',
+        'Que o passo seja firme. Mesmo pequeno.',
+        'Que o hoje seja suficiente. O amanhã vem.',
+        'Que a base esteja forte. O topo vem depois.',
+        'Que a ordem traga paz. Sem rigidez.',
+        'Que o corpo descanse. E a mente também.',
+        'Que a vida seja simples. E bonita.',
+        'Que o essencial guie o resto.',
+        'Que o dia termine com chão e calma.'
+    ],
+    ar: [
+        'Que a mente encontre foco. Um assunto por vez.',
+        'Que a palavra traga clareza. Sem excesso, sem ruído.',
+        'Que o silêncio organize. Nem tudo precisa de resposta.',
+        'Que o agora seja âncora. A mente agradece.',
+        'Que as ideias encontrem forma. E virem ação.',
+        'Que a conversa seja limpa. O que é claro não pesa.',
+        'Que a curiosidade seja leve. E não ansiedade.',
+        'Que o dia feche com simplicidade. Respire.',
+        'Que a mente desacelere. O coração acompanha.',
+        'Que a dúvida vire direção. Perguntas certas curam.',
+        'Que as ideias sejam boas companhias. Sem te levar embora.',
+        'Que o pensamento seja ferramenta. Não prisão.',
+        'Que a leveza seja escolha. E não fuga.',
+        'Que a presença vença a pressa mental.',
+        'Que a palavra seja ponte. Não muro.',
+        'Que a mente descanse. O mundo espera.',
+        'Que a clareza chegue devagar. E fique.',
+        'Que a curiosidade encontre propósito.',
+        'Que o foco seja gentil. Sem cobrança.',
+        'Que o dia termine com paz na cabeça.'
+    ],
+    agua: [
+        'Que o coração se acolha. Sem julgamento.',
+        'Que a sensibilidade seja força. E não peso.',
+        'Que a intuição guie com calma. O corpo sabe.',
+        'Que o afeto seja mútuo. E simples.',
+        'Que o dia feche com ternura. Você merece.',
+        'Que o passado ensine sem prender.',
+        'Que a emoção passe. E deixe clareza.',
+        'Que o silêncio seja abrigo. E não fuga.',
+        'Que a delicadeza proteja você.',
+        'Que a paz comece dentro. E se espalhe.',
+        'Que a onda não te leve. Você sabe voltar.',
+        'Que a saudade vire sabedoria.',
+        'Que o cuidado comece em você.',
+        'Que a emoção vire direção. Sem excesso.',
+        'Que o coração respire. Sem medo.',
+        'Que a ternura seja prática hoje.',
+        'Que o limite seja carinho.',
+        'Que o afeto não pese. Que nutra.',
+        'Que o dia termine com colo interno.',
+        'Que a calma emocional te encontre.'
+    ]
+};
+
+const ELEMENT_BRIDGES: Record<'fogo' | 'terra' | 'ar' | 'agua', string[]> = {
+    fogo: [
+        'O dia pede atitude com consciência, sem virar pressa.',
+        'Há energia de decisão no ar, mas vale escolher o que realmente importa.',
+        'Quando a vontade cresce, a direção precisa crescer junto.',
+        'O impulso é bom — desde que tenha um alvo claro.',
+        'Coragem hoje é também saber pausar antes de agir.'
+    ],
+    terra: [
+        'O dia pede constância e um ritmo que você consiga sustentar.',
+        'O que é simples funciona melhor quando feito com presença.',
+        'Há força em manter o básico bem cuidado.',
+        'O tempo é aliado quando você respeita o passo.',
+        'Organizar por dentro costuma organizar por fora.'
+    ],
+    ar: [
+        'O dia pede clareza: menos ruído, mais intenção.',
+        'Quando a mente corre, o foco vira remédio.',
+        'Conversas certas podem destravar o que estava pesado.',
+        'Ideias boas pedem espaço para amadurecer.',
+        'Às vezes, o melhor movimento é simplificar.'
+    ],
+    agua: [
+        'O dia pede acolhimento: sentir sem se afogar.',
+        'Quando a emoção sobe, respirar vira sabedoria.',
+        'Intuição funciona melhor quando o coração está em paz.',
+        'Cuidar do próprio limite muda tudo.',
+        'Afeto hoje é mais sobre presença do que sobre explicação.'
+    ]
+};
+
+const ELEMENT_INSIGHTS: Record<'fogo' | 'terra' | 'ar' | 'agua', string[]> = {
+    fogo: [
+        'Escolher uma prioridade hoje vale mais do que tentar vencer todas as frentes.',
+        'Quando a energia fica alta, o corpo precisa de descarga — movimento ajuda.',
+        'O “sim” certo hoje é mais poderoso do que mil “talvez”.',
+        'O que é urgente nem sempre é importante. Dê nome ao alvo.',
+        'Você não precisa provar nada. Faça por você.'
+    ],
+    terra: [
+        'Pequenos ajustes hoje geram grande estabilidade amanhã.',
+        'Rotina simples é um tipo de liberdade.',
+        'Cuidar do básico é um ato de amor-próprio.',
+        'O que é consistente vira confiança.',
+        'A pressa é cara. O passo firme é rico.'
+    ],
+    ar: [
+        'Uma conversa honesta vale por horas de pensamento em loop.',
+        'Menos abas abertas, mais presença.',
+        'Clareza nasce quando você escolhe um foco.',
+        'Nem todo pensamento merece atenção.',
+        'Escrever o que sente pode acalmar a mente.'
+    ],
+    agua: [
+        'Sentir não é fraqueza. É informação.',
+        'O limite protege o afeto — não o destrói.',
+        'O coração se acalma quando você se trata com gentileza.',
+        'Nem tudo precisa ser resolvido hoje. Às vezes, só acolhido.',
+        'O passado ensina, mas o presente pede espaço.'
     ]
 };
 
@@ -627,19 +842,41 @@ export function generateLocalHoroscope(options: LocalTemplateOptions): { message
     const openers = OPENERS[sign] || OPENERS['aries'];
     const opener = selectFromArray(openers, seed);
 
+    // Elemento (para micro-variações consistentes)
+    const elementMap: Record<string, 'fogo' | 'terra' | 'ar' | 'agua'> = {
+        aries: 'fogo', leao: 'fogo', sagitario: 'fogo',
+        touro: 'terra', virgem: 'terra', capricornio: 'terra',
+        gemeos: 'ar', libra: 'ar', aquario: 'ar',
+        cancer: 'agua', escorpiao: 'agua', peixes: 'agua'
+    };
+    const element = elementMap[sign] || 'fogo';
+
+    // 1.1 Ponte (varia o "ritmo" do texto sem perder o tom)
+    const bridges = ELEMENT_BRIDGES[element] || ELEMENT_BRIDGES.fogo;
+    const bridge = selectFromArray(bridges, seed + 7);
+
     // 2. CORPO RICO (V2) - O texto principal fluido e completo
     const bodies = BODIES_BY_SIGN[sign] || BODIES_BY_SIGN['aries'];
     const body = selectFromArray(bodies, seed + 1);
 
-    // 3. Fechamento (Frase de efeito)
-    const closers = CLOSERS[sign] || CLOSERS['aries'];
+    // 2.1 Insight extra (micro-variação dentro do corpo)
+    const insights = ELEMENT_INSIGHTS[element] || ELEMENT_INSIGHTS.fogo;
+    const insight = selectFromArray(insights, seed + 11);
+
+    // 3. Fechamento (Frase de efeito) — 30+ variações por combinação signo+elemento
+    const signClosers = SIGN_CLOSERS[sign] || SIGN_CLOSERS['aries'];
+    const elementClosers = ELEMENT_CLOSERS[element] || ELEMENT_CLOSERS.fogo;
+    const closers = [...signClosers, ...elementClosers];
     const closer = selectFromArray(closers, seed + 2);
 
     // Monta mensagem
-    // Nota: O 'opener' serve como título/chamada, o 'body' é o texto completo, 'closer' é assinatura
     const message = `${opener}
 
+${bridge}
+
 ${body}
+
+${insight}
 
 ${closer}`;
 
