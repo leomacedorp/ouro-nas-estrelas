@@ -91,7 +91,7 @@ export default function HomeClient({ settings }: HomeClientProps) {
             {/* ===== DAILY RITUAL ===== */}
             <section className="relative py-24 bg-mystic-900/50 overflow-hidden">
                 <div className="relative z-10">
-                    <DailyRitual />
+                    <DailyRitual dailyEnergyPackage={settings.daily_energy_package} />
                 </div>
             </section>
 

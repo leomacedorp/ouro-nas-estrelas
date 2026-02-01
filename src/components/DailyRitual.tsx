@@ -18,7 +18,16 @@ const FOCUSES = {
 
 type FocusType = keyof typeof FOCUSES | null;
 
-export default function DailyRitual() {
+type DailyEnergyPackage = {
+    date: string;
+    quote: string;
+    byElement?: { fogo?: string; terra?: string; ar?: string; agua?: string };
+    provider?: string;
+    model?: string;
+    generatedAt?: string;
+};
+
+export default function DailyRitual({ dailyEnergyPackage }: { dailyEnergyPackage?: DailyEnergyPackage }) {
     const [focus, setFocus] = useState<FocusType>(null);
     const [mounted, setMounted] = useState(false);
     const [todayDate, setTodayDate] = useState('');
@@ -28,9 +37,16 @@ export default function DailyRitual() {
         setMounted(true);
         setTodayDate(getTodayBrazilFormatted('medium'));
 
-        // Frase dinâmica da entrada (determinística por dia)
         const todayBr = getTodayBrazil();
-        setDayQuote(getDayEnergyQuote(todayBr));
+
+        // Frase dinâmica da entrada:
+        // 1) tenta usar pacote do dia (IA 1x/dia via cron, salvo no Supabase)
+        // 2) fallback determinístico (sem IA)
+        if (dailyEnergyPackage?.date === todayBr && dailyEnergyPackage?.quote) {
+            setDayQuote(dailyEnergyPackage.quote);
+        } else {
+            setDayQuote(getDayEnergyQuote(todayBr));
+        }
 
         const saved = localStorage.getItem('daily_focus') as FocusType;
         if (saved && saved in FOCUSES) {

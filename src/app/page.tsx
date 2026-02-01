@@ -16,7 +16,8 @@ export default async function Home() {
     'bonus_active',
     'bonus_text',
     'show_scarcity',
-    'scarcity_remaining'
+    'scarcity_remaining',
+    'daily_energy_package'
   ]);
 
   // Modo manutenção
