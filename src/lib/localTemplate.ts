@@ -806,6 +806,69 @@ const ELEMENT_INSIGHTS: Record<'fogo' | 'terra' | 'ar' | 'agua', string[]> = {
     ]
 };
 
+// ==================== ENERGIA DO DIA (GLOBAL) ====================
+// Varia com o dia da semana + seed do dia, para dar sensação de "clima" atual.
+// Importante: não é previsão de eventos — é linguagem simbólica de ritmo interno.
+
+const WEEKDAY_ENERGIES: Record<number, string[]> = {
+    // 0 = Domingo
+    0: [
+        'A energia do dia tem um tom de recolhimento e reorganização interna.',
+        'Hoje o clima favorece descanso consciente e reconexão com o que é simples.',
+        'A energia de hoje pede menos cobrança e mais gentileza com o próprio ritmo.',
+        'O dia parece convidar a desacelerar para ouvir melhor o que você sente.',
+        'A energia de hoje é de pausa boa: aquela que devolve clareza.'
+    ],
+    // 1 = Segunda
+    1: [
+        'A energia do dia tem um tom de reinício: foco, intenção e direção.',
+        'Hoje o clima favorece colocar ordem no que estava solto.',
+        'A energia de hoje pede planejamento leve: um passo de cada vez, mas com alvo.',
+        'O dia cobra presença no básico — e o básico sustenta o resto.',
+        'A energia do dia é de recomeço silencioso: ajuste fino e retomada.'
+    ],
+    // 2 = Terça
+    2: [
+        'A energia do dia favorece movimento: decisões pequenas, mas concretas.',
+        'Hoje o clima tende a pedir ação sem pressa, como quem alinha e segue.',
+        'A energia de hoje é direta: cortar excesso, priorizar e avançar.',
+        'O dia convida a transformar intenção em atitude prática.',
+        'A energia do dia é de coragem tranquila: firme por dentro, simples por fora.'
+    ],
+    // 3 = Quarta
+    3: [
+        'A energia do dia favorece clareza mental e conversas que destravam.',
+        'Hoje o clima pede organização de pensamentos: menos ruído, mais foco.',
+        'A energia de hoje é boa para revisar planos e ajustar rotas.',
+        'O dia convida a olhar o meio do caminho com honestidade e leveza.',
+        'A energia do dia é de alinhamento: o que não serve fica óbvio.'
+    ],
+    // 4 = Quinta
+    4: [
+        'A energia do dia favorece expansão responsável: crescer sem se perder.',
+        'Hoje o clima tende a abrir perspectivas e trazer visão de longo prazo.',
+        'A energia de hoje pede maturidade emocional para sustentar o que você quer.',
+        'O dia convida a confiar mais na própria experiência do que na pressa.',
+        'A energia do dia é de crescimento: firmeza no passo e amplitude no olhar.'
+    ],
+    // 5 = Sexta
+    5: [
+        'A energia do dia favorece conexão: relações, trocas e presença afetiva.',
+        'Hoje o clima tende a pedir mais verdade nas conversas e menos máscara.',
+        'A energia de hoje é boa para reconciliar: por dentro e por fora.',
+        'O dia convida a celebrar pequenas vitórias sem exagero nem cobrança.',
+        'A energia do dia é de leveza com responsabilidade: prazer sem fuga.'
+    ],
+    // 6 = Sábado
+    6: [
+        'A energia do dia favorece aterramento: corpo, rotina leve e descanso.',
+        'Hoje o clima pede presença no concreto: cuidar do que sustenta.',
+        'A energia de hoje é boa para simplificar e limpar excessos.',
+        'O dia convida a desacelerar sem culpa e recuperar energia.',
+        'A energia do dia é de reparo: fechar ciclos pequenos e respirar.'
+    ]
+};
+
 // ==================== FUNÇÃO DE HASH ====================
 
 // ==================== FUNÇÃO DE HASH ====================
@@ -837,10 +900,18 @@ export function generateLocalHoroscope(options: LocalTemplateOptions): { message
     // Cria seed única baseada em data + signo
     const seed = simpleHash(`${dateBr}-${sign}`);
 
+    // Dia da semana (UTC, para consistência em build)
+    const d = new Date(`${dateBr}T12:00:00.000Z`);
+    const weekday = d.getUTCDay();
+
     // Seleciona componentes
     // 1. Abertura (Breve introdução climática)
     const openers = OPENERS[sign] || OPENERS['aries'];
     const opener = selectFromArray(openers, seed);
+
+    // 1.0 Energia do dia (global)
+    const energies = WEEKDAY_ENERGIES[weekday] || WEEKDAY_ENERGIES[1];
+    const dayEnergy = selectFromArray(energies, seed + 5);
 
     // Elemento (para micro-variações consistentes)
     const elementMap: Record<string, 'fogo' | 'terra' | 'ar' | 'agua'> = {
@@ -871,6 +942,8 @@ export function generateLocalHoroscope(options: LocalTemplateOptions): { message
 
     // Monta mensagem
     const message = `${opener}
+
+${dayEnergy}
 
 ${bridge}
 
