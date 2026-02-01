@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { ArrowRight, Heart, Wallet, Briefcase, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { getTodayBrazilFormatted } from '@/lib/dateUtils';
+import { getTodayBrazil, getTodayBrazilFormatted } from '@/lib/dateUtils';
+import { getDayEnergyQuote } from '@/lib/dayEnergy';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BlurFade } from '@/components/ui/blur-fade';
 
@@ -21,10 +22,16 @@ export default function DailyRitual() {
     const [focus, setFocus] = useState<FocusType>(null);
     const [mounted, setMounted] = useState(false);
     const [todayDate, setTodayDate] = useState('');
+    const [dayQuote, setDayQuote] = useState('');
 
     useEffect(() => {
         setMounted(true);
         setTodayDate(getTodayBrazilFormatted('medium'));
+
+        // Frase dinâmica da entrada (determinística por dia)
+        const todayBr = getTodayBrazil();
+        setDayQuote(getDayEnergyQuote(todayBr));
+
         const saved = localStorage.getItem('daily_focus') as FocusType;
         if (saved && saved in FOCUSES) {
             setFocus(saved);
@@ -56,7 +63,7 @@ export default function DailyRitual() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                     >
                         <p className="font-serif text-xl md:text-2xl text-gold-200 tracking-wide italic">
-                            "Hoje o silêncio fala mais alto que o movimento."
+                            "{dayQuote || 'Hoje o silêncio fala mais alto que o movimento.'}"
                         </p>
                     </motion.div>
                     <p className="text-slate-400 text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-2">
