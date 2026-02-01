@@ -8,7 +8,6 @@ import { Meteors } from '@/components/ui/meteors';
 import { BlurFade } from '@/components/ui/blur-fade';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { motion } from 'framer-motion';
-
 // Variáveis de ambiente são injetadas no build para Client Components
 const STRIPE_PRICE_SINGLE = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_SINGLE || '';
 const STRIPE_PRICE_MONTHLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_MONTHLY || '';

@@ -68,6 +68,16 @@ interface PageProps {
     params: Promise<{ sign: string }>;
 }
 
+function jsonLdScript(data: unknown) {
+    return (
+        <script
+            type="application/ld+json"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+        />
+    );
+}
+
 export default async function SignPage({ params }: PageProps) {
     const { sign: slug } = await params;
     const signData = getSign(slug);
@@ -79,8 +89,35 @@ export default async function SignPage({ params }: PageProps) {
     const horoscope = await getHoroscope(slug);
     const guide = SIGN_GUIDES[slug];
 
+    const base = (process.env.NEXT_PUBLIC_APP_URL || 'https://ouro-nas-estrelas-6sig.vercel.app').replace(/\/$/, '');
+    const canonical = `${base}/signos/${slug}`;
+
+    const breadcrumbLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Início', item: `${base}/` },
+            { '@type': 'ListItem', position: 2, name: 'Signos', item: `${base}/signos` },
+            { '@type': 'ListItem', position: 3, name: signData.name, item: canonical },
+        ],
+    };
+
+    const faqLd = guide
+        ? {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: guide.faqs.map((f) => ({
+                '@type': 'Question',
+                name: f.q,
+                acceptedAnswer: { '@type': 'Answer', text: f.a },
+            })),
+        }
+        : null;
+
     return (
         <div className="min-h-screen pb-20 bg-mystic-950 text-slate-200">
+            {jsonLdScript(breadcrumbLd)}
+            {faqLd ? jsonLdScript(faqLd) : null}
             {/* Header / Hero */}
             <div className="relative pt-32 pb-16 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/20 to-mystic-950" />
