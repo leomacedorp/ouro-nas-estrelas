@@ -15,9 +15,29 @@ const dmSerif = DM_Serif_Display({ weight: '400', subsets: ['latin'], variable: 
 const GA_MEASUREMENT_ID = 'G-6TWW6XHNTH';
 
 export const metadata: Metadata = {
-  title: 'Ouro Nas Estrelas - Horóscopo Diário Personalizado',
-  description: 'Seu guia cósmico diário para descobrir o ouro escondido em cada momento. Leituras astrológicas premium e personalizadas.',
-  keywords: 'horóscopo, astrologia, signo, previsão, amor, dinheiro, carreira',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://ouro-nas-estrelas-6sig.vercel.app'),
+  title: {
+    default: 'Ouro Nas Estrelas — Horóscopo e Leituras Premium',
+    template: '%s — Ouro Nas Estrelas'
+  },
+  description: 'Horóscopo do dia e guias completos por signo. Leituras premium para amor, dinheiro e carreira — com uma linguagem humana, clara e acolhedora.',
+  keywords: ['horóscopo', 'astrologia', 'signos', 'amor', 'dinheiro', 'carreira', 'leitura premium'],
+  alternates: {
+    canonical: '/'
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+    title: 'Ouro Nas Estrelas — Horóscopo e Leituras Premium',
+    description: 'Horóscopo do dia e guias completos por signo. Leituras premium para amor, dinheiro e carreira.',
+    url: '/',
+    siteName: 'Ouro Nas Estrelas'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ouro Nas Estrelas — Horóscopo e Leituras Premium',
+    description: 'Horóscopo do dia e guias completos por signo. Leituras premium para amor, dinheiro e carreira.'
+  }
 };
 
 import { createClient } from '@/lib/supabase/server';
