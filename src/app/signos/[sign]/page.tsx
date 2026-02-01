@@ -154,11 +154,11 @@ export default async function SignPage({ params }: PageProps) {
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 relative z-20 space-y-10">
+            <div className="container mx-auto px-4 relative z-20 flex flex-col gap-10">
 
                 {/* Guia do signo (evergreen) */}
                 {guide && (
-                    <div className="bg-mystic-900/50 backdrop-blur-xl border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl max-w-5xl mx-auto overflow-hidden">
+                    <div className="order-2 bg-mystic-900/50 backdrop-blur-xl border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl max-w-5xl mx-auto overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
 
                         <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-100 mb-2">
@@ -217,7 +217,7 @@ export default async function SignPage({ params }: PageProps) {
                 )}
 
                 {/* Mensagem do Dia */}
-                <div className="bg-mystic-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 md:p-12 shadow-2xl max-w-3xl mx-auto overflow-hidden">
+                <div className="order-1 bg-mystic-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 md:p-12 shadow-2xl max-w-3xl mx-auto overflow-hidden">
 
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold-500/50 to-transparent" />
 
