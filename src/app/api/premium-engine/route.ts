@@ -85,8 +85,13 @@ async function callGemini(prompt: string): Promise<{ success: boolean; content?:
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt + '\n\nResposta em JSON válido:' }] }],
-                        generationConfig: { temperature: 0.8, maxOutputTokens: 2000 }
+                        contents: [{ parts: [{ text: prompt + '\n\nRetorne APENAS JSON válido.' }] }],
+                        generationConfig: {
+                            temperature: 0.8,
+                            maxOutputTokens: 2000,
+                            // Evita respostas "stringificadas"/com markdown
+                            responseMimeType: 'application/json'
+                        }
                     })
                 }
             );
@@ -134,28 +139,50 @@ ${identity.firstName}, seu desejo mais profundo de ${archetype.hiddenDesire.toLo
  */
 function extractJSON(text: string): { titulo?: string; leitura?: string } {
     // Remove markdown code blocks se existirem
-    let cleanText = text
-        .replace(/```json\n?/gi, '')
-        .replace(/```\n?/g, '')
+    let cleanText = (text || '')
+        .replace(/```json\s*/gi, '')
+        .replace(/```\s*/g, '')
         .trim();
 
-    // Tenta parse direto
-    try {
-        return JSON.parse(cleanText);
-    } catch {
-        // Tenta extrair JSON do meio do texto
-        const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-            try {
-                return JSON.parse(jsonMatch[0]);
-            } catch {
-                // Fallback
-            }
+    const tryParse = (s: string) => {
+        try {
+            return JSON.parse(s);
+        } catch {
+            return null;
         }
+    };
+
+    // 1) parse direto
+    const direct = tryParse(cleanText);
+    if (direct) return direct;
+
+    // 2) extrair objeto JSON do meio
+    const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+        const mid = tryParse(jsonMatch[0]);
+        if (mid) return mid;
+    }
+
+    // 3) Algumas respostas do Gemini vêm "stringificadas" (com \" e \n literal)
+    // Ex.: {\"titulo\":\"...\",\"leitura\":\"...\"}
+    const unescaped = cleanText
+        .replace(/\\n/g, '\n')
+        .replace(/\\t/g, '\t')
+        .replace(/\\r/g, '\r')
+        .replace(/\\\"/g, '"');
+
+    const unescParsed = tryParse(unescaped);
+    if (unescParsed) return unescParsed;
+
+    // 4) Se a resposta for um JSON dentro de aspas
+    if ((unescaped.startsWith('"{') && unescaped.endsWith('}"')) || (cleanText.startsWith('"{') && cleanText.endsWith('}"'))) {
+        const strip = unescaped.replace(/^"/, '').replace(/"$/, '');
+        const stripParsed = tryParse(strip);
+        if (stripParsed) return stripParsed;
     }
 
     // Se não conseguir extrair JSON, usa o texto como leitura
-    return { titulo: 'Sua Leitura Premium', leitura: text };
+    return { titulo: 'Sua Leitura Premium', leitura: cleanText || text };
 }
 
 export async function POST(request: Request): Promise<Response> {
