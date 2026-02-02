@@ -242,8 +242,18 @@ export async function POST(request: Request): Promise<Response> {
         // 5. Processar resultado ou usar fallback
         if (aiContent) {
             const parsed = extractJSON(aiContent);
-            titulo = parsed.titulo || `A jornada de ${symbolicMap.identity.firstName}`;
-            leitura = parsed.leitura || aiContent;
+
+            // Alguns modelos devolvem um JSON "dentro" do campo leitura.
+            // Ex.: { "titulo": "...", "leitura": "{\n  \"titulo\": ... }" }
+            const maybeNested = typeof parsed.leitura === 'string' ? parsed.leitura.trim() : '';
+            if (maybeNested.startsWith('{') && maybeNested.includes('"leitura"')) {
+                const nestedParsed = extractJSON(maybeNested);
+                titulo = nestedParsed.titulo || parsed.titulo || `A jornada de ${symbolicMap.identity.firstName}`;
+                leitura = nestedParsed.leitura || maybeNested;
+            } else {
+                titulo = parsed.titulo || `A jornada de ${symbolicMap.identity.firstName}`;
+                leitura = (parsed.leitura as any) || aiContent;
+            }
         } else {
             console.log('[premium-engine] Usando fallback local');
             provider = 'Template Local';
