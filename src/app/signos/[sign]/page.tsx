@@ -19,6 +19,23 @@ function getSign(slug: string) {
 // Mensagem de fallback
 const FALLBACK_MESSAGE = "A energia cósmica está em alinhamento especial neste momento. As estrelas preparam uma mensagem única para este signo. Em breve, uma leitura completa estará disponível com insights personalizados para o seu dia.";
 
+// Normalização de texto (UX): linguagem mais popular e espaçamento mais compacto
+function normalizeHoroscopeText(input: string): string {
+    let t = input || '';
+
+    // Trocar travessão por vírgula (mais "popular" e evita estranheza visual)
+    t = t.replace(/\s*—\s*/g, ', ');
+
+    // Normalizar múltiplas linhas vazias (evita parágrafos "muito longe")
+    // Mantém no máximo 1 linha em branco.
+    t = t.replace(/\n\s*\n\s*\n+/g, '\n\n');
+
+    // Remove espaços duplicados
+    t = t.replace(/[ \t]{2,}/g, ' ');
+
+    return t.trim();
+}
+
 // Fetch horoscope data (Mensagem do Dia)
 async function getHoroscope(sign: string) {
     const today = getTodayBrazil();
@@ -38,7 +55,7 @@ async function getHoroscope(sign: string) {
     });
 
     return {
-        message: localResult.message,
+        message: normalizeHoroscopeText(localResult.message),
         date: today,
         sign,
         dailyEnergyPackage,
