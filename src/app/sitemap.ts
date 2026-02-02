@@ -21,12 +21,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const signUrls: MetadataRoute.Sitemap = ZODIAC_SIGNS.map((s) => ({
-    url: `${base}/signos/${s.slug}`,
-    lastModified: now,
-    changeFrequency: 'daily',
-    priority: 0.7,
-  }));
+  const signUrls: MetadataRoute.Sitemap = ZODIAC_SIGNS.flatMap((s) => ([
+    {
+      url: `${base}/signos/${s.slug}`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
+      url: `${base}/signos/${s.slug}/semana`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+    {
+      url: `${base}/signos/${s.slug}/mes`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+  ]));
 
   return [...staticUrls, ...signUrls];
 }

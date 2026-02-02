@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { ZODIAC_SIGNS } from '@/lib/constants';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { getTodayBrazil } from '@/lib/dateUtils';
+import { getTodayBrazil, getWeekStartBrazil, getMonthStartBrazil } from '@/lib/dateUtils';
 import { generateHoroscope, getProviderStatus } from '@/lib/aiProvider';
 import OpenAI from 'openai';
 import { getDayEnergyQuote } from '@/lib/dayEnergy';
@@ -13,12 +13,17 @@ export const maxDuration = 60;
 // (o vercel.json agenda múltiplas execuções para completar o lote do dia)
 const MAX_SIGNS_PER_BATCH = 1;
 
-// Busca signos que faltam para hoje
-async function getMissingSigns(supabase: ReturnType<typeof createAdminClient>, today: string): Promise<typeof ZODIAC_SIGNS> {
+// Busca signos que faltam para uma data+tipo
+async function getMissingSigns(
+    supabase: ReturnType<typeof createAdminClient>,
+    dateKey: string,
+    type: 'daily' | 'weekly' | 'monthly'
+): Promise<typeof ZODIAC_SIGNS> {
     const { data: existing } = await supabase
         .from('horoscopes')
         .select('sign')
-        .eq('date', today);
+        .eq('date', dateKey)
+        .eq('type', type);
 
     const existingSigns = new Set(existing?.map(e => e.sign) || []);
     return ZODIAC_SIGNS.filter(sign => !existingSigns.has(sign.slug));
@@ -253,10 +258,14 @@ export async function GET(request: NextRequest) {
 
         const today = getTodayBrazil();
         const mode = searchParams.get('mode') || 'missing';
+        const period = (searchParams.get('period') || 'daily').toLowerCase() as 'daily' | 'weekly' | 'monthly';
+
+        const type: 'daily' | 'weekly' | 'monthly' = period === 'weekly' ? 'weekly' : period === 'monthly' ? 'monthly' : 'daily';
+        const dateKey = type === 'weekly' ? getWeekStartBrazil(today) : type === 'monthly' ? getMonthStartBrazil(today) : today;
 
         const supabase = createAdminClient();
 
-        console.log(`[CRON] Iniciando geração para ${today} - Modo: ${mode.toUpperCase()}`);
+        console.log(`[CRON] Iniciando geração para ${today} (dateKey=${dateKey}, type=${type}) - Modo: ${mode.toUpperCase()}`);
 
         // Defaults do site (uma vez): liga CTA dinâmico por padrão
         const defaults = await ensureDefaultToggles(supabase);
@@ -272,13 +281,15 @@ export async function GET(request: NextRequest) {
         const providers: Record<string, string> = {};
 
         // Busca signos faltantes
-        const missingSigns = await getMissingSigns(supabase, today);
+        const missingSigns = await getMissingSigns(supabase, dateKey, type);
 
         if (missingSigns.length === 0) {
-            console.log(`[CRON] ✅ Todos os ${ZODIAC_SIGNS.length} signos já foram gerados para ${today}`);
+            console.log(`[CRON] ✅ Todos os ${ZODIAC_SIGNS.length} signos já foram gerados para ${dateKey} (${type})`);
             return NextResponse.json({
                 success: true,
                 date: today,
+                dateKey,
+                type,
                 mode,
                 message: 'Todos os signos já foram gerados',
                 generated: 0,
@@ -287,7 +298,7 @@ export async function GET(request: NextRequest) {
             });
         }
 
-        console.log(`[CRON] ${missingSigns.length} signos pendentes: ${missingSigns.map(s => s.name).join(', ')}`);
+        console.log(`[CRON] ${missingSigns.length} signos pendentes (${type}): ${missingSigns.map(s => s.name).join(', ')}`);
 
         // Processa signos
         const signsToProcess = missingSigns.slice(0, MAX_SIGNS_PER_BATCH);
@@ -296,20 +307,74 @@ export async function GET(request: NextRequest) {
             try {
                 console.log(`[GENERATE] Processando ${sign.name}...`);
 
-                // Anti-repetição: pega ontem/anteontem do mesmo signo
-                const avoidContents = await getRecentContents(supabase, sign.slug, today);
-                const theme = pickThemeForDay(today, sign.slug);
+                // Anti-repetição: pega textos recentes do mesmo signo (somente faz sentido no daily)
+                const avoidContents = type === 'daily'
+                    ? await getRecentContents(supabase, sign.slug, today)
+                    : [];
 
-                // Usa a camada unificada de AI
-                const result = await generateHoroscope({
-                    sign: sign.slug,
-                    signName: sign.name,
-                    dateBr: today,
-                    mode: 'luna',
-                    focus: 'geral',
-                    theme,
-                    avoidContents
-                });
+                const theme = pickThemeForDay(dateKey, sign.slug);
+
+                // Daily usa a camada unificada; Weekly/Monthly usam OpenAI direto (sem depender de template diário)
+                const result = type === 'daily'
+                    ? await generateHoroscope({
+                        sign: sign.slug,
+                        signName: sign.name,
+                        dateBr: today,
+                        mode: 'luna',
+                        focus: 'geral',
+                        theme,
+                        avoidContents
+                    })
+                    : await (async () => {
+                        const apiKey = process.env.OPENAI_API_KEY;
+                        if (!apiKey) {
+                            return { success: false, content: '', provider: 'template', model: 'local', attempts: 0, errors: ['missing_openai_key'], meta: { generatedAt: new Date().toISOString(), cooldownStatus: {} } };
+                        }
+
+                        const openai = new OpenAI({ apiKey });
+                        const timeframeLabel = type === 'weekly' ? 'semana' : 'mês';
+
+                        const system = `Você é Luna, orientadora emocional do Ouro nas Estrelas.
+Não preveja acontecimentos.
+Escreva em português do Brasil, linguagem popular e direta.
+
+Tarefa:
+Gerar uma leitura do ${timeframeLabel} para o signo ${sign.name}.
+
+Regras:
+- Nada de promessas ou previsões de eventos.
+- Traga exemplos cotidianos simples.
+- Frases curtas. Fácil de ler.
+- Tamanho: ${type === 'weekly' ? '220 a 320' : '300 a 450'} palavras.
+- Inclua um conselho prático final.
+- Evite travessão (—) e linguagem muito rebuscada.
+
+Tema do período: ${theme}.
+
+Retorne apenas JSON:
+{ "mensagem": "..." }`;
+
+                        const completion = await openai.chat.completions.create({
+                            model: 'gpt-4o-mini',
+                            messages: [
+                                { role: 'system', content: system },
+                                { role: 'user', content: `Período (data base): ${dateKey}` }
+                            ],
+                            response_format: { type: 'json_object' },
+                            max_tokens: type === 'weekly' ? 550 : 800
+                        });
+
+                        const raw = completion.choices[0]?.message?.content || '';
+                        return {
+                            success: !!raw,
+                            content: raw,
+                            provider: 'openai',
+                            model: 'gpt-4o-mini',
+                            attempts: 1,
+                            errors: [],
+                            meta: { generatedAt: new Date().toISOString(), cooldownStatus: {} }
+                        };
+                    })();
 
                 if (!result.success || !result.content) {
                     console.error(`[ERROR] Falha ao gerar ${sign.name}: sem conteúdo`);
@@ -327,17 +392,17 @@ export async function GET(request: NextRequest) {
                     .from('horoscopes')
                     .insert({
                         sign: sign.slug,
-                        date: today,
+                        date: dateKey,
                         focus: 'geral',
-                        type: 'daily',
+                        type,
                         content: content,
-                        // Metadados de auditoria (salvos no próprio content ou em coluna separada se existir)
+                        // Metadados de auditoria
                         layers: {
-                            provider: result.provider,
-                            model: result.model,
-                            attempts: result.attempts,
-                            errors: result.errors,
-                            generatedAt: result.meta.generatedAt
+                            provider: (result as any).provider,
+                            model: (result as any).model,
+                            attempts: (result as any).attempts,
+                            errors: (result as any).errors,
+                            generatedAt: (result as any).meta?.generatedAt
                         }
                     });
 
@@ -358,11 +423,13 @@ export async function GET(request: NextRequest) {
         }
 
         // Calcula restantes
-        const remainingSigns = await getMissingSigns(supabase, today);
+        const remainingSigns = await getMissingSigns(supabase, dateKey, type);
 
         const summary = {
             success: generated.length > 0,
             date: today,
+            dateKey,
+            type,
             mode,
             format: 'resiliente_3_niveis',
             generated: generated.length,
