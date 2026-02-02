@@ -131,7 +131,7 @@ export default async function SignPage({ params }: PageProps) {
         : '';
     const dynamicCtaText = String(dynamicCtaLine || '').trim();
 
-    const base = (process.env.NEXT_PUBLIC_APP_URL || 'https://ouro-nas-estrelas-6sig.vercel.app').replace(/\/$/, '');
+    const base = (process.env.NEXT_PUBLIC_APP_URL || 'https://ouronasestrelas.com.br').replace(/\/$/, '');
     const canonical = `${base}/signos/${slug}`;
 
     const breadcrumbLd = {

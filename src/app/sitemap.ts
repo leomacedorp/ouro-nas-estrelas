@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { ZODIAC_SIGNS } from '@/lib/constants';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = (process.env.NEXT_PUBLIC_APP_URL || 'https://ouro-nas-estrelas-6sig.vercel.app').replace(/\/$/, '');
+  const base = (process.env.NEXT_PUBLIC_APP_URL || 'https://ouronasestrelas.com.br').replace(/\/$/, '');
 
   const now = new Date();
 

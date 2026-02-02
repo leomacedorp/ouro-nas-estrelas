@@ -15,7 +15,7 @@ const dmSerif = DM_Serif_Display({ weight: '400', subsets: ['latin'], variable: 
 const GA_MEASUREMENT_ID = 'G-6TWW6XHNTH';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://ouro-nas-estrelas-6sig.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://ouronasestrelas.com.br'),
   title: {
     default: 'Ouro Nas Estrelas — Horóscopo e Leituras Premium',
     template: '%s — Ouro Nas Estrelas'
