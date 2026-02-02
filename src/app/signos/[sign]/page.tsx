@@ -24,8 +24,9 @@ async function getHoroscope(sign: string) {
     const today = getTodayBrazil();
 
     // Pacote do dia (IA 1x/dia) — melhora a sensação de "hoje" mesmo no fallback local.
-    const settings = await getSettings(['daily_energy_package']);
+    const settings = await getSettings(['daily_energy_package', 'dynamic_cta_enabled']);
     const dailyEnergyPackage = settings.daily_energy_package;
+    const dynamicCtaEnabled = settings.dynamic_cta_enabled === true;
 
     // Por enquanto, a mensagem do dia vem do gerador local (determinístico por data+signo).
     // Como a página tem ISR (6h), o conteúdo é estável o suficiente para SEO.
@@ -39,7 +40,9 @@ async function getHoroscope(sign: string) {
     return {
         message: localResult.message,
         date: today,
-        sign
+        sign,
+        dailyEnergyPackage,
+        dynamicCtaEnabled
     };
 }
 
@@ -94,6 +97,22 @@ export default async function SignPage({ params }: PageProps) {
 
     const horoscope = await getHoroscope(slug);
     const guide = SIGN_GUIDES[slug];
+
+    const dayEnergyPackage = (horoscope as any).dailyEnergyPackage as any;
+    const dynamicCtaEnabled = (horoscope as any).dynamicCtaEnabled === true;
+
+    const elementKeyMap: Record<string, 'fogo' | 'terra' | 'ar' | 'agua'> = {
+        'Fogo': 'fogo',
+        'Terra': 'terra',
+        'Ar': 'ar',
+        'Água': 'agua',
+        'Agua': 'agua'
+    };
+    const elementKey = elementKeyMap[signData.element] || 'fogo';
+    const dynamicCtaLine = (dayEnergyPackage?.date === horoscope.date)
+        ? (dayEnergyPackage?.byElement?.[elementKey] || dayEnergyPackage?.quote || '')
+        : '';
+    const dynamicCtaText = String(dynamicCtaLine || '').trim();
 
     const base = (process.env.NEXT_PUBLIC_APP_URL || 'https://ouro-nas-estrelas-6sig.vercel.app').replace(/\/$/, '');
     const canonical = `${base}/signos/${slug}`;
@@ -246,12 +265,21 @@ export default async function SignPage({ params }: PageProps) {
                     <div className="mt-12 pt-8 border-t border-white/10">
                         <div className="bg-gradient-to-r from-gold-900/20 to-indigo-900/20 rounded-2xl p-8 border border-gold-500/30 text-center relative overflow-hidden group">
                             <div className="absolute inset-0 bg-gold-500/5 group-hover:bg-gold-500/10 transition-colors" />
+
                             <h3 className="text-xl font-serif text-white mb-4 relative z-10">
                                 Quer uma leitura mais profunda?
                             </h3>
+
+                            {dynamicCtaEnabled && dynamicCtaText ? (
+                                <p className="text-gold-200/90 mb-3 max-w-lg mx-auto relative z-10 font-medium">
+                                    Hoje: {dynamicCtaText}
+                                </p>
+                            ) : null}
+
                             <p className="text-slate-300 mb-8 max-w-lg mx-auto relative z-10">
                                 Receba uma análise premium com orientações mais específicas para amor, dinheiro e carreira.
                             </p>
+
                             <Link
                                 href="/leitura-premium"
                                 className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gold-600 hover:bg-gold-500 text-white font-bold text-lg shadow-glow-gold hover:shadow-glow-gold-strong transition-all relative z-10"
