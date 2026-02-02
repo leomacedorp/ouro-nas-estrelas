@@ -27,25 +27,34 @@ export default async function MinhaLeituraPage({ params, searchParams }: PagePro
   const signName = ZODIAC_SIGNS.find(s => s.slug === reading.sign_slug)?.name || reading.sign_slug;
 
   const c = reading.content as any;
+  const hasSymbolicReading = typeof c?.leitura === 'string' && c.leitura.trim().length > 0;
 
   return (
     <main className="min-h-screen bg-mystic-950 text-slate-200">
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-5xl font-serif font-bold text-white mb-3">
-            Sua Leitura Premium
+            {hasSymbolicReading ? (c.titulo || 'Sua Leitura Premium') : 'Sua Leitura Premium'}
           </h1>
           <p className="text-slate-400">{signName} • válida para {reading.date_key}</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card title="❤️ Amor & Vínculos" content={c.amor} />
-          <Card title="💰 Dinheiro & Recursos" content={c.dinheiro} />
-          <Card title="🚀 Carreira & Missão" content={c.carreira} />
-          <Card title="🚧 O Grande Bloqueio" content={c.bloqueio} />
-          <Card title="💎 Ouro Escondido" content={c.oportunidade} />
-          <Card title="🔮 Conselho Mágico" content={c.conselho} />
-        </div>
+        {hasSymbolicReading ? (
+          <section className="p-6 md:p-10 rounded-3xl bg-white/5 border border-white/10">
+            <p className="text-slate-200 leading-relaxed whitespace-pre-line text-lg">
+              {c.leitura}
+            </p>
+          </section>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card title="❤️ Amor & Vínculos" content={c.amor} />
+            <Card title="💰 Dinheiro & Recursos" content={c.dinheiro} />
+            <Card title="🚀 Carreira & Missão" content={c.carreira} />
+            <Card title="🚧 O Grande Bloqueio" content={c.bloqueio} />
+            <Card title="💎 Ouro Escondido" content={c.oportunidade} />
+            <Card title="🔮 Conselho Mágico" content={c.conselho} />
+          </div>
+        )}
 
         <div className="mt-10 text-center text-sm text-slate-500">
           Dica: salve este link — ele é o acesso da sua leitura.

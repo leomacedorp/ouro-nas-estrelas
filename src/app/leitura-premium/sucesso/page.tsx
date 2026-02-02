@@ -17,8 +17,12 @@ export default function SucessoPage() {
 
     // Estado
     const [selectedSign, setSelectedSign] = useState<string | null>(null);
-    const [reading, setReading] = useState<PremiumContent | null>(null);
+    const [reading, setReading] = useState<any>(null);
     const [isRevealing, setIsRevealing] = useState(false);
+
+    // Dados para leitura premium simbólica
+    const [customerName, setCustomerName] = useState('');
+    const [birthDate, setBirthDate] = useState('');
     const [isValidating, setIsValidating] = useState(true);
     const [isValidPurchase, setIsValidPurchase] = useState(false);
 
@@ -51,6 +55,11 @@ export default function SucessoPage() {
     const handleReveal = async (signSlug: string) => {
         if (!sessionId) return;
 
+        if (!customerName.trim() || !birthDate.trim()) {
+            alert('Preencha seu nome e sua data de nascimento para gerar a leitura premium personalizada.');
+            return;
+        }
+
         setIsRevealing(true);
         setSelectedSign(signSlug);
 
@@ -58,13 +67,25 @@ export default function SucessoPage() {
             const res = await fetch('/api/premium-reading/reveal', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sessionId, signSlug }),
+                body: JSON.stringify({
+                    sessionId,
+                    signSlug,
+                    name: customerName,
+                    birthDate,
+                    mode: 'short'
+                }),
             });
 
             const data = await res.json();
             if (!res.ok) {
                 alert('Não foi possível validar seu pagamento. Se você acabou de pagar, aguarde 1 minuto e tente novamente.');
                 setIsRevealing(false);
+                return;
+            }
+
+            // Preferimos enviar o usuário para a página de leitura salva (mais estável no mobile)
+            if (data.readingId && data.accessToken) {
+                window.location.href = `/minha-leitura/${data.readingId}?t=${data.accessToken}`;
                 return;
             }
 
@@ -122,8 +143,36 @@ export default function SucessoPage() {
                         </BlurFade>
 
                         <BlurFade delay={0.2}>
+                            <p className="text-lg text-slate-400 mb-8">
+                                Para gerar sua leitura premium personalizada, preciso de 2 dados rápidos.
+                            </p>
+                        </BlurFade>
+
+                        <div className="max-w-xl mx-auto mb-10 grid gap-4 text-left">
+                            <div>
+                                <label className="block text-sm text-slate-300 mb-1">Seu nome</label>
+                                <input
+                                    value={customerName}
+                                    onChange={(e) => setCustomerName(e.target.value)}
+                                    placeholder="Ex.: Ana Clara"
+                                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-slate-300 mb-1">Data de nascimento</label>
+                                <input
+                                    value={birthDate}
+                                    onChange={(e) => setBirthDate(e.target.value)}
+                                    placeholder="AAAA-MM-DD (ex.: 1990-05-15)"
+                                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                                />
+                                <p className="text-xs text-slate-500 mt-2">Usamos isso para numerologia e contexto simbólico (sem previsões de eventos).</p>
+                            </div>
+                        </div>
+
+                        <BlurFade delay={0.25}>
                             <p className="text-lg text-slate-400 mb-12">
-                                O universo recebeu sua troca de energia. Sua leitura premium está pronta para ser revelada. Escolha seu signo abaixo para acessar as 6 dimensões.
+                                Agora escolha seu signo para revelar sua leitura.
                             </p>
                         </BlurFade>
 

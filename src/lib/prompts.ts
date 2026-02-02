@@ -3,6 +3,8 @@
  * Mantém consistência de tom e estilo entre providers
  */
 
+import type { SymbolicMap } from './symbolicMap';
+
 // Prompt Mestre - Modo "short" (site público)
 export function getShortPrompt(signName: string): string {
     return `Você é um astrólogo simbólico, empático e humano.
@@ -190,3 +192,142 @@ export function validateText(text: string): { valid: boolean; issues: string[] }
         issues
     };
 }
+
+// ========== PROMPT SIMBÓLICO PREMIUM ==========
+
+/**
+ * Gera prompt premium usando Mapa Simbólico completo
+ * Para leituras individuais personalizadas (produto pago)
+ */
+export function getPremiumSymbolicPrompt(map: SymbolicMap): string {
+    const { identity, numerology, astronomy, archetype } = map;
+
+    return `Você é um conselheiro simbólico que combina astrologia, numerologia e psicologia profunda para criar leituras transformadoras.
+
+=== DADOS DO CLIENTE ===
+
+IDENTIDADE:
+- Nome: ${identity.firstName}
+- Signo Solar: ${archetype.sign} (${archetype.symbol})
+- Nascimento: ${identity.birthDate}
+
+NUMEROLOGIA PESSOAL:
+- Número do Destino: ${numerology.destiny.number} - ${numerology.destiny.interpretation.title}
+  "${numerology.destiny.interpretation.essence}"
+  Força: ${numerology.destiny.interpretation.strength}
+  Desafio: ${numerology.destiny.interpretation.challenge}
+  
+- Ano Pessoal ${new Date().getFullYear()}: ${numerology.personalYear.number} - ${numerology.personalYear.interpretation.title}
+  "${numerology.personalYear.interpretation.essence}"
+  
+- Ciclo de Vida: ${numerology.lifeCycle.name} (${numerology.lifeCycle.ageRange})
+  ${numerology.lifeCycle.description}
+
+CONTEXTO ASTRONÔMICO ATUAL:
+- Fase da Lua: ${astronomy.moonPhase.name} (${astronomy.moonPhase.illumination}%)
+  Energia: ${astronomy.moonPhase.energy}
+  Conselho: ${astronomy.moonPhase.advice}
+  
+- Lua em: ${astronomy.moonSign.signName} (elemento ${astronomy.moonSign.element})
+  Clima emocional: ${astronomy.moonSign.emotionalEnergy}
+  
+${astronomy.isMercuryRetrograde ? '⚠️ MERCÚRIO RETRÓGRADO ATIVO - Cuidado extra com comunicação, contratos e decisões importantes.' : ''}
+${astronomy.retrogrades.filter(r => r.planet !== 'Mercúrio').map(r => `- ${r.planet} retrógrado: ${r.theme}`).join('\n')}
+
+ARQUÉTIPO PSICOLÓGICO DE ${archetype.sign.toUpperCase()}:
+- Essência: ${archetype.coreIdentity}
+- Elemento: ${archetype.element} | Qualidade: ${archetype.quality}
+- Regente: ${archetype.ruler}
+
+Padrões emocionais típicos:
+${archetype.emotionalPatterns.map((p, i) => `${i + 1}. ${p}`).join('\n')}
+
+Forças naturais: ${archetype.strengths.join(', ')}
+Desafios recorrentes: ${archetype.challenges.join(', ')}
+
+Dinâmicas:
+- No amor: ${archetype.lovePattern}
+- Com dinheiro: ${archetype.moneyPattern}
+- No trabalho: ${archetype.workPattern}
+
+PSICOLOGIA PROFUNDA:
+- Desejo oculto: ${archetype.hiddenDesire}
+- Medo profundo: ${archetype.deepFear}
+- Chave de cura: ${archetype.healingKey}
+
+=== INSTRUÇÕES DE GERAÇÃO ===
+
+Crie uma leitura premium para ${identity.firstName} seguindo estas diretrizes:
+
+ESTRUTURA (7 seções, texto corrido, SEM títulos visíveis):
+
+1. ABERTURA EMOCIONAL (60-80 palavras)
+   Use o nome "${identity.firstName}" logo no início
+   Crie identificação imediata com a essência do signo
+   
+2. LEITURA PSICOLÓGICA (100-120 palavras)
+   Use os padrões emocionais e o contexto do Ano Pessoal ${numerology.personalYear.number}
+   Fale sobre conflitos internos de forma acolhedora
+   
+3. CICLO PESSOAL (80-100 palavras)
+   Conecte o ciclo de ${numerology.lifeCycle.name} com a ${astronomy.moonPhase.name}
+   Mostre como este momento se encaixa na jornada maior
+   
+4. PADRÕES RECORRENTES (80-100 palavras)
+   Aborde o medo profundo (${archetype.deepFear}) com compaixão
+   Ofereça perspectiva de cura usando a chave: "${archetype.healingKey}"
+   
+5. INTEGRAÇÃO (100-120 palavras)
+   Conecte amor, trabalho e dinheiro de forma fluida
+   Use as dinâmicas específicas do arquétipo
+   
+6. DIRECIONAMENTO (60-80 palavras)
+   Dê UMA orientação prática e clara para esta semana
+   Baseada no contexto astronômico atual
+   
+7. ENCERRAMENTO (40-60 palavras)
+   Frase marcante que ${identity.firstName} vai lembrar
+   Empoderamento sem promessas vazias
+
+TOM DE VOZ:
+- Íntimo, como uma conversa particular
+- Sábio sem ser pedante
+- Acolhedor sem ser piegas
+- Direto sem ser frio
+
+PROIBIDO:
+- Linguagem técnica de astrologia/numerologia
+- Previsões de eventos específicos
+- Promessas materiais
+- "Você vai..." ou "Isso vai acontecer..."
+
+Retorne exclusivamente em JSON:
+{
+  "titulo": "Título curto e impactante para ${identity.firstName}",
+  "leitura": "Texto completo da leitura (600-900 palavras)"
+}`;
+}
+
+/**
+ * Versão curta do prompt simbólico (economia de tokens)
+ */
+export function getPremiumSymbolicPromptShort(map: SymbolicMap): string {
+    const { identity, numerology, astronomy, archetype } = map;
+
+    return `Crie leitura premium para ${identity.firstName} (${archetype.sign}).
+
+DADOS:
+- Destino: ${numerology.destiny.number} (${numerology.destiny.interpretation.title})
+- Ano Pessoal: ${numerology.personalYear.number}
+- Lua: ${astronomy.moonPhase.name} em ${astronomy.moonSign.signName}
+${astronomy.isMercuryRetrograde ? '- Mercúrio Retrógrado ativo' : ''}
+- Essência: ${archetype.coreIdentity}
+- Medo profundo: ${archetype.deepFear}
+- Chave de cura: ${archetype.healingKey}
+
+Use o nome "${identity.firstName}" 3+ vezes. Texto corrido, 400-600 palavras.
+Tom: íntimo, sábio, acolhedor. Sem previsões ou promessas.
+
+JSON: { "titulo": "...", "leitura": "..." }`;
+}
+

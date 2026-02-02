@@ -10,7 +10,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_URL
 
 export async function POST(req: Request) {
   try {
-    const { sessionId, signSlug } = await req.json();
+    const { sessionId, signSlug, name, birthDate, mode } = await req.json();
     if (!sessionId || typeof sessionId !== 'string') {
       return NextResponse.json({ error: 'missing_session_id' }, { status: 400 });
     }
@@ -43,9 +43,50 @@ export async function POST(req: Request) {
       return NextResponse.json({ readingId: existing.id, accessToken: existing.access_token, content: existing.content });
     }
 
-    const result = generatePremiumHoroscope(signSlug, dateKey);
+    // --- Engine Simbólica (preferida) ---
+    // Se o cliente informar nome + data de nascimento, tentamos gerar uma leitura premium personalizada.
+    // Caso falhe, caímos no template local (nunca fica sem entrega).
+
     const accessToken = crypto.randomUUID();
     const customerEmail = session.customer_details?.email || session.customer_email || null;
+
+    let result: any = null;
+
+    const hasUserData = typeof name === 'string' && name.trim().length > 1 && typeof birthDate === 'string' && birthDate.trim().length >= 8;
+
+    if (hasUserData) {
+      try {
+        const base = (SITE_URL || req.headers.get('origin') || '').replace(/\/$/, '');
+        if (base) {
+          const engineRes = await fetch(`${base}/api/premium-engine`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              birthDate,
+              sign: signSlug,
+              mode: mode === 'full' ? 'full' : 'short'
+            })
+          });
+
+          const engineData = await engineRes.json();
+          if (engineRes.ok && engineData?.success && (engineData?.leitura || engineData?.titulo)) {
+            result = {
+              titulo: engineData.titulo || 'Sua Leitura Premium',
+              leitura: engineData.leitura || '',
+              provider: engineData.provider || 'premium-engine'
+            };
+          }
+        }
+      } catch (e) {
+        console.warn('[premium-reading/reveal] premium-engine failed, falling back to local template');
+      }
+    }
+
+    // Fallback local (compatibilidade com UI antiga)
+    if (!result) {
+      result = generatePremiumHoroscope(signSlug, dateKey);
+    }
 
     const { data: inserted, error } = await supabase
       .from('premium_readings')
