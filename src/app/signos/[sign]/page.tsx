@@ -299,7 +299,7 @@ export default async function SignPage({ params }: PageProps) {
 
                             <div className="flex flex-col items-center gap-4 relative z-10">
                                 <Link
-                                    href={`/leitura-premium?foco=geral#pricing`}
+                                    href={`/leitura-premium?foco=geral`}
                                     className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gold-600 hover:bg-gold-500 text-white font-bold text-lg shadow-glow-gold hover:shadow-glow-gold-strong transition-all"
                                 >
                                     <MessageCircle className="w-5 h-5" />
@@ -308,19 +308,19 @@ export default async function SignPage({ params }: PageProps) {
 
                                 <div className="flex flex-wrap justify-center gap-2">
                                     <Link
-                                        href={`/leitura-premium?foco=amor#pricing`}
+                                        href={`/leitura-premium?foco=amor`}
                                         className="px-4 py-2 rounded-full text-sm font-bold border border-white/10 bg-white/5 hover:bg-rose-500/15 hover:border-rose-400/40 text-slate-200 transition-colors"
                                     >
                                         ❤️ Amor
                                     </Link>
                                     <Link
-                                        href={`/leitura-premium?foco=dinheiro#pricing`}
+                                        href={`/leitura-premium?foco=dinheiro`}
                                         className="px-4 py-2 rounded-full text-sm font-bold border border-white/10 bg-white/5 hover:bg-emerald-500/15 hover:border-emerald-400/40 text-slate-200 transition-colors"
                                     >
                                         💰 Dinheiro
                                     </Link>
                                     <Link
-                                        href={`/leitura-premium?foco=carreira#pricing`}
+                                        href={`/leitura-premium?foco=carreira`}
                                         className="px-4 py-2 rounded-full text-sm font-bold border border-white/10 bg-white/5 hover:bg-blue-500/15 hover:border-blue-400/40 text-slate-200 transition-colors"
                                     >
                                         🚀 Carreira

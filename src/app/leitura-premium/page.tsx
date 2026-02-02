@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MessageCircle, Sparkles, Star, Lock, Zap, Compass, ArrowRight, CheckCircle2, ShieldCheck, Gem } from 'lucide-react';
 import { siteConfig } from '@/lib/siteConfig';
@@ -18,6 +18,21 @@ export default function LeituraPremiumPage() {
     const foco = (searchParams.get('foco') || '').toLowerCase();
     const focus: 'amor' | 'dinheiro' | 'carreira' | 'geral' =
         foco === 'amor' || foco === 'dinheiro' || foco === 'carreira' ? (foco as any) : 'geral';
+
+    // Mobile fix: evitar jump estranho do hash antes de carregar.
+    // Quando vier com foco (amor/dinheiro/carreira), fazemos scroll para pricing depois do render.
+    useEffect(() => {
+        if (focus === 'geral') return;
+
+        const scrollToPricing = () => {
+            const el = document.getElementById('pricing');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        // Aguarda layout/hydration
+        const t = window.setTimeout(scrollToPricing, 200);
+        return () => window.clearTimeout(t);
+    }, [focus]);
 
     // Debug: mostra se as variáveis estão configuradas
     console.log('[Stripe Config] Single:', STRIPE_PRICE_SINGLE ? 'OK' : 'MISSING');
@@ -123,7 +138,7 @@ export default function LeituraPremiumPage() {
             </section>
 
             {/* ===== PRICING SECTION ===== */}
-            <section id="pricing" className="py-24 relative overflow-hidden">
+            <section id="pricing" className="py-24 relative overflow-hidden scroll-mt-24">
                 <div className="absolute inset-0 bg-gradient-to-b from-mystic-950 via-indigo-950/20 to-mystic-950" />
 
                 <div className="container mx-auto px-4 relative z-10 max-w-5xl">
