@@ -184,6 +184,30 @@ function pickThemeForDay(dateKey: string, signSlug: string): string {
     return DAILY_THEMES[seed % DAILY_THEMES.length];
 }
 
+async function ensureDefaultToggles(supabase: ReturnType<typeof createAdminClient>) {
+    // Não sobrescreve se já existir (respeita escolha do admin)
+    const { data } = await supabase
+        .from('site_settings')
+        .select('key, value')
+        .eq('key', 'dynamic_cta_enabled')
+        .maybeSingle();
+
+    if (data?.value === false || data?.value === true) {
+        return { ok: true, changed: false, value: data.value };
+    }
+
+    const { error } = await supabase
+        .from('site_settings')
+        .upsert({
+            key: 'dynamic_cta_enabled',
+            value: true,
+            description: 'Liga/desliga CTA dinâmico nas páginas de signo (default=true)',
+            category: 'toggles'
+        }, { onConflict: 'key' });
+
+    return { ok: !error, changed: !error, value: true, error: error?.message };
+}
+
 async function getRecentContents(
     supabase: ReturnType<typeof createAdminClient>,
     signSlug: string,
@@ -233,6 +257,10 @@ export async function GET(request: NextRequest) {
         const supabase = createAdminClient();
 
         console.log(`[CRON] Iniciando geração para ${today} - Modo: ${mode.toUpperCase()}`);
+
+        // Defaults do site (uma vez): liga CTA dinâmico por padrão
+        const defaults = await ensureDefaultToggles(supabase);
+        console.log(`[CRON] Defaults:`, JSON.stringify(defaults));
 
         // Gera pacote da energia do dia (1x/dia) para a Home
         const dayEnergy = await ensureDailyEnergyPackage(supabase, today);

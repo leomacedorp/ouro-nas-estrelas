@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { MessageCircle, Sparkles, Star, Lock, Zap, Compass, ArrowRight, CheckCircle2, ShieldCheck, Gem } from 'lucide-react';
 import { siteConfig } from '@/lib/siteConfig';
 import { Meteors } from '@/components/ui/meteors';
@@ -13,6 +14,11 @@ const STRIPE_PRICE_SINGLE = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_SING
 const STRIPE_PRICE_MONTHLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_MONTHLY || '';
 
 export default function LeituraPremiumPage() {
+    const searchParams = useSearchParams();
+    const foco = (searchParams.get('foco') || '').toLowerCase();
+    const focus: 'amor' | 'dinheiro' | 'carreira' | 'geral' =
+        foco === 'amor' || foco === 'dinheiro' || foco === 'carreira' ? (foco as any) : 'geral';
+
     // Debug: mostra se as variáveis estão configuradas
     console.log('[Stripe Config] Single:', STRIPE_PRICE_SINGLE ? 'OK' : 'MISSING');
     console.log('[Stripe Config] Monthly:', STRIPE_PRICE_MONTHLY ? 'OK' : 'MISSING');
@@ -47,10 +53,15 @@ export default function LeituraPremiumPage() {
                     </BlurFade>
 
                     <BlurFade delay={0.3}>
-                        <p className="text-lg md:text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto">
+                        <p className="text-lg md:text-xl text-slate-400 mb-4 leading-relaxed max-w-2xl mx-auto">
                             Horóscopos de jornal são genéricos. Você precisa de um mapa de guerra.
                             Descubra o que está oculto nas suas finanças, relacionamentos e carreira hoje.
                         </p>
+                        {focus !== 'geral' ? (
+                            <p className="text-sm text-gold-300/90 font-medium mb-6">
+                                Foco selecionado: <span className="text-gold-200 uppercase tracking-widest">{focus}</span>
+                            </p>
+                        ) : null}
                     </BlurFade>
 
                     <BlurFade delay={0.4}>
@@ -141,6 +152,7 @@ export default function LeituraPremiumPage() {
                             isPopular={false}
                             priceId={STRIPE_PRICE_SINGLE}
                             link={siteConfig.whatsapp.url("Olá! Quero comprar a Leitura Avulsa por R$ 37.")}
+                            focus={focus}
                         />
 
                         {/* PLANO MENSAL (POPULAR) */}
@@ -159,6 +171,7 @@ export default function LeituraPremiumPage() {
                             isPopular={true}
                             priceId={STRIPE_PRICE_MONTHLY}
                             link={siteConfig.whatsapp.url("Olá! Quero assinar o Clube das Estrelas por R$ 97/mês.")}
+                            focus={focus}
                         />
                     </div>
                 </div>
@@ -192,7 +205,7 @@ function LayerCard({ icon, title, desc }: { icon: string, title: string, desc: s
     );
 }
 
-function PricingCard({ title, price, period, features, buttonText, isPopular, link, priceId }: any) {
+function PricingCard({ title, price, period, features, buttonText, isPopular, link, priceId, focus }: any) {
     const [loading, setLoading] = useState(false);
 
     const handleCheckout = async () => {
@@ -206,7 +219,8 @@ function PricingCard({ title, price, period, features, buttonText, isPopular, li
                 body: JSON.stringify({
                     priceId,
                     // fallback: o backend também tenta inferir o mode
-                    mode: isPopular ? 'subscription' : 'payment'
+                    mode: isPopular ? 'subscription' : 'payment',
+                    focus
                 }),
             });
 
