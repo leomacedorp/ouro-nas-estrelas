@@ -169,6 +169,8 @@ function extractJSON(text: string): { titulo?: string; leitura?: string } {
         .replace(/\\n/g, '\n')
         .replace(/\\t/g, '\t')
         .replace(/\\r/g, '\r')
+        // Alguns modelos devolvem \" (dupla barra) e outros devolvem \" já como " (uma barra)
+        .replace(/\\\\\"/g, '"')
         .replace(/\\\"/g, '"');
 
     const unescParsed = tryParse(unescaped);
