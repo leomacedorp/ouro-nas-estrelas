@@ -142,13 +142,20 @@ function generateEmailHTML(transit: ReturnType<typeof getWeeklyTransitContent>, 
 }
 
 export async function GET(req: Request) {
-    // Verificar autorização (opcional se CRON_SECRET não estiver configurado)
+    // Verificar autorização via header OU query parameter
     const authHeader = req.headers.get('authorization');
+    const url = new URL(req.url);
+    const querySecret = url.searchParams.get('secret');
     const cronSecret = process.env.CRON_SECRET;
 
-    // Se CRON_SECRET está definido, exige autenticação
-    // Se não está definido, permite acesso (modo desenvolvimento/teste)
-    if (cronSecret && cronSecret.length > 0 && authHeader !== `Bearer ${cronSecret}`) {
+    // Aceita: Bearer token no header OU ?secret= na URL OU sem CRON_SECRET definido
+    const isAuthorized =
+        !cronSecret ||
+        cronSecret.length === 0 ||
+        authHeader === `Bearer ${cronSecret}` ||
+        querySecret === cronSecret;
+
+    if (!isAuthorized) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
