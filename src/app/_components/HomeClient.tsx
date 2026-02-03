@@ -8,6 +8,8 @@ import { motion } from 'framer-motion';
 import CelestialWheel from '@/components/CelestialWheel';
 import ZodiacGrid from '@/components/ZodiacGrid';
 import DailyRitual from '@/components/DailyRitual';
+import { DayNumberBanner } from '@/components/DayNumberBanner';
+import { DestinyCalculator } from '@/components/DestinyCalculator';
 import { BlurFade } from '@/components/ui/blur-fade';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { TextReveal } from '@/components/ui/text-reveal';
@@ -88,6 +90,9 @@ export default function HomeClient({ settings }: HomeClientProps) {
                 </div>
             </section>
 
+            {/* ===== DAY NUMBER BANNER (Numerology) ===== */}
+            <DayNumberBanner />
+
             {/* ===== DAILY RITUAL ===== */}
             <section className="relative py-24 bg-mystic-900/50 overflow-hidden">
                 <div className="relative z-10">
@@ -103,6 +108,9 @@ export default function HomeClient({ settings }: HomeClientProps) {
                     </BlurFade>
                 </div>
             </div>
+
+            {/* ===== DESTINY CALCULATOR (Lead Magnet) ===== */}
+            <DestinyCalculator />
 
             {/* ===== BENEFITS SECTION ===== */}
             <section className="py-24 bg-transparent relative overflow-hidden">

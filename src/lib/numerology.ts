@@ -302,3 +302,49 @@ export function getNumerologySummary(profile: NumerologyProfile): string {
     const { destiny, personalYear, lifeCycle } = profile;
     return `Destino ${destiny.number} (${destiny.interpretation.title}), Ano Pessoal ${personalYear.number}, Ciclo de ${lifeCycle.name}`;
 }
+
+/**
+ * Calcula o Número Universal do Dia (soma da data atual)
+ * Não precisa de dados do usuário - válido para todos
+ */
+export function calculateUniversalDayNumber(date?: Date): number {
+    const d = date || new Date();
+    const day = d.getDate();
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+
+    const sum = day + month + year;
+    return reduceToCore(sum, false);
+}
+
+/**
+ * Retorna interpretação resumida para o Número Universal do Dia
+ */
+export function getUniversalDayMessage(date?: Date): {
+    number: number;
+    title: string;
+    theme: string;
+    advice: string;
+} {
+    const num = calculateUniversalDayNumber(date);
+    const interp = getNumberInterpretation(num);
+
+    const DAILY_THEMES: Record<number, { theme: string; advice: string }> = {
+        1: { theme: 'Novos começos e iniciativa', advice: 'Tome a frente. Hoje favorece quem age primeiro.' },
+        2: { theme: 'Parcerias e diplomacia', advice: 'Coopere. Os melhores resultados virão de alianças.' },
+        3: { theme: 'Expressão e criatividade', advice: 'Comunique suas ideias. Sua voz tem poder hoje.' },
+        4: { theme: 'Estrutura e trabalho focado', advice: 'Construa bases sólidas. Disciplina gera resultados.' },
+        5: { theme: 'Mudança e adaptação', advice: 'Seja flexível. Oportunidades surgem do inesperado.' },
+        6: { theme: 'Família e responsabilidades', advice: 'Cuide dos vínculos. Harmonia nos relacionamentos.' },
+        7: { theme: 'Introspecção e sabedoria', advice: 'Reflita antes de agir. Respostas estão dentro de você.' },
+        8: { theme: 'Poder e realizações', advice: 'Foque em resultados. Seu esforço será recompensado.' },
+        9: { theme: 'Conclusões e generosidade', advice: 'Finalize pendências. Desapegue do que não serve mais.' }
+    };
+
+    return {
+        number: num,
+        title: interp?.title || `Número ${num}`,
+        theme: DAILY_THEMES[num]?.theme || interp?.essence || '',
+        advice: DAILY_THEMES[num]?.advice || ''
+    };
+}
