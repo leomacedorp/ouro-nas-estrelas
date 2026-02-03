@@ -1,12 +1,57 @@
-import ComingSoon from '@/components/ComingSoon';
+import Link from 'next/link';
+import { ArrowLeft, Clock, Sparkles } from 'lucide-react';
+import { Meteors } from '@/components/ui/meteors';
+import LeadForm from '@/components/LeadForm';
+import { BlurFade } from '@/components/ui/blur-fade';
 
 export default function ClubePage() {
     return (
-        <ComingSoon
-            title="Clube das Estrelas"
-            subtitle="Uma comunidade exclusiva para quem deseja aprofundar seu conhecimento astrológico e conexão espiritual. Acesso VIP a conteúdos inéditos."
-            badge="Lista de Espera Aberta"
-            whatsappMessage="Olá! Quero entrar na lista de espera do Clube das Estrelas."
-        />
+        <div className="min-h-[80vh] flex items-center justify-center relative overflow-hidden py-20">
+            {/* Background Effects */}
+            <div className="absolute inset-0 bg-gradient-to-b from-mystic-950/80 via-indigo-950/20 to-mystic-950/80" />
+            <Meteors number={15} className="opacity-40" />
+
+            <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
+                <BlurFade delay={0.1}>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-8 backdrop-blur-md">
+                        <Clock className="w-4 h-4 text-gold-400 animate-pulse" />
+                        <span className="text-sm text-gold-300 font-bold tracking-wide uppercase">Lista de Espera 2026</span>
+                    </div>
+                </BlurFade>
+
+                <BlurFade delay={0.2}>
+                    <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight text-slate-100">
+                        Clube das Estrelas
+                    </h1>
+                </BlurFade>
+
+                <BlurFade delay={0.3}>
+                    <p className="text-lg md:text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto">
+                        Uma comunidade exclusiva para quem deseja aprofundar seu conhecimento astrológico e conexão espiritual.
+                        <br /><span className="text-gold-300">Vagas encerradas momentaneamente.</span>
+                    </p>
+                </BlurFade>
+
+                <BlurFade delay={0.4}>
+                    <div className="max-w-md mx-auto text-left">
+                        <LeadForm
+                            type="clube"
+                            buttonText="Entrar na Lista VIP"
+                            showPhone={true}
+                            showMessage={false}
+                            successMessage="Você está na lista! Avisaremos por email quando abrirmos novas vagas."
+                        />
+                    </div>
+                </BlurFade>
+
+                <BlurFade delay={0.5}>
+                    <div className="mt-8">
+                        <Link href="/" className="text-slate-500 hover:text-white transition-colors flex items-center justify-center gap-2 text-sm font-medium">
+                            <ArrowLeft className="w-4 h-4" /> Voltar para o Início
+                        </Link>
+                    </div>
+                </BlurFade>
+            </div>
+        </div>
     );
 }
