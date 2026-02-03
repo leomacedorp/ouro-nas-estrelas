@@ -96,43 +96,68 @@ export default function LeituraPremiumPage() {
                 </div>
             </section>
 
-            {/* ===== THE 6 LAYERS (PRODUCT BREAKDOWN) ===== */}
+            {/* ===== THE 7 DIMENSIONS (PRODUCT BREAKDOWN) ===== */}
             <section className="py-24 bg-mystic-900/30 relative">
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl md:text-5xl font-serif font-bold text-slate-100 mb-4">
-                            O Que Você Recebe?
+                            Sua vida, revelada em <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600">7 dimensões</span> decisivas
                         </h2>
                         <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-                            Não é apenas um texto. É uma análise completa de <span className="text-gold-400 font-bold">6 dimensões</span> da sua vida.
+                            Não é um horóscopo. É um <span className="text-gold-400 font-bold">diagnóstico estratégico</span> para enxergar oportunidades, evitar erros e agir com clareza.
                         </p>
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <LayerCard
                             icon="❤️" title="Amor & Vínculos"
-                            desc="O que está invisível na sua relação atual ou na sua busca. Não é sobre 'se vai dar certo', é sobre como fazer dar certo."
+                            desc="Entenda o que está invisível nas suas relações e fortaleça conexões com mais segurança emocional."
                         />
                         <LayerCard
                             icon="💰" title="Dinheiro & Recursos"
-                            desc="Onde está a energia de prosperidade hoje. Pare de nadar contra a maré financeira e descubra o fluxo."
+                            desc="Descubra onde o dinheiro está fluindo — e como aproveitar o momento certo para prosperar."
                         />
                         <LayerCard
                             icon="🚀" title="Carreira & Missão"
-                            desc="A decisão estratégica para tomar nas próximas 24h. Liderança, foco e oportunidades profissionais."
+                            desc="Clareza para decisões profissionais e movimentos que aceleram seu crescimento."
                         />
                         <LayerCard
                             icon="🚧" title="O Grande Bloqueio"
-                            desc="A armadilha mental que seu signo está propenso a cair hoje. Saber disso é evitar 80% dos problemas."
+                            desc="Identifique o padrão que mais atrasa sua vida hoje — e elimine antes que vire prejuízo."
                         />
                         <LayerCard
                             icon="💎" title="Ouro Escondido"
-                            desc="A oportunidade oculta que está na sua frente e você não está vendo por estar focado no problema errado."
+                            desc="A oportunidade que está diante de você, mas que poucos conseguem enxergar."
                         />
                         <LayerCard
-                            icon="🔮" title="Conselho Secreto"
-                            desc="Uma frase mântrica personalizada (Afirmação de Poder) para alinhar sua vibração imediatamente."
+                            icon="✨" title="Conselho Estratégico"
+                            desc="A orientação direta e personalizada para o próximo passo da sua jornada."
                         />
+                        {/* 7th DIMENSION - THE CROWN JEWEL */}
+                        <div className="md:col-span-2 lg:col-span-3">
+                            <BlurFade>
+                                <div className="p-8 rounded-2xl bg-gradient-to-br from-gold-900/20 to-indigo-900/20 border border-gold-500/30 hover:border-gold-500/50 transition-all group relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5"></div>
+                                    <div className="absolute top-4 right-4">
+                                        <span className="px-3 py-1 rounded-full bg-gold-500/20 text-gold-300 text-xs font-bold uppercase tracking-wider border border-gold-500/30">
+                                            Exclusivo
+                                        </span>
+                                    </div>
+                                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
+                                        <div className="text-6xl group-hover:scale-110 transition-transform">🔢</div>
+                                        <div className="text-center md:text-left flex-1">
+                                            <h3 className="text-2xl md:text-3xl font-serif font-bold text-gold-300 mb-3">
+                                                Código do Destino <span className="text-slate-400 text-lg font-normal">(Numerologia)</span>
+                                            </h3>
+                                            <p className="text-slate-300 text-lg leading-relaxed max-w-2xl">
+                                                Seus números revelam talentos, ciclos e o caminho onde sua vida flui com mais força.
+                                                <span className="text-gold-400 font-medium"> Use sua assinatura numérica para tomar decisões no momento certo.</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </BlurFade>
+                        </div>
                     </div>
                 </div>
             </section>
