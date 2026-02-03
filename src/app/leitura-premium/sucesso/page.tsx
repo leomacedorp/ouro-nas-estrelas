@@ -72,7 +72,7 @@ export default function SucessoPage() {
                     signSlug,
                     name: customerName,
                     birthDate,
-                    mode: 'short'
+                    mode: 'full'
                 }),
             });
 
@@ -161,9 +161,9 @@ export default function SucessoPage() {
                             <div>
                                 <label className="block text-sm text-slate-300 mb-1">Data de nascimento</label>
                                 <input
+                                    type="date"
                                     value={birthDate}
                                     onChange={(e) => setBirthDate(e.target.value)}
-                                    placeholder="AAAA-MM-DD (ex.: 1990-05-15)"
                                     className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-gold-500/40"
                                 />
                                 <p className="text-xs text-slate-500 mt-2">Usamos isso para numerologia e contexto simbólico (sem previsões de eventos).</p>

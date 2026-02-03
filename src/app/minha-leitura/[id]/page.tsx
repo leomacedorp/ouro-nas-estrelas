@@ -29,6 +29,12 @@ export default async function MinhaLeituraPage({ params, searchParams }: PagePro
   const c = reading.content as any;
   const hasSymbolicReading = typeof c?.leitura === 'string' && c.leitura.trim().length > 0;
 
+  // Formatar data para DD/MM/YYYY
+  const formatDate = (dateKey: string) => {
+    const [year, month, day] = dateKey.split('-');
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <main className="min-h-screen bg-mystic-950 text-slate-200">
       <div className="container mx-auto px-4 py-16 max-w-4xl">
@@ -36,7 +42,7 @@ export default async function MinhaLeituraPage({ params, searchParams }: PagePro
           <h1 className="text-3xl md:text-5xl font-serif font-bold text-white mb-3">
             {hasSymbolicReading ? (c.titulo || 'Sua Leitura Premium') : 'Sua Leitura Premium'}
           </h1>
-          <p className="text-slate-400">{signName} • válida para {reading.date_key}</p>
+          <p className="text-slate-400">{signName} • válida para {formatDate(reading.date_key)}</p>
         </div>
 
         {hasSymbolicReading ? (
