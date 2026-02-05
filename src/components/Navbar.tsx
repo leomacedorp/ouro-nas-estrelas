@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Sparkles, Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
 import { siteConfig } from '@/lib/siteConfig';
 
 export default function Navbar({ settings }: { settings?: any }) {
@@ -42,10 +41,10 @@ export default function Navbar({ settings }: { settings?: any }) {
                         </Link>
                     ))}
                     <Link
-                        href={siteConfig.whatsapp.url("Gostaria de acessar a Área de Membros")}
+                        href="/entrar"
                         className="px-6 py-2 rounded-full bg-gold-600/10 border border-gold-500/30 text-gold-300 hover:bg-gold-600 hover:text-white transition-all duration-300"
                     >
-                        Área de Membros
+                        Lista VIP
                     </Link>
                 </div>
 
@@ -73,11 +72,11 @@ export default function Navbar({ settings }: { settings?: any }) {
                             </Link>
                         ))}
                         <Link
-                            href={siteConfig.whatsapp.url("Gostaria de acessar a Área de Membros")}
+                            href="/entrar"
                             className="mt-4 px-6 py-3 rounded-lg text-center bg-gold-600 text-white font-medium"
                             onClick={() => setIsOpen(false)}
                         >
-                            Área de Membros
+                            Lista VIP
                         </Link>
                     </div>
                 </div>
