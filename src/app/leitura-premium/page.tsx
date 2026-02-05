@@ -187,7 +187,7 @@ export default function LeituraPremiumPage() {
                                 className="mt-1 h-5 w-5 accent-gold-500"
                             />
                             <span className="text-sm text-slate-300 leading-relaxed">
-                                Entendi que esta leitura é simbólica, feita para orientação e reflexão.
+                                Entendo que esta leitura é simbólica, feita para orientação e reflexão.
                             </span>
                         </label>
                         <p className="mt-2 text-xs text-slate-500">
