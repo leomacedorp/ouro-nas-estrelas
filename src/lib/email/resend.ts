@@ -1,12 +1,19 @@
 import { Resend } from 'resend';
 
+export type EmailAttachment = {
+  filename: string;
+  content: string | Buffer;
+  contentType?: string;
+};
+
 export type SendEmailParams = {
   to: string;
   subject: string;
   html: string;
+  attachments?: EmailAttachment[];
 };
 
-export async function sendEmail({ to, subject, html }: SendEmailParams) {
+export async function sendEmail({ to, subject, html, attachments }: SendEmailParams) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM || 'Ouro nas Estrelas <contato@ouronasestrelas.com.br>';
 
@@ -23,6 +30,7 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
     to,
     subject,
     html,
+    attachments,
   });
 
   return result;

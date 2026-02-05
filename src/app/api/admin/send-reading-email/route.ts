@@ -29,10 +29,24 @@ export async function POST(req: NextRequest) {
 
     const html = renderPremiumReadingEmailHtml(body.data);
 
+    // Also attach the full reading as an HTML file (useful for saving/printing).
+    const filenameSafe = `leitura-premium-${(body.data.customerName || 'cliente')
+      .normalize('NFKD')
+      .replace(/[^a-zA-Z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+      .toLowerCase()}.html`;
+
     const result = await sendEmail({
       to,
       subject,
       html,
+      attachments: [
+        {
+          filename: filenameSafe,
+          contentType: 'text/html; charset=utf-8',
+          content: Buffer.from(html, 'utf8'),
+        },
+      ],
     });
 
     return NextResponse.json({ ok: true, result });
