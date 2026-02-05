@@ -360,7 +360,6 @@ function PricingCard({ title, price, period, features, buttonText, isPopular, li
                         window.location.href = link;
                     }}
                     className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${ButtonColors} ${(!acceptedSymbolicTerms || loading) ? 'opacity-60 cursor-not-allowed' : ''}`}>
-                >
                     {ButtonContent}
                 </button>
             )}
