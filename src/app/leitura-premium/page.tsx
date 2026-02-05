@@ -19,6 +19,8 @@ export default function LeituraPremiumPage() {
     const focus: 'amor' | 'dinheiro' | 'carreira' | 'geral' =
         foco === 'amor' || foco === 'dinheiro' || foco === 'carreira' ? (foco as any) : 'geral';
 
+    const [acceptedSymbolicTerms, setAcceptedSymbolicTerms] = useState(false);
+
     // Mobile fix: evitar jump estranho do hash antes de carregar.
     // Quando vier com foco (amor/dinheiro/carreira), fazemos scroll para pricing depois do render.
     useEffect(() => {
@@ -176,6 +178,23 @@ export default function LeituraPremiumPage() {
                         </p>
                     </div>
 
+                    <div className="mb-8 max-w-3xl mx-auto">
+                        <label className="flex items-start gap-3 p-4 rounded-2xl bg-white/5 border border-white/10">
+                            <input
+                                type="checkbox"
+                                checked={acceptedSymbolicTerms}
+                                onChange={(e) => setAcceptedSymbolicTerms(e.target.checked)}
+                                className="mt-1 h-5 w-5 accent-gold-500"
+                            />
+                            <span className="text-sm text-slate-300 leading-relaxed">
+                                Entendi que esta leitura é simbólica, feita para orientação e reflexão.
+                            </span>
+                        </label>
+                        <p className="mt-2 text-xs text-slate-500">
+                            Para continuar para o pagamento, marque a confirmação acima.
+                        </p>
+                    </div>
+
                     <div className="grid md:grid-cols-2 gap-8 items-center">
                         {/* PLANO ÚNICO */}
                         <PricingCard
@@ -193,6 +212,7 @@ export default function LeituraPremiumPage() {
                             priceId={STRIPE_PRICE_SINGLE}
                             link={siteConfig.whatsapp.url("Olá! Quero comprar a Leitura Avulsa por R$ 37.")}
                             focus={focus}
+                            acceptedSymbolicTerms={acceptedSymbolicTerms}
                         />
 
                         {/* PLANO MENSAL (POPULAR) */}
@@ -212,6 +232,7 @@ export default function LeituraPremiumPage() {
                             priceId={STRIPE_PRICE_MONTHLY}
                             link={siteConfig.whatsapp.url("Olá! Quero assinar o Clube das Estrelas por R$ 97/mês.")}
                             focus={focus}
+                            acceptedSymbolicTerms={acceptedSymbolicTerms}
                         />
                     </div>
                 </div>
@@ -245,11 +266,15 @@ function LayerCard({ icon, title, desc }: { icon: string, title: string, desc: s
     );
 }
 
-function PricingCard({ title, price, period, features, buttonText, isPopular, link, priceId, focus }: any) {
+function PricingCard({ title, price, period, features, buttonText, isPopular, link, priceId, focus, acceptedSymbolicTerms }: any) {
     const [loading, setLoading] = useState(false);
 
     const handleCheckout = async () => {
         if (!priceId) return;
+        if (!acceptedSymbolicTerms) {
+            alert('Confirme a leitura simbólica para continuar.');
+            return;
+        }
 
         setLoading(true);
         try {
@@ -260,7 +285,8 @@ function PricingCard({ title, price, period, features, buttonText, isPopular, li
                     priceId,
                     // fallback: o backend também tenta inferir o mode
                     mode: isPopular ? 'subscription' : 'payment',
-                    focus
+                    focus,
+                    acceptedSymbolicTerms: Boolean(acceptedSymbolicTerms),
                 }),
             });
 
@@ -318,17 +344,25 @@ function PricingCard({ title, price, period, features, buttonText, isPopular, li
                 // Botão de API (Stripe)
                 <button
                     onClick={handleCheckout}
-                    disabled={loading}
-                    className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${ButtonColors}`}>
+                    disabled={loading || !acceptedSymbolicTerms}
+                    className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${ButtonColors} ${(!acceptedSymbolicTerms || loading) ? 'opacity-60 cursor-not-allowed' : ''}`}>
                     {ButtonContent}
                 </button>
             ) : (
                 // Botão de Link (WhatsApp)
-                <Link href={link} className="w-full">
-                    <button className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${ButtonColors}`}>
-                        {ButtonContent}
-                    </button>
-                </Link>
+                <button
+                    disabled={loading || !acceptedSymbolicTerms}
+                    onClick={() => {
+                        if (!acceptedSymbolicTerms) {
+                            alert('Confirme a leitura simbólica para continuar.');
+                            return;
+                        }
+                        window.location.href = link;
+                    }}
+                    className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${ButtonColors} ${(!acceptedSymbolicTerms || loading) ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                >
+                    {ButtonContent}
+                </button>
             )}
         </div>
     );

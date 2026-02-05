@@ -3,7 +3,7 @@ import { getStripe } from '@/lib/stripe';
 
 export async function POST(req: Request) {
     try {
-        const { priceId, mode, focus } = await req.json();
+        const { priceId, mode, focus, acceptedSymbolicTerms } = await req.json();
 
         // Se o client não mandar mode, inferimos a partir do Price no Stripe.
         // - price recorrente => subscription
@@ -26,6 +26,8 @@ export async function POST(req: Request) {
         });
 
         const stripe = getStripe();
+        const nowIso = new Date().toISOString();
+
         const session = await stripe.checkout.sessions.create({
             line_items: [
                 {
@@ -38,6 +40,9 @@ export async function POST(req: Request) {
             cancel_url: `${origin}/leitura-premium`,
             metadata: {
                 focus: typeof focus === 'string' ? focus : null,
+                accepted_symbolic_terms: acceptedSymbolicTerms ? 'true' : 'false',
+                accepted_symbolic_terms_at: acceptedSymbolicTerms ? nowIso : null,
+                accepted_symbolic_terms_version: 'v1',
                 // Aqui podemos guardar dados extras, como o signo do usuário se já soubermos
             }
         });
