@@ -26,7 +26,38 @@ export default async function MinhaLeituraPage({ params, searchParams }: PagePro
 
   const signName = ZODIAC_SIGNS.find(s => s.slug === reading.sign_slug)?.name || reading.sign_slug;
 
-  const c = reading.content as any;
+  // content can be either an object or (in some edge cases) a JSON string.
+  const rawContent = reading.content as any;
+  const safeJsonParse = (v: unknown) => {
+    if (typeof v !== 'string') return null;
+    const s = v.trim();
+    if (!s.startsWith('{') || !s.endsWith('}')) return null;
+    try {
+      return JSON.parse(s);
+    } catch {
+      return null;
+    }
+  };
+
+  // Normalize content to an object.
+  let c: any = rawContent;
+  const parsedContent = safeJsonParse(rawContent);
+  if (parsedContent && typeof parsedContent === 'object') {
+    c = parsedContent;
+  }
+
+  // Some providers sometimes return a nested JSON inside c.leitura.
+  if (typeof c?.leitura === 'string') {
+    const nested = safeJsonParse(c.leitura);
+    if (nested && typeof nested === 'object') {
+      c = {
+        ...c,
+        titulo: c.titulo || (nested as any).titulo,
+        leitura: (nested as any).leitura ?? c.leitura,
+      };
+    }
+  }
+
   const hasSymbolicReading = typeof c?.leitura === 'string' && c.leitura.trim().length > 0;
 
   // Formatar data para DD/MM/YYYY
