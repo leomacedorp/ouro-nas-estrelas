@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import DownloadPDFButton from '@/components/DownloadPDFButton';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { ZODIAC_SIGNS } from '@/lib/constants';
 
@@ -69,32 +70,42 @@ export default async function MinhaLeituraPage({ params, searchParams }: PagePro
   return (
     <main className="min-h-screen bg-mystic-950 text-slate-200">
       <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-5xl font-serif font-bold text-white mb-3">
-            {hasSymbolicReading ? (c.titulo || 'Sua Leitura Premium') : 'Sua Leitura Premium'}
-          </h1>
-          <p className="text-slate-400">{signName} • válida para {formatDate(reading.date_key)}</p>
+        {/* Envolve o conteúdo para captura do PDF */}
+        <div id="premium-reading-content" className="p-4 bg-mystic-950">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl md:text-5xl font-serif font-bold text-white mb-3">
+              {hasSymbolicReading ? (c.titulo || 'Sua Leitura Premium') : 'Sua Leitura Premium'}
+            </h1>
+            <p className="text-slate-400">{signName} • válida para {formatDate(reading.date_key)}</p>
+          </div>
+
+          {hasSymbolicReading ? (
+            <section className="p-6 md:p-10 rounded-3xl bg-white/5 border border-white/10">
+              <p className="text-slate-200 leading-relaxed whitespace-pre-line text-lg">
+                {c.leitura}
+              </p>
+            </section>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card title="❤️ Amor & Vínculos" content={c.amor} />
+              <Card title="💰 Dinheiro & Recursos" content={c.dinheiro} />
+              <Card title="🚀 Carreira & Missão" content={c.carreira} />
+              <Card title="🚧 O Grande Bloqueio" content={c.bloqueio} />
+              <Card title="💎 Ouro Escondido" content={c.oportunidade} />
+              <Card title="🔮 Conselho Mágico" content={c.conselho} />
+            </div>
+          )}
+
+          <div className="mt-10 text-center text-sm text-slate-500 pb-4">
+            Ouro Nas Estrelas — {new Date().getFullYear()}
+          </div>
         </div>
 
-        {hasSymbolicReading ? (
-          <section className="p-6 md:p-10 rounded-3xl bg-white/5 border border-white/10">
-            <p className="text-slate-200 leading-relaxed whitespace-pre-line text-lg">
-              {c.leitura}
-            </p>
-          </section>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card title="❤️ Amor & Vínculos" content={c.amor} />
-            <Card title="💰 Dinheiro & Recursos" content={c.dinheiro} />
-            <Card title="🚀 Carreira & Missão" content={c.carreira} />
-            <Card title="🚧 O Grande Bloqueio" content={c.bloqueio} />
-            <Card title="💎 Ouro Escondido" content={c.oportunidade} />
-            <Card title="🔮 Conselho Mágico" content={c.conselho} />
-          </div>
-        )}
-
-        <div className="mt-10 text-center text-sm text-slate-500">
-          Dica: salve este link — ele é o acesso da sua leitura.
+        <div className="mt-8 text-center flex flex-col items-center gap-4">
+          <DownloadPDFButton targetId="premium-reading-content" fileName={`Leitura-${signName}.pdf`} />
+          <p className="text-sm text-slate-500">
+            Dica: salve este link — ele é o acesso permanente da sua leitura.
+          </p>
         </div>
       </div>
     </main>

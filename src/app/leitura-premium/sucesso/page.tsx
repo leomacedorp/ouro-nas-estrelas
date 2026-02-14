@@ -9,6 +9,7 @@ import { BlurFade } from '@/components/ui/blur-fade';
 import { Meteors } from '@/components/ui/meteors';
 import { ZODIAC_SIGNS } from '@/lib/constants';
 import { PremiumContent } from '@/lib/localPremiumTemplate';
+import DownloadPDFButton from '@/components/DownloadPDFButton';
 import { siteConfig } from '@/lib/siteConfig';
 
 export default function SucessoPage() {
@@ -205,25 +206,31 @@ export default function SucessoPage() {
                 ) : (
                     // RESULTADO DA LEITURA
                     <div className="max-w-4xl mx-auto animate-in fade-in duration-700">
-                        <div className="text-center mb-16">
-                            <span className="inline-block px-4 py-1 rounded-full bg-gold-500/20 text-gold-300 text-sm font-bold mb-4 border border-gold-500/30">
-                                LEITURA PREMIUM ATIVADA
-                            </span>
-                            <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-4">
-                                Revelações para {ZODIAC_SIGNS.find(s => s.slug === selectedSign)?.name}
-                            </h2>
-                            <p className="text-slate-400">
-                                Leitura válida para as próximas 24 horas.
-                            </p>
-                        </div>
+                        <div id="premium-reading-content" className="p-4 bg-mystic-950">
+                            <div className="text-center mb-16">
+                                <span className="inline-block px-4 py-1 rounded-full bg-gold-500/20 text-gold-300 text-sm font-bold mb-4 border border-gold-500/30">
+                                    LEITURA PREMIUM ATIVADA
+                                </span>
+                                <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-4">
+                                    Revelações para {ZODIAC_SIGNS.find(s => s.slug === selectedSign)?.name}
+                                </h2>
+                                <p className="text-slate-400">
+                                    Leitura válida para as próximas 24 horas.
+                                </p>
+                            </div>
 
-                        <div className="grid md:grid-cols-2 gap-6 mb-12">
-                            <ContentCard icon="❤️" title="Amor & Vínculos" content={reading.amor} delay={0.1} />
-                            <ContentCard icon="💰" title="Dinheiro & Recursos" content={reading.dinheiro} delay={0.2} />
-                            <ContentCard icon="🚀" title="Carreira & Missão" content={reading.carreira} delay={0.3} />
-                            <ContentCard icon="🚧" title="O Grande Bloqueio" content={reading.bloqueio} isWarning delay={0.4} />
-                            <ContentCard icon="💎" title="Ouro Escondido" content={reading.oportunidade} isGold delay={0.5} />
-                            <ContentCard icon="🔮" title="Conselho Mágico" content={reading.conselho} isMystic delay={0.6} />
+                            <div className="grid md:grid-cols-2 gap-6 mb-12">
+                                <ContentCard icon="❤️" title="Amor & Vínculos" content={reading.amor} delay={0.1} />
+                                <ContentCard icon="💰" title="Dinheiro & Recursos" content={reading.dinheiro} delay={0.2} />
+                                <ContentCard icon="🚀" title="Carreira & Missão" content={reading.carreira} delay={0.3} />
+                                <ContentCard icon="🚧" title="O Grande Bloqueio" content={reading.bloqueio} isWarning delay={0.4} />
+                                <ContentCard icon="💎" title="Ouro Escondido" content={reading.oportunidade} isGold delay={0.5} />
+                                <ContentCard icon="🔮" title="Conselho Mágico" content={reading.conselho} isMystic delay={0.6} />
+                            </div>
+
+                            <div className="text-center text-sm text-slate-500 pb-4">
+                                Ouro Nas Estrelas — {new Date().getFullYear()}
+                            </div>
                         </div>
 
                         {/* FUTER DA ENTREGA */}
@@ -238,9 +245,7 @@ export default function SucessoPage() {
                                         Quero Entrar no Clube
                                     </ShimmerButton>
                                 </Link>
-                                <button onClick={() => window.print()} className="px-6 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center gap-2 transition-colors">
-                                    <Download className="w-5 h-5" /> Salvar em PDF
-                                </button>
+                                <DownloadPDFButton targetId="premium-reading-content" fileName={`Leitura-${selectedSign}.pdf`} />
                             </div>
                         </div>
                     </div>
