@@ -3,6 +3,6 @@ import { metadata } from './metadata';
 
 export { metadata };
 
-export default function LeituraPremiumLayout({ children }: { children: ReactNode }) {
+export default function LeituraCasalLayout({ children }: { children: ReactNode }) {
   return children;
 }

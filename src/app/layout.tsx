@@ -14,17 +14,19 @@ const dmSerif = DM_Serif_Display({ weight: '400', subsets: ['latin'], variable: 
 // Google Analytics ID
 const GA_MEASUREMENT_ID = 'G-6TWW6XHNTH';
 
+const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || 'https://ouronasestrelas.com.br').replace(/\/$/, '');
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://ouronasestrelas.com.br'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Ouro Nas Estrelas — Horóscopo e Leituras Premium',
     template: '%s — Ouro Nas Estrelas'
   },
   description: 'Horóscopo do dia e guias completos por signo. Leituras premium para amor, dinheiro e carreira — com uma linguagem humana, clara e acolhedora.',
   keywords: ['horóscopo', 'astrologia', 'signos', 'amor', 'dinheiro', 'carreira', 'leitura premium'],
-  alternates: {
-    canonical: '/'
-  },
+  // IMPORTANTE (SEO): não setar canonical global aqui.
+  // Cada rota deve declarar seu canonical (alternates.canonical) para evitar
+  // todas as páginas apontarem para "/".
   verification: {
     google: '9QT1St6-A2ClDlCXLrs1Kl8eDnfR1IO-8QJnQrMR9uk'
   },
@@ -33,7 +35,7 @@ export const metadata: Metadata = {
     locale: 'pt_BR',
     title: 'Ouro Nas Estrelas — Horóscopo e Leituras Premium',
     description: 'Horóscopo do dia e guias completos por signo. Leituras premium para amor, dinheiro e carreira.',
-    url: '/',
+    url: SITE_URL,
     siteName: 'Ouro Nas Estrelas'
   },
   twitter: {
