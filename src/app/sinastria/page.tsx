@@ -2,9 +2,9 @@ import { Metadata } from 'next';
 import SinastriaClient from '@/components/SinastriaClient';
 
 export const metadata: Metadata = {
-    title: 'Sinastria Amorosa: Compatibilidade dos Signos | Ouro Nas Estrelas',
-    description: 'Descubra se o seu signo combina com o da pessoa amada. Calculadora de sinastria e compatibilidade amorosa gratuita.',
-    keywords: ['sinastria amorosa', 'compatibilidade signos', 'combinacao astral', 'amor entre signos', 'mapa astral casal']
+    title: 'Sinastria: Compatibilidade entre Signos | Ouro Nas Estrelas',
+    description: 'Descubra a compatibilidade entre signos por foco: amor, química, trabalho e amizade. Resultado rápido e prático.',
+    keywords: ['sinastria', 'compatibilidade signos', 'signos combinam', 'sinastria amor', 'quimica dos signos', 'compatibilidade signos trabalho', 'compatibilidade amizade signos']
 };
 
 export default function SinastriaPage() {

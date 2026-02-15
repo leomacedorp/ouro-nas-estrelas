@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Sparkles, ArrowRight, Star, Flame, Wind, Droplets, Mountain } from 'lucide-react';
+import { Heart, Sparkles, ArrowRight, Star, Flame, Briefcase, Users, Zap } from 'lucide-react';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import Link from 'next/link';
 import { ZODIAC_SIGNS } from '@/lib/constants';
-import { calculateCompatibility, CompatibilityResult } from '@/lib/compatibility';
+import { calculateCompatibility, CompatibilityFocus, CompatibilityResult } from '@/lib/compatibility';
 
 const SIGNS_LIST = Object.entries(ZODIAC_SIGNS).map(([slug, data]) => ({
     slug,
@@ -15,7 +15,28 @@ const SIGNS_LIST = Object.entries(ZODIAC_SIGNS).map(([slug, data]) => ({
     element: data.element // 'fogo', 'terra', 'ar', 'agua'
 }));
 
-export default function SinastriaClient() {
+const FOCUS_OPTIONS: Array<{ key: CompatibilityFocus; label: string; icon: any; helper: string }> = [
+    { key: 'amor', label: 'Amor', icon: Heart, helper: 'carinho, vínculo e futuro' },
+    { key: 'quimica', label: 'Química', icon: Zap, helper: 'atração e sintonia física' },
+    { key: 'trabalho', label: 'Trabalho', icon: Briefcase, helper: 'parceria e performance' },
+    { key: 'amizade', label: 'Amizade', icon: Users, helper: 'convivência e lealdade' },
+];
+
+function focusCopy(focus: CompatibilityFocus) {
+    switch (focus) {
+        case 'quimica':
+            return { badge: 'Sexo / Química', title: 'Sinastria de Química', subtitle: 'Entenda atração, ritmo e o que acende (ou esfria) a conexão.' };
+        case 'trabalho':
+            return { badge: 'Trabalho', title: 'Sinastria Profissional', subtitle: 'Descubra como vocês funcionam juntos em metas, decisões e rotina.' };
+        case 'amizade':
+            return { badge: 'Amizade', title: 'Sinastria de Amizade', subtitle: 'Veja onde a amizade flui e como evitar ruídos na convivência.' };
+        default:
+            return { badge: 'Amor', title: 'Sinastria Amorosa', subtitle: 'Descubra a alquimia secreta entre dois corações.' };
+    }
+}
+
+export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocus?: CompatibilityFocus }) {
+    const [focus, setFocus] = useState<CompatibilityFocus>(defaultFocus);
     const [signA, setSignA] = useState('');
     const [signB, setSignB] = useState('');
     const [loading, setLoading] = useState(false);
@@ -32,7 +53,7 @@ export default function SinastriaClient() {
             // Simulate calculation drama
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            const res = calculateCompatibility(signA, signB);
+            const res = calculateCompatibility(signA, signB, focus);
             setResult(res);
         } catch (e) {
             setError('Não foi possível calcular agora. Tente novamente.');
@@ -59,18 +80,49 @@ export default function SinastriaClient() {
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
                         <Heart className="w-4 h-4 text-rose-400 fill-current" />
-                        <span className="text-sm font-medium text-rose-200">Amor e Relacionamento</span>
+                        <span className="text-sm font-medium text-rose-200">{focusCopy(focus).badge}</span>
                     </div>
                     <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-rose-200 via-pink-200 to-purple-200">
-                        Sinastria Amorosa
+                        {focusCopy(focus).title}
                     </h1>
                     <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                        Descubra a alquimia secreta entre dois corações.
+                        {focusCopy(focus).subtitle}
                     </p>
                 </motion.div>
 
                 {/* Calculator Interface */}
                 <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl mb-12 relative overflow-hidden">
+                    {/* Focus selector */}
+                    <div className="relative z-10 mb-10">
+                        <p className="text-sm font-medium text-slate-300 uppercase tracking-wider text-center mb-4">Qual é o foco?</p>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            {FOCUS_OPTIONS.map((opt) => {
+                                const Icon = opt.icon;
+                                const active = focus === opt.key;
+                                return (
+                                    <button
+                                        key={opt.key}
+                                        onClick={() => setFocus(opt.key)}
+                                        className={
+                                            `rounded-2xl border px-4 py-4 text-left transition-all ` +
+                                            (active
+                                                ? 'border-rose-500/50 bg-rose-500/10'
+                                                : 'border-white/10 bg-black/30 hover:bg-black/40')
+                                        }
+                                        type="button"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <Icon className={active ? 'text-rose-300' : 'text-slate-400'} size={18} />
+                                            <span className={active ? 'text-white font-semibold' : 'text-slate-200 font-semibold'}>{opt.label}</span>
+                                        </div>
+                                        <div className={active ? 'text-rose-100/80 text-xs mt-1' : 'text-slate-400 text-xs mt-1'}>
+                                            {opt.helper}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
                     {/* Decorative Background inside card */}
                     <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-purple-500/5 pointer-events-none" />
 
@@ -160,21 +212,28 @@ export default function SinastriaClient() {
                                 </p>
                             </div>
 
-                            {/* Details Grid */}
+                            {/* Details */}
                             <div className="grid md:grid-cols-2">
                                 <div className="p-8 border-r border-white/10 bg-white/5">
                                     <h3 className="text-sm font-bold uppercase text-rose-300 mb-4 flex items-center gap-2">
-                                        <Flame className="w-4 h-4" /> Alquimia dos Elementos
+                                        <Flame className="w-4 h-4" /> O que favorece
                                     </h3>
-                                    <p className="text-slate-300 leading-relaxed mb-4">
-                                        A interação entre {result.elements.a} e {result.elements.b} cria uma dinâmica única.
-                                    </p>
-                                    <div className="bg-rose-500/10 border border-rose-500/20 p-4 rounded-xl">
-                                        <p className="text-rose-100 font-medium">✨ {result.elements.interaction}</p>
-                                    </div>
+                                    <p className="text-slate-200 leading-relaxed mb-6">{result.blocks.favorable}</p>
+
+                                    <h3 className="text-sm font-bold uppercase text-rose-300 mb-4 flex items-center gap-2">
+                                        <Flame className="w-4 h-4" /> O que pode atrapalhar
+                                    </h3>
+                                    <p className="text-slate-200 leading-relaxed">{result.blocks.challenging}</p>
                                 </div>
 
                                 <div className="p-8 bg-white/5">
+                                    <h3 className="text-sm font-bold uppercase text-purple-300 mb-4 flex items-center gap-2">
+                                        <Star className="w-4 h-4" /> Ação de hoje (10 min)
+                                    </h3>
+                                    <div className="bg-purple-500/10 border border-purple-500/20 p-4 rounded-xl mb-6">
+                                        <p className="text-purple-100 font-medium">✨ {result.blocks.actionToday}</p>
+                                    </div>
+
                                     <h3 className="text-sm font-bold uppercase text-purple-300 mb-4 flex items-center gap-2">
                                         <Star className="w-4 h-4" /> Conselho Cósmico
                                     </h3>
@@ -191,7 +250,7 @@ export default function SinastriaClient() {
 
                             {/* Upsell Footer */}
                             <div className="p-8 bg-gradient-to-r from-rose-900/30 to-purple-900/30 text-center">
-                                <h4 className="text-white font-serif font-bold text-xl mb-4">Quer entender seu próprio coração primeiro?</h4>
+                                <h4 className="text-white font-serif font-bold text-xl mb-4">Quer uma leitura simbólica completa do seu momento?</h4>
                                 <Link
                                     href="/leitura-premium"
                                     className="inline-flex items-center gap-2 text-rose-200 hover:text-white transition-colors border-b border-rose-200/50 hover:border-white pb-1"
