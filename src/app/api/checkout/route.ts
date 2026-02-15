@@ -3,7 +3,7 @@ import { getStripe } from '@/lib/stripe';
 
 export async function POST(req: Request) {
     try {
-        const { priceId, mode, focus, acceptedSymbolicTerms } = await req.json();
+        const { priceId, mode, focus, acceptedSymbolicTerms, product } = await req.json();
 
         // Se o client não mandar mode, inferimos a partir do Price no Stripe.
         // - price recorrente => subscription
@@ -28,6 +28,24 @@ export async function POST(req: Request) {
         const stripe = getStripe();
         const nowIso = new Date().toISOString();
 
+        const productKey = typeof product === 'string' ? product : 'premium';
+
+        // URLs por produto (mantém fechado para evitar open redirects)
+        const urls = (() => {
+            if (productKey === 'couple') {
+                return {
+                    success: `${origin}/leitura-casal/sucesso?session_id={CHECKOUT_SESSION_ID}`,
+                    cancel: `${origin}/leitura-casal`,
+                };
+            }
+
+            // default: leitura premium
+            return {
+                success: `${origin}/leitura-premium/sucesso?session_id={CHECKOUT_SESSION_ID}`,
+                cancel: `${origin}/leitura-premium`,
+            };
+        })();
+
         const session = await stripe.checkout.sessions.create({
             line_items: [
                 {
@@ -36,9 +54,10 @@ export async function POST(req: Request) {
                 },
             ],
             mode: inferredMode, // 'payment' (venda única) ou 'subscription' (assinatura)
-            success_url: `${origin}/leitura-premium/sucesso?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${origin}/leitura-premium`,
+            success_url: urls.success,
+            cancel_url: urls.cancel,
             metadata: {
+                product: productKey,
                 focus: typeof focus === 'string' ? focus : null,
                 accepted_symbolic_terms: acceptedSymbolicTerms ? 'true' : 'false',
                 accepted_symbolic_terms_at: acceptedSymbolicTerms ? nowIso : null,

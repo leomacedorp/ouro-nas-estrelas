@@ -250,13 +250,23 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
 
                             {/* Upsell Footer */}
                             <div className="p-8 bg-gradient-to-r from-rose-900/30 to-purple-900/30 text-center">
-                                <h4 className="text-white font-serif font-bold text-xl mb-4">Quer uma leitura simbólica completa do seu momento?</h4>
-                                <Link
-                                    href="/leitura-premium"
-                                    className="inline-flex items-center gap-2 text-rose-200 hover:text-white transition-colors border-b border-rose-200/50 hover:border-white pb-1"
-                                >
-                                    Fazer minha Leitura Pessoal Simbólica <ArrowRight className="w-4 h-4" />
-                                </Link>
+                                <h4 className="text-white font-serif font-bold text-xl mb-4">Quer destravar a leitura simbólica completa?</h4>
+
+                                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                                    <Link
+                                        href="/leitura-casal"
+                                        className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/10 text-white font-semibold transition-colors"
+                                    >
+                                        Destravar Leitura do Casal <ArrowRight className="w-4 h-4" />
+                                    </Link>
+
+                                    <Link
+                                        href="/leitura-premium"
+                                        className="inline-flex items-center gap-2 text-rose-200 hover:text-white transition-colors border-b border-rose-200/50 hover:border-white pb-1"
+                                    >
+                                        Quero minha Leitura Pessoal <ArrowRight className="w-4 h-4" />
+                                    </Link>
+                                </div>
                             </div>
                         </motion.div>
                     )}

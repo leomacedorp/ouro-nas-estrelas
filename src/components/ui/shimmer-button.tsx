@@ -10,6 +10,8 @@ interface ShimmerButtonProps {
     shimmerSize?: string;
     shimmerDuration?: string;
     onClick?: () => void;
+    disabled?: boolean;
+    type?: 'button' | 'submit' | 'reset';
 }
 
 export function ShimmerButton({
@@ -19,18 +21,23 @@ export function ShimmerButton({
     shimmerSize = "0.1em",
     shimmerDuration = "2s",
     onClick,
+    disabled,
+    type = 'button',
 }: ShimmerButtonProps) {
     return (
         <motion.button
-            onClick={onClick}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            type={type}
+            onClick={disabled ? undefined : onClick}
+            disabled={disabled}
+            whileHover={disabled ? undefined : { scale: 1.02 }}
+            whileTap={disabled ? undefined : { scale: 0.98 }}
             className={cn(
                 "group relative inline-flex items-center justify-center overflow-hidden rounded-full",
                 "px-8 py-4 font-bold text-lg transition-all duration-300",
                 "bg-gradient-to-r from-gold-600 to-gold-500",
                 "text-white shadow-[0_0_20px_rgba(245,158,11,0.3)]",
                 "hover:shadow-[0_0_40px_rgba(245,158,11,0.5)]",
+                disabled ? "opacity-60 cursor-not-allowed" : "",
                 className
             )}
             style={{
