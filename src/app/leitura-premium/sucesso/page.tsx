@@ -11,6 +11,7 @@ import { ZODIAC_SIGNS } from '@/lib/constants';
 import { PremiumContent } from '@/lib/localPremiumTemplate';
 import DownloadPDFButton from '@/components/DownloadPDFButton';
 import { siteConfig } from '@/lib/siteConfig';
+import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 
 export default function SucessoPage() {
     const searchParams = useSearchParams();
@@ -276,14 +277,12 @@ function ContentCard({ icon, title, content, isWarning, isGold, isMystic, delay 
 
     return (
         <BlurFade delay={delay}>
-            <div className={`p-8 rounded-2xl border ${borderColor} ${bgColor} hover:border-opacity-50 transition-all h-full`}>
+            <div className={`p-8 rounded-2xl border ${borderColor} ${bgColor} hover:border-opacity-50 transition-all h-full text-left`}>
                 <div className="flex items-center gap-3 mb-4">
                     <span className="text-3xl">{icon}</span>
                     <h3 className={`text-xl font-serif font-bold ${titleColor}`}>{title}</h3>
                 </div>
-                <p className="text-slate-300 leading-relaxed text-lg">
-                    {content}
-                </p>
+                <MarkdownRenderer content={content} className="text-lg" />
             </div>
         </BlurFade>
     );

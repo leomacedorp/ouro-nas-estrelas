@@ -5,14 +5,15 @@ export const siteConfig = {
         message_default: "Olá! Gostaria de saber mais sobre o Ouro Nas Estrelas.",
         cta_label: "Receber Minha Mensagem",
         url: function (message?: string) {
-            const msg = message || this.message_default;
-            const cleanNumber = this.number.replace(/\D/g, '');
-            return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(msg)}`;
+            // Redireciona para /contato para centralizar leads (Estratégia Portal)
+            return `/contato?msg=${encodeURIComponent(message || this.message_default)}`;
         }
     },
     links: {
         nav: [
             { name: 'Mensagem do Dia', href: '/' },
+            { name: 'Numerologia', href: '/numerologia' },
+            { name: 'Sinastria', href: '/sinastria' },
             { name: 'Consulta Simbólica', href: '/consulta' },
             { name: 'Clube Ouro', href: '/clube' },
             { name: 'Produtos', href: '/produtos' },
