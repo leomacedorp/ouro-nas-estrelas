@@ -8,11 +8,11 @@ import Link from 'next/link';
 import { ZODIAC_SIGNS } from '@/lib/constants';
 import { calculateCompatibility, CompatibilityFocus, CompatibilityResult } from '@/lib/compatibility';
 
-const SIGNS_LIST = Object.entries(ZODIAC_SIGNS).map(([slug, data]) => ({
-    slug,
+const SIGNS_LIST = ZODIAC_SIGNS.map((data) => ({
+    slug: data.slug,
     name: data.name,
     icon: data.symbol,
-    element: data.element // 'fogo', 'terra', 'ar', 'agua'
+    element: data.element // display only
 }));
 
 const FOCUS_OPTIONS: Array<{ key: CompatibilityFocus; label: string; icon: any; helper: string }> = [
