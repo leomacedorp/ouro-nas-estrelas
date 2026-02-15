@@ -12,8 +12,10 @@ export const maxDuration = 60;
  * POST /api/premium-engine
  * Body: { name, birthDate, sign, mode?: 'full'|'short' }
  * 
+ * Proteção: Rate Limit via IP (Memória) e Verificação de Sessão (Opcional)
  * Fluxo:
- * 1. Constrói Mapa Simbólico
+ * 1. Verifica Rate Limit
+ * 2. Constrói Mapa Simbólico
  * 2. Gera Prompt Enriquecido
  * 3. Chama IA (OpenAI → Gemini → Fallback local)
  * 4. Retorna leitura personalizada
@@ -187,8 +189,41 @@ function extractJSON(text: string): { titulo?: string; leitura?: string } {
     return { titulo: 'Sua Leitura Premium', leitura: cleanText || text };
 }
 
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hora
+const MAX_REQUESTS_PER_IP = 10; // 10 leituras por hora por IP (generoso para testes, restritivo para abuso)
+
+// In-memory store (not persistent across Vercel cold starts, but good enough for basic flood protection)
+const ipRequests = new Map<string, { count: number; expires: number }>();
+
+function checkRateLimit(ip: string): boolean {
+    const now = Date.now();
+    const record = ipRequests.get(ip);
+
+    if (!record || now > record.expires) {
+        ipRequests.set(ip, { count: 1, expires: now + RATE_LIMIT_WINDOW });
+        return true;
+    }
+
+    if (record.count >= MAX_REQUESTS_PER_IP) {
+        return false;
+    }
+
+    record.count++;
+    return true;
+}
+
 export async function POST(request: Request): Promise<Response> {
     const startTime = Date.now();
+
+    // Rate Limit Check
+    const xff = request.headers.get('x-forwarded-for') || '';
+    const ip = (xff.split(',')[0] || '').trim() || 'unknown';
+    if (!checkRateLimit(ip)) {
+        return NextResponse.json({
+            success: false,
+            error: 'Too many requests. Try again later.'
+        }, { status: 429 });
+    }
 
     try {
         const body: RequestBody = await request.json();
@@ -202,7 +237,8 @@ export async function POST(request: Request): Promise<Response> {
             }, { status: 400 });
         }
 
-        console.log('[premium-engine] Gerando para:', { name, sign, mode });
+        // Evite logar PII (ex.: nome/data de nascimento) em produção
+        console.log('[premium-engine] Gerando leitura premium', { sign, mode });
 
         // 1. Construir Mapa Simbólico
         const symbolicMap = buildSymbolicMap(name, birthDate, sign);

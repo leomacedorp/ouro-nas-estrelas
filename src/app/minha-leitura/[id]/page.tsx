@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import DownloadPDFButton from '@/components/DownloadPDFButton';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { ZODIAC_SIGNS } from '@/lib/constants';
+import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 
 export const runtime = 'nodejs';
 
@@ -80,10 +81,8 @@ export default async function MinhaLeituraPage({ params, searchParams }: PagePro
           </div>
 
           {hasSymbolicReading ? (
-            <section className="p-6 md:p-10 rounded-3xl bg-white/5 border border-white/10">
-              <p className="text-slate-200 leading-relaxed whitespace-pre-line text-lg">
-                {c.leitura}
-              </p>
+            <section className="p-6 md:p-10 rounded-3xl bg-white/5 border border-white/10 text-left">
+              <MarkdownRenderer content={c.leitura} className="text-lg" />
             </section>
           ) : (
             <div className="grid md:grid-cols-2 gap-6">
@@ -100,6 +99,7 @@ export default async function MinhaLeituraPage({ params, searchParams }: PagePro
             Ouro Nas Estrelas — {new Date().getFullYear()}
           </div>
         </div>
+
 
         <div className="mt-8 text-center flex flex-col items-center gap-4">
           <DownloadPDFButton targetId="premium-reading-content" fileName={`Leitura-${signName}.pdf`} />
