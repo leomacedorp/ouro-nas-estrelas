@@ -20,18 +20,26 @@ export default function SinastriaClient() {
     const [signB, setSignB] = useState('');
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<CompatibilityResult | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     const handleCalculate = async () => {
         if (!signA || !signB) return;
         setLoading(true);
         setResult(null);
+        setError(null);
 
-        // Simulate calculation drama
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        try {
+            // Simulate calculation drama
+            await new Promise(resolve => setTimeout(resolve, 2000));
 
-        const res = calculateCompatibility(signA, signB);
-        setResult(res);
-        setLoading(false);
+            const res = calculateCompatibility(signA, signB);
+            setResult(res);
+        } catch (e) {
+            setError('Não foi possível calcular agora. Tente novamente.');
+            console.error('[sinastria] calculateCompatibility failed', e);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -111,6 +119,16 @@ export default function SinastriaClient() {
 
                 {/* Results Reveal */}
                 <AnimatePresence>
+                    {error && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            className="mb-8 bg-rose-500/10 border border-rose-500/20 text-rose-100 rounded-2xl p-4 text-center"
+                        >
+                            {error}
+                        </motion.div>
+                    )}
                     {result && (
                         <motion.div
                             initial={{ opacity: 0, y: 40, scale: 0.95 }}
