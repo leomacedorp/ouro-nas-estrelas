@@ -79,9 +79,12 @@ export default function LeituraCasalPage() {
           </BlurFade>
 
           <BlurFade delay={0.3}>
-            <p className="text-lg md:text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-slate-400 mb-6 leading-relaxed max-w-2xl mx-auto">
               Não é só “combina ou não combina”. É uma leitura profunda (e prática) do <b>padrão do encontro</b>,
               do <b>ponto cego</b> e do <b>ritual de 7 dias</b> para melhorar a relação.
+            </p>
+            <p className="text-sm text-slate-500 max-w-2xl mx-auto">
+              Lote de lançamento (vibração 8): <span className="text-gold-300 font-semibold">R$ 26,90</span> — depois volta para <span className="text-slate-300 font-semibold">R$ 53,90</span>.
             </p>
           </BlurFade>
 
@@ -126,7 +129,7 @@ export default function LeituraCasalPage() {
                 onClick={handleCheckout}
                 disabled={!acceptedSymbolicTerms || loading}
               >
-                {loading ? 'Abrindo pagamento...' : 'Destravar Leitura do Casal'}
+                {loading ? 'Abrindo pagamento...' : 'Destravar Leitura do Casal (R$ 26,90)'}
                 <Sparkles className="w-4 h-4 ml-2" />
               </ShimmerButton>
 

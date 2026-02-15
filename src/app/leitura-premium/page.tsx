@@ -270,7 +270,11 @@ function PricingCard({ title, price, period, features, buttonText, isPopular, li
     const [loading, setLoading] = useState(false);
 
     const handleCheckout = async () => {
-        if (!priceId) return;
+        if (!priceId) {
+            // Produto/price ainda não configurado (evita botão "morto")
+            alert('Pagamento ainda não liberado para este produto.');
+            return;
+        }
         if (!acceptedSymbolicTerms) {
             alert('Confirme a leitura simbólica para continuar.');
             return;
