@@ -14,7 +14,6 @@ type Props = {
 export function ZodiacSelect({ value, onChange, placeholder = "Escolher signo", className = "" }: Props) {
   const [open, setOpen] = useState(false);
   const [openUp, setOpenUp] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   const current = useMemo(() => ZODIAC_SIGNS.find((s) => s.slug === value), [value]);
@@ -26,14 +25,6 @@ export function ZodiacSelect({ value, onChange, placeholder = "Escolher signo", 
     };
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
-  }, []);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 639px)");
-    const apply = () => setIsMobile(mq.matches);
-    apply();
-    mq.addEventListener?.("change", apply);
-    return () => mq.removeEventListener?.("change", apply);
   }, []);
 
   // No mobile, se o seletor estiver perto do fim da tela, abre "pra cima" pra não ficar escondido.
@@ -67,11 +58,12 @@ export function ZodiacSelect({ value, onChange, placeholder = "Escolher signo", 
         <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
-      {open && !isMobile && (
+      {open && (
         <div
           role="listbox"
           className={
-            "absolute z-50 w-full max-h-72 overflow-auto rounded-2xl border border-white/10 bg-slate-950/95 backdrop-blur-xl shadow-2xl " +
+            // z alto pra ficar acima do botão e demais elementos
+            "absolute z-[80] w-full max-h-72 overflow-auto rounded-2xl border border-white/10 bg-slate-950/95 backdrop-blur-xl shadow-2xl " +
             (openUp ? "bottom-full mb-2" : "top-full mt-2")
           }
         >
@@ -97,46 +89,6 @@ export function ZodiacSelect({ value, onChange, placeholder = "Escolher signo", 
               </button>
             );
           })}
-        </div>
-      )}
-
-      {open && isMobile && (
-        <div className="fixed inset-0 z-[100]">
-          <button
-            type="button"
-            aria-label="Fechar"
-            className="absolute inset-0 bg-black/60"
-            onClick={() => setOpen(false)}
-          />
-          <div className="absolute left-0 right-0 bottom-0 max-h-[70vh] rounded-t-3xl border border-white/10 bg-slate-950/95 backdrop-blur-xl shadow-2xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-white/10 text-slate-200 font-semibold">
-              Escolher signo
-            </div>
-            <div role="listbox" className="max-h-[60vh] overflow-auto">
-              {ZODIAC_SIGNS.map((s) => {
-                const active = s.slug === value;
-                return (
-                  <button
-                    key={s.slug}
-                    type="button"
-                    role="option"
-                    aria-selected={active}
-                    onClick={() => {
-                      onChange(s.slug);
-                      setOpen(false);
-                    }}
-                    className={
-                      "w-full px-5 py-4 text-left text-slate-100 hover:bg-white/10 flex items-center gap-3 " +
-                      (active ? "bg-white/10" : "")
-                    }
-                  >
-                    <span className="w-6 text-slate-300">{s.symbol}</span>
-                    <span className="font-medium text-lg">{s.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
       )}
     </div>
