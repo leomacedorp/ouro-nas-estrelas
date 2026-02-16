@@ -40,10 +40,75 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'engine_failed' }, { status: 500 });
     }
 
+    // Às vezes o engine cai no fallback e devolve o JSON inteiro como texto em `leitura`.
+    // Ex.: leitura = '{"titulo":"...","leitura":"..."}'
+    const tryExtractNested = (raw: unknown): { titulo?: string; leitura?: string } | null => {
+      if (typeof raw !== 'string') return null;
+      const s = raw.trim();
+      if (!s.startsWith('{') || !s.includes('"leitura"')) return null;
+
+      // 1) tenta parse direto
+      try {
+        const obj = JSON.parse(s);
+        if (obj && typeof obj === 'object') {
+          const t = (obj as any).titulo;
+          const l = (obj as any).leitura;
+          if (typeof t === 'string' || typeof l === 'string') return { titulo: t, leitura: l };
+        }
+      } catch {
+        // ignore
+      }
+
+      // 2) extração manual do campo "leitura" (string JSON escapada)
+      const idx = s.indexOf('"leitura"');
+      if (idx < 0) return null;
+      const after = s.slice(idx);
+      const colon = after.indexOf(':');
+      if (colon < 0) return null;
+      let rest = after.slice(colon + 1).trim();
+      if (!rest.startsWith('"')) return null;
+
+      // captura string até aspas não-escapadas
+      let out = '';
+      let escaped = false;
+      for (let i = 1; i < rest.length; i++) {
+        const ch = rest[i];
+        if (escaped) {
+          out += ch;
+          escaped = false;
+          continue;
+        }
+        if (ch === '\\') {
+          escaped = true;
+          continue;
+        }
+        if (ch === '"') {
+          break;
+        }
+        out += ch;
+      }
+
+      const leitura = out
+        .replace(/\\n/g, '\n')
+        .replace(/\\t/g, '\t')
+        .replace(/\\r/g, '\r')
+        .replace(/\\"/g, '"');
+
+      // titulo (best-effort)
+      const tMatch = s.match(/"titulo"\s*:\s*"([\s\S]*?)"/);
+      const titulo = tMatch?.[1]
+        ? tMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n')
+        : undefined;
+
+      return { titulo, leitura };
+    };
+
+    const nested = tryExtractNested(engineData.leitura);
+
     return NextResponse.json({
       content: {
-        titulo: engineData.titulo,
-        leitura: engineData.leitura,
+        titulo: nested?.titulo || engineData.titulo,
+        leitura: nested?.leitura || engineData.leitura,
         provider: engineData.provider,
       },
     });
