@@ -206,13 +206,21 @@ export async function POST(request: Request): Promise<Response> {
       }
     }
 
-    const result = aiContent ? extractJSON(aiContent) : generateLocalFallback({ a, b, focus });
+    let result = aiContent ? extractJSON(aiContent) : generateLocalFallback({ a, b, focus });
+
+    // Se a IA devolver curto demais, não serve como produto. Garante um mínimo usando fallback local.
+    const leituraText = typeof result?.leitura === 'string' ? result.leitura.trim() : '';
+    if (leituraText.length < 800) {
+      console.log('[couple-engine] Conteúdo curto, usando fallback local', { length: leituraText.length, provider: provider || 'none' });
+      result = generateLocalFallback({ a, b, focus });
+      provider = provider ? `${provider} (fallback)` : 'Template Local';
+    }
 
     return NextResponse.json({
       success: true,
       provider: provider || 'Template Local',
       titulo: result.titulo || 'Leitura do Casal',
-      leitura: result.leitura || '',
+      leitura: (typeof result.leitura === 'string' ? result.leitura : '') || '',
     });
   } catch (e) {
     console.error('[couple-engine] Erro', e);
