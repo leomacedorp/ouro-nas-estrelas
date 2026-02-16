@@ -283,9 +283,7 @@ function LaunchPrice({
         </div>
       </div>
 
-      <div className="mt-4 text-xs text-slate-500">
-        * Podemos plugar um contador real (decrementando) usando Stripe ou um KV/DB. Hoje está só como “lote de 100”.
-      </div>
+      {/* Nota removida: não mostrar detalhes internos pro usuário */}
     </div>
   );
 }
