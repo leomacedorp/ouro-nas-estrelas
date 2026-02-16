@@ -140,7 +140,7 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                     {/* Decorative Background inside card */}
                     <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-purple-500/5 pointer-events-none" />
 
-                    <div className="grid md:grid-cols-[1fr,auto,1fr] gap-8 items-center relative z-10">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start relative z-10">
                         {/* Sign A Selector */}
                         <SignSelector
                             label="Seu Signo"
@@ -148,13 +148,6 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                             onChange={setSignA}
                             color="rose"
                         />
-
-                        {/* Connection Icon */}
-                        <div className="hidden md:flex flex-col items-center justify-center pt-8">
-                            <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                                <Sparkles className="w-5 h-5 text-slate-400" />
-                            </div>
-                        </div>
 
                         {/* Sign B Selector */}
                         <SignSelector
@@ -165,7 +158,7 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                         />
                     </div>
 
-                    <div className="mt-12 text-center">
+                    <div className="mt-8 text-center">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}

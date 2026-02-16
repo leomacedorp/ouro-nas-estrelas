@@ -32,7 +32,7 @@ export function ZodiacSelect({ value, onChange, placeholder = "Escolher signo", 
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={
-          "w-full flex items-center justify-between gap-3 appearance-none bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-center text-lg text-white outline-none focus:ring-4 focus:ring-white/10 transition-all hover:bg-black/60"
+          "w-full flex items-center justify-between gap-3 appearance-none bg-black/40 border border-white/10 rounded-2xl px-5 py-3 text-center text-base text-white outline-none focus:ring-4 focus:ring-white/10 transition-all hover:bg-black/60"
         }
         aria-haspopup="listbox"
         aria-expanded={open}
