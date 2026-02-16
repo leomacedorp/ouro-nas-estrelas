@@ -3,7 +3,7 @@ import { getStripe } from '@/lib/stripe';
 
 export async function POST(req: Request) {
     try {
-        const { priceId, mode, focus, acceptedSymbolicTerms, product } = await req.json();
+        const { priceId, mode, focus, acceptedSymbolicTerms, product, signA, signB } = await req.json();
 
         // Se o client não mandar mode, inferimos a partir do Price no Stripe.
         // - price recorrente => subscription
@@ -33,8 +33,15 @@ export async function POST(req: Request) {
         // URLs por produto (mantém fechado para evitar open redirects)
         const urls = (() => {
             if (productKey === 'couple') {
+                // Suporta prefill do foco/signos no sucesso (antes do pagamento o usuário escolhe o que quer)
+                const qp = new URLSearchParams({ session_id: '{CHECKOUT_SESSION_ID}' });
+
+                if (typeof focus === 'string' && focus) qp.set('focus', focus);
+                if (typeof signA === 'string' && signA) qp.set('signA', signA);
+                if (typeof signB === 'string' && signB) qp.set('signB', signB);
+
                 return {
-                    success: `${origin}/leitura-casal/sucesso?session_id={CHECKOUT_SESSION_ID}`,
+                    success: `${origin}/leitura-casal/sucesso?${qp.toString()}`,
                     cancel: `${origin}/leitura-casal`,
                 };
             }
@@ -62,7 +69,8 @@ export async function POST(req: Request) {
                 accepted_symbolic_terms: acceptedSymbolicTerms ? 'true' : 'false',
                 accepted_symbolic_terms_at: acceptedSymbolicTerms ? nowIso : null,
                 accepted_symbolic_terms_version: 'v1',
-                // Aqui podemos guardar dados extras, como o signo do usuário se já soubermos
+                signA: typeof signA === 'string' ? signA : null,
+                signB: typeof signB === 'string' ? signB : null,
             }
         });
 

@@ -13,17 +13,22 @@ import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 export default function LeituraCasalSucessoPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
+  const preFocus = (searchParams.get('focus') || '') as any;
+  const preSignA = (searchParams.get('signA') || '');
+  const preSignB = (searchParams.get('signB') || '');
 
   const [isValidating, setIsValidating] = useState(true);
   const [isValidPurchase, setIsValidPurchase] = useState(false);
 
   const [aName, setAName] = useState('');
   const [aBirth, setABirth] = useState('');
-  const [aSign, setASign] = useState('');
+  const [aSign, setASign] = useState(preSignA || '');
 
   const [bName, setBName] = useState('');
   const [bBirth, setBBirth] = useState('');
-  const [bSign, setBSign] = useState('');
+  const [bSign, setBSign] = useState(preSignB || '');
+
+  const [focus, setFocus] = useState<'amor' | 'quimica' | 'trabalho' | 'amizade'>((['amor','quimica','trabalho','amizade'].includes(preFocus) ? preFocus : 'amor') as any);
 
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<any>(null);
@@ -70,6 +75,7 @@ export default function LeituraCasalSucessoPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId,
+          focus,
           a: { name: aName, birthDate: aBirth, sign: aSign },
           b: { name: bName, birthDate: bBirth, sign: bSign },
         }),
@@ -158,10 +164,20 @@ export default function LeituraCasalSucessoPage() {
             </BlurFade>
 
             <BlurFade delay={0.2}>
-              <p className="text-lg text-slate-400 mb-8">
-                Agora preencha os dados do casal para gerar a leitura simbólica completa.
+              <p className="text-lg text-slate-400 mb-6">
+                Agora preencha os dados da dupla para gerar a leitura de compatibilidade completa.
               </p>
             </BlurFade>
+
+            <div className="max-w-xl mx-auto mb-6 text-left">
+              <label className="block text-sm text-slate-300 mb-1">Foco da compatibilidade</label>
+              <select value={focus} onChange={(e) => setFocus(e.target.value as any)} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+                <option value="amor">Amor</option>
+                <option value="quimica">Química</option>
+                <option value="trabalho">Trabalho</option>
+                <option value="amizade">Amizade</option>
+              </select>
+            </div>
 
             <div className="max-w-xl mx-auto mb-10 grid gap-4 text-left">
               <div className="grid sm:grid-cols-2 gap-4">

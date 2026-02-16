@@ -6,16 +6,27 @@ import { Gem, ShieldCheck, CheckCircle2, ArrowRight, HeartHandshake, Sparkles, F
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { BlurFade } from '@/components/ui/blur-fade';
 import { Meteors } from '@/components/ui/meteors';
+import { ZodiacSelect } from '@/components/ZodiacSelect';
 
 const STRIPE_PRICE_COUPLE = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_COUPLE || '';
+
+type CompatibilityFocus = 'amor' | 'quimica' | 'trabalho' | 'amizade';
 
 export default function LeituraCasalPage() {
   const [acceptedSymbolicTerms, setAcceptedSymbolicTerms] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [signA, setSignA] = useState('');
+  const [signB, setSignB] = useState('');
+  const [focus, setFocus] = useState<CompatibilityFocus>('amor');
+
   const handleCheckout = async () => {
     if (!STRIPE_PRICE_COUPLE) {
       alert('Preço do produto ainda não configurado (Stripe).');
+      return;
+    }
+    if (!signA || !signB || !focus) {
+      alert('Escolha os dois signos e o foco antes de continuar.');
       return;
     }
     if (!acceptedSymbolicTerms) {
@@ -31,6 +42,9 @@ export default function LeituraCasalPage() {
         body: JSON.stringify({
           priceId: STRIPE_PRICE_COUPLE,
           product: 'couple',
+          focus,
+          signA,
+          signB,
           acceptedSymbolicTerms: true,
         }),
       });
@@ -70,7 +84,7 @@ export default function LeituraCasalPage() {
 
           <BlurFade delay={0.2}>
             <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight text-slate-100">
-              Leitura Simbólica do Casal
+              Leitura da Compatibilidade
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-pink-200 to-purple-200">
                 clareza, direção e reconexão
@@ -80,8 +94,8 @@ export default function LeituraCasalPage() {
 
           <BlurFade delay={0.3}>
             <p className="text-lg md:text-xl text-slate-400 mb-6 leading-relaxed max-w-2xl mx-auto">
-              Não é só “combina ou não combina”. É uma leitura profunda (e prática) do <b>padrão do encontro</b>,
-              do <b>ponto cego</b> e do <b>ritual de 7 dias</b> para melhorar a relação.
+              Não é só “combina ou não combina”. É uma leitura profunda (e prática) da <b>dinâmica entre vocês</b>,
+              do <b>ponto cego</b> e de um <b>ritual de 7 dias</b> para melhorar a convivência — seja amor, química, trabalho ou amizade.
             </p>
             <div className="mt-4 max-w-2xl mx-auto">
               <LaunchPrice
@@ -97,6 +111,46 @@ export default function LeituraCasalPage() {
           </BlurFade>
 
           <BlurFade delay={0.35}>
+            <div className="max-w-3xl mx-auto mb-8">
+              <div className="grid sm:grid-cols-2 gap-4 text-left">
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-slate-400 mb-2">Signo 1</div>
+                  <ZodiacSelect value={signA} onChange={setSignA} placeholder="Escolher signo" />
+                </div>
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-slate-400 mb-2">Signo 2</div>
+                  <ZodiacSelect value={signB} onChange={setSignB} placeholder="Escolher signo" />
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-2">Foco</div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {([
+                    { key: 'amor', label: 'Amor' },
+                    { key: 'quimica', label: 'Química' },
+                    { key: 'trabalho', label: 'Trabalho' },
+                    { key: 'amizade', label: 'Amizade' },
+                  ] as Array<{ key: CompatibilityFocus; label: string }>).map((opt) => {
+                    const active = focus === opt.key;
+                    return (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => setFocus(opt.key)}
+                        className={
+                          'rounded-2xl border px-4 py-3 text-left transition-all ' +
+                          (active ? 'border-gold-500/50 bg-gold-500/10 text-white' : 'border-white/10 bg-black/30 hover:bg-black/40 text-slate-200')
+                        }
+                      >
+                        <div className="font-semibold">{opt.label}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
             <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto text-left mb-10">
               <Feature icon={<HeartHandshake className="w-5 h-5 text-rose-300" />} title="Arquétipo do Encontro">
                 O “porquê” dessa conexão e o que ela quer curar/fortalecer.
@@ -135,9 +189,9 @@ export default function LeituraCasalPage() {
               <ShimmerButton
                 className="text-lg px-10 py-4 font-bold min-w-[260px]"
                 onClick={handleCheckout}
-                disabled={!acceptedSymbolicTerms || loading}
+                disabled={!acceptedSymbolicTerms || loading || !signA || !signB}
               >
-                {loading ? 'Abrindo pagamento...' : 'Destravar Leitura do Casal (R$ 26,90)'}
+                {loading ? 'Abrindo pagamento...' : 'Destravar Leitura da Compatibilidade (R$ 26,90)'}
                 <Sparkles className="w-4 h-4 ml-2" />
               </ShimmerButton>
 

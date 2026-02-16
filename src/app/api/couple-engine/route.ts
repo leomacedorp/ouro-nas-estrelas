@@ -137,7 +137,7 @@ function extractJSON(text: string): any {
 function buildPrompt({ a, b, focus }: RequestBody) {
   const focusLine = focus ? `Foco: ${focus}.` : 'Foco: relacionamento (geral).';
 
-  return `Gere uma LEITURA SIMBÓLICA DO CASAL (automática), em pt-BR, no tom místico-terapêutico com pitadas de romance.
+  return `Gere uma LEITURA SIMBÓLICA DE COMPATIBILIDADE (automática), em pt-BR, no tom místico-terapêutico (e prático).
 
 Regras:
 - Não faça previsões determinísticas de eventos.
@@ -145,7 +145,7 @@ Regras:
 - Evite promessas absolutas.
 - Conteúdo escaneável com títulos curtos e bullets.
 - Inclua um "Ritual de 7 dias" (7 itens, um por dia, 10 min).
-- Inclua "Ponto Cego do Casal" (1 parágrafo) e "Como interromper o ciclo" (bullets).
+- Inclua "Ponto Cego da Dupla" (1 parágrafo) e "Como interromper o ciclo" (bullets).
 
 ${focusLine}
 
