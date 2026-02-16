@@ -80,7 +80,30 @@ export default function LeituraCasalSucessoPage() {
         return;
       }
 
-      setContent(data.content);
+      // Normaliza respostas onde o provider devolve um JSON "aninhado" dentro de content.leitura
+      // Ex.: content.leitura = "{ \"titulo\": ..., \"leitura\": ... }"
+      const safeParse = (v: unknown) => {
+        if (typeof v !== 'string') return null;
+        const s = v.trim();
+        if (!s.startsWith('{') || !s.endsWith('}')) return null;
+        try {
+          return JSON.parse(s);
+        } catch {
+          return null;
+        }
+      };
+
+      let c: any = data.content;
+      const nested = safeParse(c?.leitura);
+      if (nested && typeof nested === 'object') {
+        c = {
+          ...c,
+          titulo: c?.titulo || (nested as any).titulo,
+          leitura: (nested as any).leitura ?? c?.leitura,
+        };
+      }
+
+      setContent(c);
     } catch {
       alert('Erro ao conectar com o servidor.');
     } finally {
