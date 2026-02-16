@@ -102,7 +102,13 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                                 return (
                                     <button
                                         key={opt.key}
-                                        onClick={() => setFocus(opt.key)}
+                                        onClick={() => {
+                                            setFocus(opt.key);
+                                            // Se o usuário trocar o foco, o resultado antigo fica "travado".
+                                            // Limpamos para evitar confusão (o usuário recalcula ou podemos recalcular automaticamente).
+                                            setResult(null);
+                                            setError(null);
+                                        }}
                                         className={
                                             `rounded-2xl border px-4 py-4 text-left transition-all ` +
                                             (active
