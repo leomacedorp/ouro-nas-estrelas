@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Sparkles, ArrowRight, Star, Flame, Briefcase, Users, Zap } from 'lucide-react';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
@@ -43,15 +43,16 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
     const [result, setResult] = useState<CompatibilityResult | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const handleCalculate = async () => {
+    const handleCalculate = async ({ skipDelay = false }: { skipDelay?: boolean } = {}) => {
         if (!signA || !signB) return;
         setLoading(true);
-        setResult(null);
         setError(null);
 
         try {
-            // Simulate calculation drama
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Um pouco de "drama" só quando o usuário clicou manualmente.
+            if (!skipDelay) {
+                await new Promise(resolve => setTimeout(resolve, 700));
+            }
 
             const res = calculateCompatibility(signA, signB, focus);
             setResult(res);
@@ -62,6 +63,15 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
             setLoading(false);
         }
     };
+
+    // Quando o usuário troca o foco (amor/química/trabalho/amizade), recalculamos automaticamente
+    // para evitar a sensação de "resultado igual".
+    useEffect(() => {
+        if (!signA || !signB) return;
+        if (!result) return;
+        handleCalculate({ skipDelay: true });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [focus]);
 
     return (
         <main className="min-h-screen bg-mystic-950 text-slate-100 selection:bg-rose-500/30 overflow-hidden">
@@ -104,10 +114,6 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                                         key={opt.key}
                                         onClick={() => {
                                             setFocus(opt.key);
-                                            // Se o usuário trocar o foco, o resultado antigo fica "travado".
-                                            // Limpamos para evitar confusão (o usuário recalcula ou podemos recalcular automaticamente).
-                                            setResult(null);
-                                            setError(null);
                                         }}
                                         className={
                                             `rounded-2xl border px-4 py-4 text-left transition-all ` +
@@ -161,7 +167,7 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={handleCalculate}
+                            onClick={() => handleCalculate()}
                             disabled={!signA || !signB || loading}
                             className="w-full md:w-auto min-w-[300px] relative group"
                         >

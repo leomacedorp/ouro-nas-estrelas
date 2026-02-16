@@ -81,7 +81,8 @@ export function calculateCompatibility(signA: string, signB: string, focus: Comp
     const label = scoreToLabel(score, focus);
 
     const key = [elemA, elemB].sort().join('-');
-    const description = INTERACTION_TEXTS[key] || 'Uma combinação única.';
+    const baseDesc = INTERACTION_TEXTS[key] || 'Uma combinação única.';
+    const description = `${baseDesc} ${focusDescription(focus)}`.trim();
 
     const blocks = getFocusBlocks(elemA, elemB, focus);
 
@@ -166,6 +167,19 @@ function getFocusBlocks(elemA: string, elemB: string, focus: CompatibilityFocus)
     const challenging = 'O desafio é não reagir no impulso. Se um fecha, o outro pressiona — e a conexão oscila.';
     const actionToday = 'Hoje, troquem um pedido claro (não uma cobrança) e um gesto de cuidado. Pequeno, mas constante.';
     return { favorable, challenging, actionToday };
+}
+
+function focusDescription(focus: CompatibilityFocus): string {
+    switch (focus) {
+        case 'quimica':
+            return 'No foco de química, o que pesa é presença, ritmo e intensidade.';
+        case 'trabalho':
+            return 'No foco profissional, vale observar ritmo, decisão e complementaridade.';
+        case 'amizade':
+            return 'No foco de amizade, leveza, lealdade e espaço fazem diferença.';
+        default:
+            return 'No foco amoroso, vínculo e segurança emocional guiam o caminho.';
+    }
 }
 
 function getTips(elemA: string, elemB: string, focus: CompatibilityFocus): string[] {
