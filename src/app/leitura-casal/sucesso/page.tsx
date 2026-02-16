@@ -176,7 +176,7 @@ export default function LeituraCasalSucessoPage() {
 
               <div>
                 <label className="block text-sm text-slate-300 mb-1">Signo (Pessoa 1)</label>
-                <select value={aSign} onChange={(e) => setASign(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+                <select value={aSign} onChange={(e) => setASign(e.target.value)} style={{ colorScheme: 'dark' }} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
                   <option value="" disabled>Escolher signo</option>
                   {ZODIAC_SIGNS.map((s) => (
                     <option key={s.slug} value={s.slug}>{s.symbol} {s.name}</option>
@@ -197,7 +197,7 @@ export default function LeituraCasalSucessoPage() {
 
               <div>
                 <label className="block text-sm text-slate-300 mb-1">Signo (Pessoa 2)</label>
-                <select value={bSign} onChange={(e) => setBSign(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+                <select value={bSign} onChange={(e) => setBSign(e.target.value)} style={{ colorScheme: 'dark' }} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
                   <option value="" disabled>Escolher signo</option>
                   {ZODIAC_SIGNS.map((s) => (
                     <option key={s.slug} value={s.slug}>{s.symbol} {s.name}</option>

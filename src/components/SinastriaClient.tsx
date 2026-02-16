@@ -299,11 +299,13 @@ function SignSelector({ label, value, onChange, color }: any) {
                 <select
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
+                    // Ajuda o Chrome/Windows a renderizar o dropdown com tema escuro (evita lista branca com texto apagado)
+                    style={{ colorScheme: 'dark' }}
                     className={`w-full appearance-none bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-center text-lg text-white outline-none focus:ring-4 transition-all ${borderColor} ${ringColor} cursor-pointer hover:bg-black/60`}
                 >
                     <option value="" disabled>Escolher Signo</option>
                     {SIGNS_LIST.map(sign => (
-                        <option key={sign.slug} value={sign.slug} className="bg-slate-900 py-2">
+                        <option key={sign.slug} value={sign.slug}>
                             {sign.icon} {sign.name}
                         </option>
                     ))}
