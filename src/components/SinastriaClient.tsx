@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { ZODIAC_SIGNS } from '@/lib/constants';
 import { ZodiacSelect } from '@/components/ZodiacSelect';
 import { calculateCompatibility, CompatibilityFocus, CompatibilityResult } from '@/lib/compatibility';
+import { siteConfig } from '@/lib/siteConfig';
 
 const SIGNS_LIST = ZODIAC_SIGNS.map((data) => ({
     slug: data.slug,
@@ -237,6 +238,43 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                                         <Flame className="w-4 h-4" /> O que pode atrapalhar
                                     </h3>
                                     <p className="text-slate-200 leading-relaxed">{result.blocks.challenging}</p>
+
+                                    {/* Conversion block */}
+                                    <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-rose-900/25 to-purple-900/20 border border-white/10">
+                                        <h4 className="text-white font-serif font-bold text-xl mb-2">💫 Como fazer essa relação funcionar</h4>
+                                        <p className="text-slate-300 mb-4">
+                                            Você viu o básico. Na <span className="text-gold-200 font-semibold">Leitura Completa do Casal</span>, eu te mostro o que fazer na prática —
+                                            com pontos cegos, soluções e um ritual de 7 dias.
+                                        </p>
+
+                                        <ul className="text-slate-200 space-y-2 mb-5">
+                                            <li className="flex gap-2"><span className="text-rose-300">✅</span><span><b>Análise profunda</b> (bem mais do que o score)</span></li>
+                                            <li className="flex gap-2"><span className="text-rose-300">✅</span><span><b>Pontos cegos</b> que repetem o ciclo</span></li>
+                                            <li className="flex gap-2"><span className="text-rose-300">✅</span><span><b>Soluções práticas</b> para os atritos</span></li>
+                                            <li className="flex gap-2"><span className="text-rose-300">✅</span><span><b>Ritual de 7 dias</b> (10 min/dia)</span></li>
+                                        </ul>
+
+                                        <div className="flex flex-col sm:flex-row gap-3">
+                                            <Link href="/leitura-casal" className="flex-1">
+                                                <ShimmerButton className="w-full py-4 text-base font-bold !bg-gradient-to-r !from-gold-500 !to-amber-600">
+                                                    💎 Destravar Leitura do Casal
+                                                </ShimmerButton>
+                                            </Link>
+
+                                            <Link
+                                                href={siteConfig.whatsapp.url(
+                                                    `Quero receber compatibilidades e dicas grátis no WhatsApp.\n\nSinastria: ${signA} + ${signB}\nFoco: ${focus}`
+                                                )}
+                                                className="flex-1 inline-flex items-center justify-center rounded-full px-6 py-4 bg-white/10 hover:bg-white/15 border border-white/10 text-white font-semibold transition-colors"
+                                            >
+                                                📱 Receber no WhatsApp
+                                            </Link>
+                                        </div>
+
+                                        <div className="mt-4 text-xs text-slate-400">
+                                            Dica: você pode calcular outra combinação ali em cima e comparar.
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="p-8 bg-white/5">
