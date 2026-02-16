@@ -109,7 +109,27 @@ function extractJSON(text: string): any {
     try {
       return JSON.parse(unescaped);
     } catch {
-      return { titulo: 'Leitura do Casal', leitura: cleanText || text };
+      // Heurística: extrair campos principais mesmo se o JSON estiver levemente inválido (trailing commas, etc.)
+      try {
+        const tituloMatch = unescaped.match(/"titulo"\s*:\s*"([\s\S]*?)"\s*,/);
+        const leituraMatch = unescaped.match(/"leitura"\s*:\s*"([\s\S]*?)"\s*\}?\s*$/);
+
+        const titulo = tituloMatch?.[1]
+          ? tituloMatch[1].replace(/\\"/g, '"').replace(/\"/g, '"')
+          : 'Leitura do Casal';
+
+        const leituraRaw = leituraMatch?.[1] ? leituraMatch[1] : (cleanText || text || '');
+        const leitura = leituraRaw
+          .replace(/\\n/g, '\n')
+          .replace(/\\t/g, '\t')
+          .replace(/\\r/g, '\r')
+          .replace(/\\"/g, '"')
+          .replace(/\"/g, '"');
+
+        return { titulo, leitura };
+      } catch {
+        return { titulo: 'Leitura do Casal', leitura: cleanText || text };
+      }
     }
   }
 }
