@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Gem, ShieldCheck, CheckCircle2, ArrowRight, HeartHandshake, Sparkles, Flame, MessageCircleHeart, CalendarDays } from 'lucide-react';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { BlurFade } from '@/components/ui/blur-fade';
@@ -83,9 +83,17 @@ export default function LeituraCasalPage() {
               Não é só “combina ou não combina”. É uma leitura profunda (e prática) do <b>padrão do encontro</b>,
               do <b>ponto cego</b> e do <b>ritual de 7 dias</b> para melhorar a relação.
             </p>
-            <p className="text-sm text-slate-500 max-w-2xl mx-auto">
-              Lote de lançamento (vibração 8): <span className="text-gold-300 font-semibold">R$ 26,90</span> — depois volta para <span className="text-slate-300 font-semibold">R$ 53,90</span>.
-            </p>
+            <div className="mt-4 max-w-2xl mx-auto">
+              <LaunchPrice
+                launchPrice="26,90"
+                fullPrice="53,90"
+                headline="Lote de lançamento"
+                sub="Válido por tempo limitado"
+                // Ajuste a data de término quando quiser (ex.: fim do lançamento)
+                endsAtIso={process.env.NEXT_PUBLIC_COUPLE_LAUNCH_ENDS_AT || ''}
+                totalSlots={100}
+              />
+            </div>
           </BlurFade>
 
           <BlurFade delay={0.35}>
@@ -200,6 +208,84 @@ function Deliverable({ title, children }: any) {
     <div className="p-6 rounded-2xl bg-black/30 border border-white/10">
       <div className="font-serif text-lg text-slate-100 font-bold mb-2">{title}</div>
       <div className="text-sm text-slate-400 leading-relaxed">{children}</div>
+    </div>
+  );
+}
+
+function LaunchPrice({
+  headline,
+  sub,
+  launchPrice,
+  fullPrice,
+  endsAtIso,
+  totalSlots,
+}: {
+  headline: string;
+  sub?: string;
+  launchPrice: string;
+  fullPrice: string;
+  endsAtIso?: string;
+  totalSlots?: number;
+}) {
+  // fallback: 7 dias a partir de agora
+  const endsAt = useMemo(() => {
+    if (endsAtIso) {
+      const d = new Date(endsAtIso);
+      if (!Number.isNaN(d.getTime())) return d;
+    }
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    return d;
+  }, [endsAtIso]);
+
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(t);
+  }, []);
+
+  const remainingMs = Math.max(0, endsAt.getTime() - now);
+  const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((remainingMs / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((remainingMs / (1000 * 60)) % 60);
+  const seconds = Math.floor((remainingMs / 1000) % 60);
+
+  return (
+    <div className="rounded-2xl border border-gold-500/30 bg-gradient-to-br from-gold-900/15 to-rose-900/10 p-5">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div>
+          <div className="text-sm uppercase tracking-wider text-gold-300 font-bold">{headline}</div>
+          {sub ? <div className="text-xs text-slate-400 mt-1">{sub}</div> : null}
+        </div>
+
+        <div className="text-right">
+          <div className="text-xs text-slate-400">Preço normal</div>
+          <div className="text-slate-200">
+            <span className="text-red-300 line-through font-semibold">R$ {fullPrice}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div className="text-xs text-slate-400">Preço de lançamento</div>
+          <div className="text-3xl md:text-4xl font-serif font-bold text-gold-200">R$ {launchPrice}</div>
+        </div>
+
+        <div className="text-center sm:text-right">
+          <div className="text-xs text-slate-400">Termina em</div>
+          <div className="font-mono text-slate-100">
+            {days}d {String(hours).padStart(2, '0')}:{String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+          </div>
+          {typeof totalSlots === 'number' ? (
+            <div className="mt-1 text-xs text-slate-400">Lote: {totalSlots} vagas</div>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="mt-4 text-xs text-slate-500">
+        * Podemos plugar um contador real (decrementando) usando Stripe ou um KV/DB. Hoje está só como “lote de 100”.
+      </div>
     </div>
   );
 }
