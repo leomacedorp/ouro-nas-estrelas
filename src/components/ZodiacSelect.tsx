@@ -13,6 +13,7 @@ type Props = {
 
 export function ZodiacSelect({ value, onChange, placeholder = "Escolher signo", className = "" }: Props) {
   const [open, setOpen] = useState(false);
+  const [openUp, setOpenUp] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   const current = useMemo(() => ZODIAC_SIGNS.find((s) => s.slug === value), [value]);
@@ -25,6 +26,20 @@ export function ZodiacSelect({ value, onChange, placeholder = "Escolher signo", 
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
   }, []);
+
+  // No mobile, se o seletor estiver perto do fim da tela, abre "pra cima" pra não ficar escondido.
+  useEffect(() => {
+    if (!open) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    // dropdown ~ 320px; se não couber embaixo mas couber mais em cima, abre pra cima
+    setOpenUp(spaceBelow < 320 && spaceAbove > spaceBelow);
+  }, [open]);
 
   return (
     <div ref={ref} className={`relative ${className}`}>
@@ -46,7 +61,10 @@ export function ZodiacSelect({ value, onChange, placeholder = "Escolher signo", 
       {open && (
         <div
           role="listbox"
-          className="absolute z-50 mt-2 w-full max-h-72 overflow-auto rounded-2xl border border-white/10 bg-slate-950/95 backdrop-blur-xl shadow-2xl"
+          className={
+            "absolute z-50 w-full max-h-72 overflow-auto rounded-2xl border border-white/10 bg-slate-950/95 backdrop-blur-xl shadow-2xl " +
+            (openUp ? "bottom-full mb-2" : "top-full mt-2")
+          }
         >
           {ZODIAC_SIGNS.map((s) => {
             const active = s.slug === value;
