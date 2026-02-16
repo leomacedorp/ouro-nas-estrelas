@@ -7,6 +7,7 @@ import { CheckCircle2, Lock, ArrowRight } from 'lucide-react';
 import { BlurFade } from '@/components/ui/blur-fade';
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import { ZODIAC_SIGNS } from '@/lib/constants';
+import { ZodiacSelect } from '@/components/ZodiacSelect';
 import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 
 export default function LeituraCasalSucessoPage() {
@@ -176,12 +177,7 @@ export default function LeituraCasalSucessoPage() {
 
               <div>
                 <label className="block text-sm text-slate-300 mb-1">Signo (Pessoa 1)</label>
-                <select value={aSign} onChange={(e) => setASign(e.target.value)} style={{ colorScheme: 'dark' }} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
-                  <option value="" disabled>Escolher signo</option>
-                  {ZODIAC_SIGNS.map((s) => (
-                    <option key={s.slug} value={s.slug}>{s.symbol} {s.name}</option>
-                  ))}
-                </select>
+                <ZodiacSelect value={aSign} onChange={setASign} placeholder="Escolher signo" className="rounded-xl" />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4 mt-2">
@@ -197,12 +193,7 @@ export default function LeituraCasalSucessoPage() {
 
               <div>
                 <label className="block text-sm text-slate-300 mb-1">Signo (Pessoa 2)</label>
-                <select value={bSign} onChange={(e) => setBSign(e.target.value)} style={{ colorScheme: 'dark' }} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
-                  <option value="" disabled>Escolher signo</option>
-                  {ZODIAC_SIGNS.map((s) => (
-                    <option key={s.slug} value={s.slug}>{s.symbol} {s.name}</option>
-                  ))}
-                </select>
+                <ZodiacSelect value={bSign} onChange={setBSign} placeholder="Escolher signo" className="rounded-xl" />
               </div>
             </div>
 

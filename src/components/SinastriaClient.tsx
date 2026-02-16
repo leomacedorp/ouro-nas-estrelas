@@ -6,6 +6,7 @@ import { Heart, Sparkles, ArrowRight, Star, Flame, Briefcase, Users, Zap } from 
 import { ShimmerButton } from '@/components/ui/shimmer-button';
 import Link from 'next/link';
 import { ZODIAC_SIGNS } from '@/lib/constants';
+import { ZodiacSelect } from '@/components/ZodiacSelect';
 import { calculateCompatibility, CompatibilityFocus, CompatibilityResult } from '@/lib/compatibility';
 
 const SIGNS_LIST = ZODIAC_SIGNS.map((data) => ({
@@ -289,31 +290,19 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
 }
 
 function SignSelector({ label, value, onChange, color }: any) {
-    const borderColor = color === 'rose' ? 'focus:border-rose-500' : 'focus:border-purple-500';
+    // O <select> nativo no Chrome/Windows abre um dropdown branco que não respeita bem o tema escuro.
+    // Usamos um seletor customizado para garantir legibilidade.
     const ringColor = color === 'rose' ? 'focus:ring-rose-500/20' : 'focus:ring-purple-500/20';
 
     return (
         <div className="space-y-4">
             <label className="block text-sm font-medium text-slate-300 uppercase tracking-wider text-center">{label}</label>
-            <div className="relative">
-                <select
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    // Ajuda o Chrome/Windows a renderizar o dropdown com tema escuro (evita lista branca com texto apagado)
-                    style={{ colorScheme: 'dark' }}
-                    className={`w-full appearance-none bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-center text-lg text-white outline-none focus:ring-4 transition-all ${borderColor} ${ringColor} cursor-pointer hover:bg-black/60`}
-                >
-                    <option value="" disabled>Escolher Signo</option>
-                    {SIGNS_LIST.map(sign => (
-                        <option key={sign.slug} value={sign.slug}>
-                            {sign.icon} {sign.name}
-                        </option>
-                    ))}
-                </select>
-                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-500">
-                    <ArrowRight className="w-4 h-4 rotate-90" />
-                </div>
-            </div>
+            <ZodiacSelect
+                value={value}
+                onChange={onChange}
+                placeholder="Escolher signo"
+                className={ringColor}
+            />
         </div>
     );
 }
