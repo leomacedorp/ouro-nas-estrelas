@@ -48,6 +48,7 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
     const handleCalculate = async ({ skipDelay = false }: { skipDelay?: boolean } = {}) => {
         if (!signA || !signB) return;
         setLoading(true);
+        setResult(null); // evita mostrar resultado antigo com foco novo
         setError(null);
 
         try {
@@ -71,6 +72,9 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
     useEffect(() => {
         if (!signA || !signB) return;
         if (!result) return;
+        // limpa e recalcula quando o foco muda
+        setResult(null);
+        setError(null);
         handleCalculate({ skipDelay: true });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [focus]);
@@ -234,9 +238,9 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
 
                                     {/* Conversion block */}
                                     <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-rose-900/25 to-purple-900/20 border border-white/10">
-                                        <h4 className="text-white font-serif font-bold text-xl mb-2">💫 Como fazer essa relação funcionar</h4>
+                                        <h4 className="text-white font-serif font-bold text-xl mb-2">💫 Como fazer essa compatibilidade funcionar</h4>
                                         <p className="text-slate-300 mb-4">
-                                            Você viu o básico. Na <span className="text-gold-200 font-semibold">Leitura Completa do Casal</span>, eu te mostro o que fazer na prática —
+                                            Você viu o básico. Na <span className="text-gold-200 font-semibold">Leitura da Compatibilidade</span>, eu te mostro o que fazer na prática —
                                             com pontos cegos, soluções e um ritual de 7 dias.
                                         </p>
 
@@ -250,7 +254,7 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                                         <div className="flex flex-col sm:flex-row gap-3">
                                             <Link href="/leitura-casal" className="flex-1">
                                                 <ShimmerButton className="w-full py-4 text-base font-bold !bg-gradient-to-r !from-gold-500 !to-amber-600">
-                                                    💎 Destravar Leitura do Casal
+                                                    💎 Destravar Leitura da Compatibilidade
                                                 </ShimmerButton>
                                             </Link>
 
