@@ -45,8 +45,19 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
     const [result, setResult] = useState<CompatibilityResult | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const handleCalculate = async ({ skipDelay = false }: { skipDelay?: boolean } = {}) => {
-        if (!signA || !signB) return;
+    const handleCalculate = async (
+        {
+            skipDelay = false,
+            focusOverride,
+            signAOverride,
+            signBOverride,
+        }: { skipDelay?: boolean; focusOverride?: CompatibilityFocus; signAOverride?: string; signBOverride?: string } = {}
+    ) => {
+        const a = signAOverride ?? signA;
+        const b = signBOverride ?? signB;
+        const f = focusOverride ?? focus;
+
+        if (!a || !b) return;
         setLoading(true);
         setResult(null); // evita mostrar resultado antigo com foco novo
         setError(null);
@@ -57,7 +68,7 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                 await new Promise(resolve => setTimeout(resolve, 700));
             }
 
-            const res = calculateCompatibility(signA, signB, focus);
+            const res = calculateCompatibility(a, b, f);
             setResult(res);
         } catch (e) {
             setError('Não foi possível calcular agora. Tente novamente.');
@@ -70,12 +81,10 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
     // Quando o usuário troca o foco (amor/química/trabalho/amizade), recalculamos automaticamente
     // para evitar a sensação de "resultado igual".
     useEffect(() => {
+        // Sempre que o foco mudar (e já houver signos), recalculamos automaticamente.
+        // Isso evita qualquer sensação de "travou" em um dos focos.
         if (!signA || !signB) return;
-        if (!result) return;
-        // limpa e recalcula quando o foco muda
-        setResult(null);
-        setError(null);
-        handleCalculate({ skipDelay: true });
+        handleCalculate({ skipDelay: true, focusOverride: focus, signAOverride: signA, signBOverride: signB });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [focus]);
 
@@ -120,6 +129,9 @@ export default function SinastriaClient({ defaultFocus = 'amor' }: { defaultFocu
                                         key={opt.key}
                                         onClick={() => {
                                             setFocus(opt.key);
+                                            // feedback imediato
+                                            setResult(null);
+                                            setError(null);
                                         }}
                                         className={
                                             `rounded-2xl border px-4 py-4 text-left transition-all ` +
