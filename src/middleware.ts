@@ -94,5 +94,6 @@ export const config = {
          * Match all request paths starting with /admin
          */
         '/admin/:path*',
+        '/api/admin/:path*',
     ],
 }

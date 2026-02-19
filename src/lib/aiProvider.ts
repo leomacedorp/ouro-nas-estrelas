@@ -104,7 +104,6 @@ async function tryOpenAI(options: GenerationOptions, pass: number = 0): Promise<
             return { success: false, error: 'Resposta vazia da OpenAI' };
         }
 
-        console.log(`[OPENAI] ✅ ${signName} gerado com sucesso`);
         return { success: true, content: rawContent };
 
     } catch (error: unknown) {
@@ -136,8 +135,6 @@ async function tryGemini(options: GenerationOptions, pass: number = 0): Promise<
     }
 
     try {
-        console.log(`[GEMINI] Tentando gerar para ${signName} (fallback)...`);
-
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         const basePrompt = mode === 'premium' && focus
